@@ -31,14 +31,18 @@ repositories {
 }
 
 dependencies {
+    final String tomcatVersion = '9.0.36'
+
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 
+    implementation('commons-cli:commons-cli:1.4')
+    implementation('javax.activation:activation:1.1')
+    implementation('javax.xml.bind:jaxb-api:2.3.1')
     implementation('org.apache.logging.log4j:log4j-core:2.13.3')
-    final String tomcatVersion = '9.0.36'
     implementation('org.apache.tomcat.embed:tomcat-embed-core:'+tomcatVersion)
     implementation('org.apache.tomcat.embed:tomcat-embed-jasper:'+tomcatVersion)
     implementation('org.apache.tomcat:tomcat-jasper:'+tomcatVersion)
     implementation('org.apache.tomcat:tomcat-jasper-el:'+tomcatVersion)
     implementation('org.apache.tomcat:tomcat-jsp-api:'+tomcatVersion)
-    implementation('commons-cli:commons-cli:1.4')
+    implementation('org.glassfish.jaxb:jaxb-runtime:2.3.3')
 }

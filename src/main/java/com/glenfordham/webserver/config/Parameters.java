@@ -2,6 +2,15 @@ package com.glenfordham.webserver.config;
 
 public enum Parameters {
 
+    CONFIG_FILE(
+            "c",
+            true,
+            true,
+            "configFile",
+            true,
+            "the location of the config.xml file",
+            null
+    ),
     HELP(
             "h",
             false,
