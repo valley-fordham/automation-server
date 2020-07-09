@@ -1,10 +1,3 @@
-<html lang="en">
-	<head>
-		<title>Web Server</title>
-	</head>
-	<body>
-		<div class='main'>
-      		Nothing to see here folks.
-		</div>
-	</body>
-</html>
+<welcome-file-list>
+    <welcome-file>/RequestArbiter</welcome-file>
+</welcome-file-list>
