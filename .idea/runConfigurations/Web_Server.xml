@@ -2,7 +2,7 @@
   <configuration default="false" name="Web Server" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.glenfordham.webserver.Application" />
     <module name="webserver.main" />
-    <option name="PROGRAM_PARAMETERS" value="-p 80 -h" />
+    <option name="PROGRAM_PARAMETERS" value="-p 80" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

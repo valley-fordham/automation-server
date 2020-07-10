@@ -2,6 +2,7 @@ package com.glenfordham.webserver.servlet;
 
 import com.glenfordham.webserver.Log;
 import com.glenfordham.webserver.automation.AutomationHandler;
+import com.glenfordham.webserver.servlet.parameters.ParameterMap;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -35,7 +36,7 @@ public class RequestArbiter extends HttpServlet {
             out.write(outputHtml.getBytes());
             out.flush();
             out.close();
-            automationHandler.processRequest(req.getParameterMap());
+            automationHandler.processRequest(new ParameterMap(req.getParameterMap()));
         } catch (Exception e) {
             Log.error("Unexpected error occurred in servlet", e);
         }

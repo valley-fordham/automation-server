@@ -115,3 +115,7 @@ tomcat.*
 
 # Sonarlint
 .idea/sonarlint/
+
+# Generated java files
+Config.java
+ObjectFactory.java

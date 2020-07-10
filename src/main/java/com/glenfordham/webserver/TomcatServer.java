@@ -1,7 +1,7 @@
 package com.glenfordham.webserver;
 
 import com.glenfordham.webserver.config.ConfigProperties;
-import com.glenfordham.webserver.config.Parameters;
+import com.glenfordham.webserver.config.Arguments;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
@@ -26,12 +26,12 @@ public class TomcatServer {
                 ConfigProperties configProperties = ConfigProperties.getInstance();
 
                 File root = getRootFolder();
-                Path tempPath = Files.createTempDirectory(configProperties.getPropertyValue(Parameters.TEMP_DIR_PREFIX));
+                Path tempPath = Files.createTempDirectory(configProperties.getPropertyValue(Arguments.TEMP_DIR_PREFIX));
                 System.setProperty("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE", "true");
 
                 Tomcat tomcat = new Tomcat();
                 tomcat.setBaseDir(tempPath.toString());
-                tomcat.setPort(configProperties.getPropertyValueAsInt(Parameters.PORT));
+                tomcat.setPort(configProperties.getPropertyValueAsInt(Arguments.PORT));
                 tomcat.getConnector();
 
                 StandardContext ctx = (StandardContext) tomcat.addWebapp("", new File(root.getAbsolutePath(), "src/main/webapp/").getAbsolutePath());

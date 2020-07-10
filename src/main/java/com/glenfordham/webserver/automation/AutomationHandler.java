@@ -2,74 +2,43 @@ package com.glenfordham.webserver.automation;
 
 import com.glenfordham.webserver.Log;
 import com.glenfordham.webserver.automation.broadlink.BroadlinkHandler;
-import com.glenfordham.webserver.automation.jaxb.Config;
-import com.glenfordham.webserver.config.ConfigProperties;
-import com.glenfordham.webserver.config.Parameters;
+import com.glenfordham.webserver.servlet.parameters.ParameterMap;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.util.Map;
+import javax.xml.bind.JAXBException;
 
 public class AutomationHandler {
 
     final BroadlinkHandler broadlinkHandler = new BroadlinkHandler();
 
-    public boolean processRequest(Map<String, String[]> requestParams) {
+    public void processRequest(ParameterMap parameterMap) {
         try {
-            // TODO: implement better URL parameters
-            // Load configuration file
-            File file = new File(ConfigProperties.getInstance().getPropertyValue(Parameters.CONFIG_FILE));
-            JAXBContext jaxbContext = JAXBContext.newInstance(Config.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            Config config = (Config)jaxbUnmarshaller.unmarshal(file);
+            AutomationParameterValidator parameterValidator = new AutomationParameterValidator();
 
-            if (!isAuthenticationTokenValid(requestParams.get(Constant.AUTHENTICATION_TOKEN.get()))
-                    || !isRequestTypeValid(requestParams.get(Constant.REQUEST_TYPE.get()))) {
-                return false;
+            // If URL parameters are not valid, ignore the request
+            if (!parameterValidator.isParameterMapValid(parameterMap)) {
+                Log.debug("Invalid request: " + parameterMap.toString());
+                return;
             }
-            Log.info("Valid request");
+            Log.debug("Valid request");
 
-            if (requestParams.get(Constant.REQUEST_TYPE.get())[0].equals(RequestType.BROADLINK.get())) {
-                broadlinkHandler.processRequest(requestParams);
-            }
-            return true;
-        } catch (Exception e) {
-            Log.error("Unexpected error occurred", e);
-            return false;
-        }
-    }
-
-    private boolean isUrlParamValid(String[] urlParam) {
-        if (urlParam == null) {
-            return false;
-        }
-        if (urlParam.length != 1) {
-            Log.error("Only one instance of a parameter is allowed");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isAuthenticationTokenValid(String[] authenticationToken) {
-        if (isUrlParamValid(authenticationToken)) {
-            String token = authenticationToken[0];
-            return token.equals("winning");
-        } else {
-            Log.error("Invalid authentication token");
-            return false;
-        }
-    }
-
-    private boolean isRequestTypeValid(String[] requestType) {
-        if (isUrlParamValid(requestType)) {
-            for (RequestType requestTypeCheck : RequestType.values()) {
-                if (requestType[0].equals(requestTypeCheck.get())) {
-                    return true;
+            RequestType requestType = RequestType.get(parameterMap.get(Parameter.REQUEST_TYPE.get()).getFirst());
+            if (requestType != null) {
+                switch (requestType) {
+                    case BROADLINK:
+                        broadlinkHandler.start(parameterMap);
+                        return;
+                    case CARPORT:
+                    case CMD_LINE:
+                    case EMAIL:
+                    case GPIO:
+                    default:
+                        break;
                 }
             }
+        } catch (JAXBException jaxbE) {
+            Log.error("Error occurred when loading config file", jaxbE);
+        } catch (Exception e) {
+            Log.error("Unexpected error occurred", e);
         }
-        Log.error("Invalid request type" + (requestType != null ? ": " + requestType[0] : " - not provided"));
-        return false;
     }
 }

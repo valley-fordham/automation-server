@@ -64,12 +64,9 @@
                             <xs:element name="requests">
                                 <xs:complexType>
                                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="authentication_token" type="xs:string" minOccurs="0"/>
                                         <xs:element name="request">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="authentication_token" type="xs:string"
-                                                                minOccurs="0"/>
                                                     <xs:element name="name" type="xs:string"/>
                                                     <xs:element name="description" type="xs:string" minOccurs="0"/>
                                                     <xs:element name="write" minOccurs="0">
@@ -126,12 +123,9 @@
                             <xs:element name="requests">
                                 <xs:complexType>
                                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="authentication_token" type="xs:string" minOccurs="0"/>
                                         <xs:element name="request">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="authentication_token" type="xs:string"
-                                                                minOccurs="0"/>
                                                     <xs:element name="name" type="xs:string"/>
                                                     <xs:element name="description" type="xs:string" minOccurs="0"/>
                                                     <xs:element name="to" type="xs:string"/>
@@ -154,12 +148,9 @@
                             <xs:element name="requests">
                                 <xs:complexType>
                                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="authentication_token" type="xs:string" minOccurs="0"/>
                                         <xs:element name="request">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="authentication_token" type="xs:string"
-                                                                minOccurs="0"/>
                                                     <xs:element name="name" type="xs:string"/>
                                                     <xs:element name="description" type="xs:string" minOccurs="0"/>
                                                     <xs:element name="command_line" type="xs:string"/>
@@ -196,12 +187,9 @@
                             <xs:element name="requests">
                                 <xs:complexType>
                                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="authentication_token" type="xs:string" minOccurs="0"/>
                                         <xs:element name="request">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="authentication_token" type="xs:string"
-                                                                minOccurs="0"/>
                                                     <xs:element name="name" type="xs:string"/>
                                                     <xs:element name="description" type="xs:string" minOccurs="0"/>
                                                     <xs:element name="broadlink_device_name" type="xs:string"/>
