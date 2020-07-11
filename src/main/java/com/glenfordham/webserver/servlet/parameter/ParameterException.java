@@ -1,4 +1,4 @@
-package com.glenfordham.webserver.servlet.parameters;
+package com.glenfordham.webserver.servlet.parameter;
 
 public class ParameterException extends Exception {
 

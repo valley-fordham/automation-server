@@ -1,4 +1,4 @@
-package com.glenfordham.webserver.servlet.parameters;
+package com.glenfordham.webserver.servlet.parameter;
 
 import java.util.ArrayList;
 import java.util.List;

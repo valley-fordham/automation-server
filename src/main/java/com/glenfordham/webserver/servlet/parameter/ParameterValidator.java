@@ -1,4 +1,4 @@
-package com.glenfordham.webserver.servlet.parameters;
+package com.glenfordham.webserver.servlet.parameter;
 
 /**
  * Interface for building URL parameter validation eg. ?token=x&token_2=y

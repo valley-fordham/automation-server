@@ -14,7 +14,7 @@ public class ConfigProperties {
     private static ConfigProperties instance = null;
 
     /**
-     * Creates a default ConfigProperties with default values pulled from Arguments enum
+     * Creates a default ConfigProperties with default values pulled from Arguments enum. Internal class use only
      */
     private ConfigProperties() {
         for (Arguments param : Arguments.values()) {

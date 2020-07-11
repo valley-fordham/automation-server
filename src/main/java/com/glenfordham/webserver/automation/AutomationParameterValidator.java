@@ -1,10 +1,10 @@
 package com.glenfordham.webserver.automation;
 
 import com.glenfordham.webserver.Log;
-import com.glenfordham.webserver.servlet.parameters.ParameterException;
-import com.glenfordham.webserver.servlet.parameters.ParameterList;
-import com.glenfordham.webserver.servlet.parameters.ParameterMap;
-import com.glenfordham.webserver.servlet.parameters.ParameterValidator;
+import com.glenfordham.webserver.servlet.parameter.ParameterException;
+import com.glenfordham.webserver.servlet.parameter.ParameterList;
+import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import com.glenfordham.webserver.servlet.parameter.ParameterValidator;
 
 import java.util.Arrays;
 

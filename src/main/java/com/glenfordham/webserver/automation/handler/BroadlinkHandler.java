@@ -1,4 +1,4 @@
-package com.glenfordham.webserver.automation.broadlink;
+package com.glenfordham.webserver.automation.handler;
 
 import com.glenfordham.utils.process.ProcessWrapper;
 import com.glenfordham.webserver.Log;
@@ -6,32 +6,41 @@ import com.glenfordham.webserver.automation.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.utils.StringUtils;
 import com.glenfordham.webserver.automation.jaxb.Config;
-import com.glenfordham.webserver.servlet.parameters.ParameterException;
-import com.glenfordham.webserver.servlet.parameters.ParameterMap;
+import com.glenfordham.webserver.servlet.parameter.ParameterException;
+import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-// TODO: make a handler interface
-public class BroadlinkHandler {
+/**
+ * Broadlink Handler
+ *
+ * Broadlink actions require the broadlink CLI path and a number of parameters configured - the required values will
+ * be dependent on your device. See https://github.com/mjg59/python-broadlink for more information.
+ */
+public class BroadlinkHandler implements Handler {
 
     /**
      * Processes a broadlink type request. Matches request against configuration XML and triggers Broadlink action
      * on the device configured in the XML.
      *
-     * Broadlink actions require the broadlink CLI path and a number of parameters configured, depending on your
-     * broadlink device.
-     *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @throws InterruptedException if thread is interrupted while waiting for the process to complete
-     * @throws IOException if an error occurs when running broadlink CLI executable
+     * @param clientOutput client OutputStream, for writing a response
+     * @throws HandlerException a generic Exception occurs when handling the request
      * @throws JAXBException if unable to load configuration file
      * @throws ParameterException if unable to get request name from parameter
      */
-    public void start(ParameterMap parameterMap, OutputStream clientOutput) throws InterruptedException, IOException, JAXBException, ParameterException {
-        processRequest(parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst());
+    @Override
+    public void start(ParameterMap parameterMap, OutputStream clientOutput) throws HandlerException, JAXBException, ParameterException {
+        try {
+            processRequest(parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst());
+        } catch (IOException | InterruptedException e) {
+            // if an error occurs when running broadlink CLI executable,
+            //  or if thread is interrupted while waiting for the process to complete
+            throw new HandlerException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -78,10 +87,12 @@ public class BroadlinkHandler {
 
         // Invoke the Broadlink executable using ProcessWrapper to ensure all streams and the process are closed.
         // Wait for the process to complete and log error if an error code is returned
-        try (ProcessWrapper processWrapper = new ProcessWrapper(
-                Runtime.getRuntime().exec(config.getBroadlink().getCliPath()
+        String executePath = config.getBroadlink().getCliPath()
                 + " --device \"" + device.getDeviceCode() + " " + device.getIpAddress() + " " + device.getMacAddress()
-                + "\" --send " + request.getSignalCode()))) {
+                + "\" --send " + request.getSignalCode();
+        Log.debug("Executing process: " + executePath);
+        try (ProcessWrapper processWrapper = new ProcessWrapper(
+                Runtime.getRuntime().exec(executePath))) {
             if (processWrapper.getProcess().waitFor() != 0) {
                 Log.error(StringUtils.getStringFromStream(processWrapper.getProcess().getErrorStream()));
             }

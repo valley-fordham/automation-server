@@ -1,15 +1,13 @@
 package com.glenfordham.webserver.automation;
 
 import com.glenfordham.webserver.Log;
-import com.glenfordham.webserver.automation.broadlink.BroadlinkHandler;
-import com.glenfordham.webserver.servlet.parameters.ParameterMap;
+import com.glenfordham.webserver.automation.handler.BroadlinkHandler;
+import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
 import javax.xml.bind.JAXBException;
 import java.io.OutputStream;
 
-public class AutomationHandler {
-
-    final BroadlinkHandler broadlinkHandler = new BroadlinkHandler();
+public class Automation {
 
     /**
      * Attempts to process HTTP request.
@@ -33,7 +31,7 @@ public class AutomationHandler {
             if (requestType != null) {
                 switch (requestType) {
                     case BROADLINK:
-                        broadlinkHandler.start(parameterMap, clientOutput);
+                        new BroadlinkHandler().start(parameterMap, clientOutput);
                         return;
                     case CARPORT:
                     case CMD_LINE:

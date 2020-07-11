@@ -1,8 +1,8 @@
 package com.glenfordham.webserver.servlet;
 
 import com.glenfordham.webserver.Log;
-import com.glenfordham.webserver.automation.AutomationHandler;
-import com.glenfordham.webserver.servlet.parameters.ParameterMap;
+import com.glenfordham.webserver.automation.Automation;
+import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -17,14 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 )
 public class RequestArbiter extends HttpServlet {
 
-    final AutomationHandler automationHandler = new AutomationHandler();
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
             // Get output stream for client to be optionally used in various request handlers
             ServletOutputStream clientStream = resp.getOutputStream();
-            automationHandler.processHttpRequest(new ParameterMap(req.getParameterMap()), clientStream);
+            new Automation().processHttpRequest(new ParameterMap(req.getParameterMap()), clientStream);
 
             // If stream still ready after handler processing, assume nothing was written, and return generic response
             if (clientStream.isReady()) {
