@@ -1,5 +1,7 @@
 package com.glenfordham.webserver.servlet.parameter;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ public class ParameterMap extends HashMap<String, ParameterList> {
         for (Map.Entry<String, String[]> entry : requestParams.entrySet()) {
             ParameterList paramList = new ParameterList();
             for (String param : requestParams.get(entry.getKey())) {
-                if (!param.isBlank()) {
+                if (StringUtils.isNotBlank(param)) {
                     paramList.add(param);
                 }
             }

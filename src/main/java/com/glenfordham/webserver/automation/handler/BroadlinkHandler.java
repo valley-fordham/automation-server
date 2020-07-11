@@ -4,7 +4,7 @@ import com.glenfordham.utils.process.ProcessWrapper;
 import com.glenfordham.webserver.Log;
 import com.glenfordham.webserver.automation.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
-import com.glenfordham.utils.StringUtils;
+import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
@@ -17,8 +17,9 @@ import java.util.List;
 /**
  * Broadlink Handler
  *
- * Broadlink actions require the broadlink CLI path and a number of parameters configured - the required values will
- * be dependent on your device. See https://github.com/mjg59/python-broadlink for more information.
+ * Broadlink actions require the broadlink CLI path (including Python path) and a number of parameters configured.
+ * The required values will be dependent on your device.
+ * See https://github.com/mjg59/python-broadlink for more information.
  */
 public class BroadlinkHandler implements Handler {
 
@@ -94,7 +95,7 @@ public class BroadlinkHandler implements Handler {
         try (ProcessWrapper processWrapper = new ProcessWrapper(
                 Runtime.getRuntime().exec(executePath))) {
             if (processWrapper.getProcess().waitFor() != 0) {
-                Log.error(StringUtils.getStringFromStream(processWrapper.getProcess().getErrorStream()));
+                Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.glenfordham.webserver.automation;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Authenticator {
 
     /**
@@ -9,7 +11,7 @@ public class Authenticator {
      * @return true if the token passes authentication
      */
     static boolean authenticate(String authenticationToken) {
-        return !authenticationToken.isBlank() && authenticationToken.equals("winner");
+        return StringUtils.isNotBlank(authenticationToken) && authenticationToken.equals("winner");
     }
 
     // Use static method

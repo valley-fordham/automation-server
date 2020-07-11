@@ -4,11 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * Helper functions relating to Strings
  */
-public class StringUtils {
+public class StreamUtils {
 
     /**
      * Gets a String object from an InputStream and closes the InputStream
@@ -17,7 +18,7 @@ public class StringUtils {
      * @return a String containing the text from the InputStream
      * @throws IOException if an error occurs when reading the text
      */
-    public static String getStringFromStream(InputStream inputStream) throws IOException {
+    public static String getString(InputStream inputStream) throws IOException {
         try (InputStreamReader isReader = new InputStreamReader(inputStream)) {
             BufferedReader reader = new BufferedReader(isReader);
             StringBuilder stringBuilder = new StringBuilder();
@@ -29,5 +30,17 @@ public class StringUtils {
         }
     }
 
-    private StringUtils() {}
+    /**
+     * Writes text to an OutputStream and flushes the text immediately. Closing is left for the caller
+     *
+     * @param text the message to write to the OutputStream
+     * @param outputStream the OutputStream to be written to
+     * @throws IOException if an error occurs when writing the text
+     */
+    public static void writeString(String text, OutputStream outputStream) throws IOException {
+        outputStream.write(text.getBytes());
+        outputStream.flush();
+    }
+
+    private StreamUtils() {}
 }
