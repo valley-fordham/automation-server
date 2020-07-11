@@ -5,12 +5,20 @@ import com.glenfordham.webserver.automation.broadlink.BroadlinkHandler;
 import com.glenfordham.webserver.servlet.parameters.ParameterMap;
 
 import javax.xml.bind.JAXBException;
+import java.io.OutputStream;
 
 public class AutomationHandler {
 
     final BroadlinkHandler broadlinkHandler = new BroadlinkHandler();
 
-    public void processRequest(ParameterMap parameterMap) {
+    /**
+     * Attempts to process HTTP request.
+     * Checks that URL parameters are valid, then identifies the request type and triage's the request to the appropriate
+     * handler.
+     *
+     * @param parameterMap the parameters of the HTTP request
+     */
+    public void processHttpRequest(ParameterMap parameterMap, OutputStream clientOutput) {
         try {
             AutomationParameterValidator parameterValidator = new AutomationParameterValidator();
 
@@ -25,7 +33,7 @@ public class AutomationHandler {
             if (requestType != null) {
                 switch (requestType) {
                     case BROADLINK:
-                        broadlinkHandler.start(parameterMap);
+                        broadlinkHandler.start(parameterMap, clientOutput);
                         return;
                     case CARPORT:
                     case CMD_LINE:

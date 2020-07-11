@@ -5,6 +5,11 @@ import java.util.Map;
 
 public class ParameterMap extends HashMap<String, ParameterList> {
 
+    /**
+     * Extends the default Servlet request parameter map to remove the need to handle String[]
+     *
+     * @param requestParams the servlet request parameter map to create the ParameterMap from
+     */
     public ParameterMap(Map<String, String[]> requestParams) {
         super();
         for (Map.Entry<String, String[]> entry : requestParams.entrySet()) {
@@ -18,7 +23,6 @@ public class ParameterMap extends HashMap<String, ParameterList> {
         }
     }
 
-    // TODO: test these overrides
     @Override @SuppressWarnings("unchecked")
     public boolean equals(Object o) {
         if (o == this) {
@@ -50,9 +54,7 @@ public class ParameterMap extends HashMap<String, ParameterList> {
                     }
                 }
             }
-        } catch (ClassCastException unused) {
-            return false;
-        } catch (NullPointerException unused) {
+        } catch (ClassCastException | NullPointerException unused) {
             return false;
         }
         return true;

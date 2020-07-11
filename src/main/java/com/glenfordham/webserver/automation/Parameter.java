@@ -1,5 +1,10 @@
 package com.glenfordham.webserver.automation;
 
+/**
+ * Contains all supported URL parameters
+ *
+ * eg. ?authentication_token=token&request_type=request_type&request=requestName
+ */
 public enum Parameter {
     AUTHENTICATION_TOKEN(
             "authentication_token"
@@ -40,5 +45,4 @@ public enum Parameter {
         }
         return null;
     }
-
 }

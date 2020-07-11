@@ -1,5 +1,8 @@
 package com.glenfordham.webserver.config;
 
+/**
+ * Contains all supported application arguments
+ */
 public enum Arguments {
 
     CONFIG_FILE(

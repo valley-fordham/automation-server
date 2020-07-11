@@ -22,21 +22,26 @@ public class RequestArbiter extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            ServletOutputStream out = resp.getOutputStream();
-            final String outputHtml = "<html lang=\"en\">\n" +
-                    "\t<head>\n" +
-                    "\t\t<title>Web Server</title>\n" +
-                    "\t</head>\n" +
-                    "\t<body>\n" +
-                    "\t\t<div class='main'>\n" +
-                    "      \t\tNothing to see here folks.\n" +
-                    "\t\t</div>\n" +
-                    "\t</body>\n" +
-                    "</html>\n";
-            out.write(outputHtml.getBytes());
-            out.flush();
-            out.close();
-            automationHandler.processRequest(new ParameterMap(req.getParameterMap()));
+            // Get output stream for client to be optionally used in various request handlers
+            ServletOutputStream clientStream = resp.getOutputStream();
+            automationHandler.processHttpRequest(new ParameterMap(req.getParameterMap()), clientStream);
+
+            // If stream still ready after handler processing, assume nothing was written, and return generic response
+            if (clientStream.isReady()) {
+                final String outputHtml = "<html lang=\"en\">\n" +
+                        "\t<head>\n" +
+                        "\t\t<title>Web Server</title>\n" +
+                        "\t</head>\n" +
+                        "\t<body>\n" +
+                        "\t\t<div class='main'>\n" +
+                        "      \t\tNothing to see here folks.\n" +
+                        "\t\t</div>\n" +
+                        "\t</body>\n" +
+                        "</html>\n";
+                clientStream.write(outputHtml.getBytes());
+                clientStream.flush();
+                clientStream.close();
+            }
         } catch (Exception e) {
             Log.error("Unexpected error occurred in servlet", e);
         }

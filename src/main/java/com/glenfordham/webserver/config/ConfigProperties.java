@@ -14,6 +14,15 @@ public class ConfigProperties {
     private static ConfigProperties instance = null;
 
     /**
+     * Creates a default ConfigProperties with default values pulled from Arguments enum
+     */
+    private ConfigProperties() {
+        for (Arguments param : Arguments.values()) {
+            addProperty(param, param.getDefaultValue());
+        }
+    }
+
+    /**
      * Adds the property and its value to the class
      *
      * @param key The property key to add
@@ -69,12 +78,5 @@ public class ConfigProperties {
             instance = new ConfigProperties();
         }
         return instance;
-    }
-
-    // Constructor
-    private ConfigProperties() {
-        for (Arguments param : Arguments.values()) {
-            addProperty(param, param.getDefaultValue());
-        }
     }
 }

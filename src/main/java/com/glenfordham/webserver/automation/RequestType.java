@@ -1,5 +1,10 @@
 package com.glenfordham.webserver.automation;
 
+/**
+ * Contains all supported request types
+ *
+ * eg. /?authentication_token=token&request_type=broadlink&request=requestName
+ */
 public enum RequestType {
 
     BROADLINK(

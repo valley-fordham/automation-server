@@ -18,7 +18,7 @@ public class TomcatServer {
     private static boolean started = false;
 
     /**
-     * Starts the Tomcat server
+     * Starts the Tomcat server. Only one running Tomcat instance is supported
      */
     static synchronized void start() {
         try {
@@ -46,10 +46,16 @@ public class TomcatServer {
                 Log.error("Unable to start Tomcat. Tomcat is already started.");
             }
         } catch (Exception e) {
-            Application.exit("Unable to start Tomcat", e);
+            Log.error("Unexpected error occurred when starting Tomcat.");
         }
     }
 
+    /**
+     * Gets the root folder of the Tomcat directory
+     *
+     * @return a File containing the absolute root path
+     * @throws URISyntaxException if unable to convert location to URI
+     */
     private static File getRootFolder() throws URISyntaxException {
         File root;
         String runningJarPath = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replaceAll("\\\\", "/");
@@ -63,6 +69,7 @@ public class TomcatServer {
         return root;
     }
 
+    // Ensure only one TomcatServer is created using static start() method
     private TomcatServer() {
     }
 }

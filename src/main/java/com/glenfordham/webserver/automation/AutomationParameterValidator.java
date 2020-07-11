@@ -63,7 +63,7 @@ public class AutomationParameterValidator implements ParameterValidator {
      *
      * @param authenticationTokens a list of parameter tokens
      * @return true if there is only one authentication token, and the token value is correct
-     * @throws ParameterException thrown if authenticationTokens is unexpectedly empty
+     * @throws ParameterException if authenticationTokens is unexpectedly empty
      */
     private boolean isAuthenticationTokenValid(ParameterList authenticationTokens) throws ParameterException {
         if (areUrlParamsValid(authenticationTokens)) {
