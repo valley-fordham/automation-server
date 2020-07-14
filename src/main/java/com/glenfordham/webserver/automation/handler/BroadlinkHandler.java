@@ -8,6 +8,7 @@ import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class BroadlinkHandler implements Handler {
 
     /**
      * Processes a broadlink type request. Matches request against configuration XML and triggers Broadlink action
-     * on the device configured in the XML.
+     * on the device configured against the request
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
@@ -37,7 +38,7 @@ public class BroadlinkHandler implements Handler {
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws HandlerException, JAXBException, ParameterException {
         try {
             processRequest(parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst());
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | SAXException e) {
             // if an error occurs when running broadlink CLI executable,
             //  or if thread is interrupted while waiting for the process to complete
             throw new HandlerException(e.getMessage(), e);
@@ -55,13 +56,14 @@ public class BroadlinkHandler implements Handler {
      * @throws IOException if an error occurs when running broadlink CLI executable
      * @throws JAXBException if unable to load configuration file
      */
-    private void processRequest(String incomingRequestName) throws InterruptedException, IOException, JAXBException {
+    private void processRequest(String incomingRequestName) throws InterruptedException, IOException, JAXBException, SAXException {
         // Load configuration file on every attempt to ensure server does not need restarting when modifying config
         Config config = AutomationConfig.load();
 
         // Get all Device and Request elements, then attempt to process the request
         List<Config.Broadlink.Requests.Request> validRequestList = config.getBroadlink().getRequests().getRequest();
         List<Config.Broadlink.Devices.Device> validDeviceList =  config.getBroadlink().getDevices().getDevice();
+        List<Config.Broadlink.Signals.Signal> validSignalList =  config.getBroadlink().getSignals().getSignal();
 
         // Check if the incoming request matches a configured request name
         Config.Broadlink.Requests.Request request = validRequestList.stream()
@@ -74,7 +76,6 @@ public class BroadlinkHandler implements Handler {
             return;
         }
 
-        // TODO: config validator?
         // Check that the device associated with the request name is configured
         Config.Broadlink.Devices.Device device = validDeviceList.stream()
                 .filter(deviceEntry -> request.getBroadlinkDeviceName().equalsIgnoreCase(deviceEntry.getName()))
@@ -86,11 +87,22 @@ public class BroadlinkHandler implements Handler {
             return;
         }
 
+        // Check if the incoming request matches a configured request name
+        Config.Broadlink.Signals.Signal signal = validSignalList.stream()
+                .filter(signalEntry -> request.getSignalName().equalsIgnoreCase(signalEntry.getName()))
+                .findFirst()
+                .orElse(null);
+
+        if (signal == null) {
+            Log.error("Invalid signal name: " + incomingRequestName);
+            return;
+        }
+
         // Invoke the Broadlink executable using ProcessWrapper to ensure all streams and the process are closed.
         // Wait for the process to complete and log error if an error code is returned
         String executePath = config.getBroadlink().getCliPath()
                 + " --device \"" + device.getDeviceCode() + " " + device.getIpAddress() + " " + device.getMacAddress()
-                + "\" --send " + request.getSignalCode();
+                + "\" --send " + signal.getCode();
         Log.debug("Executing process: " + executePath);
         try (ProcessWrapper processWrapper = new ProcessWrapper(
                 Runtime.getRuntime().exec(executePath))) {

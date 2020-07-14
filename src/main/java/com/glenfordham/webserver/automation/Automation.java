@@ -2,6 +2,8 @@ package com.glenfordham.webserver.automation;
 
 import com.glenfordham.webserver.Log;
 import com.glenfordham.webserver.automation.handler.BroadlinkHandler;
+import com.glenfordham.webserver.automation.handler.CommandLineHandler;
+import com.glenfordham.webserver.automation.handler.EmailHandler;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
 import javax.xml.bind.JAXBException;
@@ -35,10 +37,13 @@ public class Automation {
                         return;
                     case CARPORT:
                     case CMD_LINE:
+                        new CommandLineHandler().start(parameterMap, clientOutput);
+                        return;
                     case EMAIL:
+                        new EmailHandler().start(parameterMap, clientOutput);
+                        return;
                     case GPIO:
                     default:
-                        break;
                 }
             }
         } catch (JAXBException jaxbE) {
