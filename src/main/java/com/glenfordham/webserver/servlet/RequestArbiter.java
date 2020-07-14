@@ -1,7 +1,7 @@
 package com.glenfordham.webserver.servlet;
 
 import com.glenfordham.utils.StreamUtils;
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.Automation;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 

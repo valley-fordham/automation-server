@@ -1,6 +1,6 @@
 package com.glenfordham.webserver.config;
 
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 
 import java.util.EnumMap;
 

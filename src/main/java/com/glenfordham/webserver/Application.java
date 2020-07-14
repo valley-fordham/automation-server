@@ -1,6 +1,7 @@
 package com.glenfordham.webserver;
 
 import com.glenfordham.webserver.config.CliParser;
+import com.glenfordham.webserver.logging.Log;
 
 public class Application {
 

@@ -1,6 +1,6 @@
 package com.glenfordham.webserver.automation;
 
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterList;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;

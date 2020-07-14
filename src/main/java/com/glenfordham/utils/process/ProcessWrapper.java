@@ -1,6 +1,6 @@
 package com.glenfordham.utils.process;
 
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 
 public class ProcessWrapper implements AutoCloseable {
 

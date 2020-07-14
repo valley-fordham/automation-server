@@ -2,7 +2,7 @@ package com.glenfordham.webserver.automation.handler;
 
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.utils.process.ProcessWrapper;
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.jaxb.Config;
@@ -13,7 +13,6 @@ import org.xml.sax.SAXException;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 
 public class CommandLineHandler implements Handler {
     /**
@@ -33,11 +32,8 @@ public class CommandLineHandler implements Handler {
         // Load configuration file on every attempt to ensure server does not need restarting when modifying config
         Config config = AutomationConfig.load();
 
-        // Get all Request elements, then attempt to process the request
-        List<Config.CommandLine.Requests.Request> validRequestList = config.getCommandLine().getRequests().getRequest();
-
         // Check if the incoming request matches a configured request name
-        Config.CommandLine.Requests.Request request = validRequestList.stream()
+        Config.CommandLine.Requests.Request request = config.getCommandLine().getRequests().getRequest().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))
                 .findFirst()
                 .orElse(null);

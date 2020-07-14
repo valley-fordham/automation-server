@@ -1,6 +1,6 @@
 package com.glenfordham.webserver.automation;
 
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.handler.BroadlinkHandler;
 import com.glenfordham.webserver.automation.handler.CommandLineHandler;
 import com.glenfordham.webserver.automation.handler.EmailHandler;

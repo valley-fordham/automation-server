@@ -56,13 +56,13 @@
                     </xs:complexType>
                 </xs:element>
 
-                <xs:element name="gpio">
+                <xs:element name="gpio" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="requests">
+                            <xs:element name="requests" minOccurs="0">
                                 <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="request">
+                                    <xs:sequence>
+                                        <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="name" type="xs:string"/>
@@ -114,42 +114,49 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="email">
+                <xs:element name="email" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="mailboxes">
+                            <xs:element name="mailboxes" minOccurs="0">
                                 <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="mailbox">
+                                    <xs:sequence>
+                                        <xs:element name="mailbox" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="name" type="xs:string"/>
                                                     <xs:element name="host" type="xs:string"/>
                                                     <xs:element name="port" type="xs:integer"/>
                                                     <xs:element name="authenticate" type="xs:boolean"/>
-                                                    <xs:element name="username" type="xs:string"/>
+                                                    <xs:element name="username" type="xs:string" minOccurs="0"/>
                                                     <xs:element name="password" type="xs:string" minOccurs="0"/>
-                                                    <xs:element name="tls" type="xs:boolean" minOccurs="0"/>
+                                                    <xs:element name="tls" type="xs:boolean"/>
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="requests">
+                            <xs:element name="requests" minOccurs="0">
                                 <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="request">
+                                    <xs:sequence>
+                                        <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="name" type="xs:string"/>
                                                     <xs:element name="mailbox_name" type="xs:string"/>
-                                                    <xs:element name="to" type="xs:string"/>
+                                                    <xs:element name="to" type="xs:string" maxOccurs="unbounded"/>
                                                     <xs:element name="from" type="xs:string"/>
                                                     <xs:element name="subject" type="xs:string"/>
-                                                    <xs:element name="message" type="xs:string"/>
+                                                    <xs:element name="message" minOccurs="0" type="xs:string"/>
                                                     <xs:element name="html" type="xs:boolean"/>
-                                                    <xs:element name="headers" type="xs:string"/>
+                                                    <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="name" type="xs:string"/>
+                                                                <xs:element name="text" type="xs:string"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
@@ -159,13 +166,13 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="command_line">
+                <xs:element name="command_line" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="requests">
+                            <xs:element name="requests" minOccurs="0">
                                 <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="request">
+                                    <xs:sequence>
+                                        <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="name" type="xs:string"/>
@@ -179,14 +186,14 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="broadlink">
+                <xs:element name="broadlink" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="cli_path" type="xs:string" minOccurs="0"/>
-                            <xs:element name="devices">
+                            <xs:element name="cli_path" type="xs:string"/>
+                            <xs:element name="devices" minOccurs="0">
                                 <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="device">
+                                    <xs:sequence>
+                                        <xs:element name="device" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="name" type="xs:string"/>
@@ -199,10 +206,10 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="signals">
+                            <xs:element name="signals" minOccurs="0">
                                 <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="signal">
+                                    <xs:sequence>
+                                        <xs:element name="signal" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="name" type="xs:string"/>
@@ -213,10 +220,10 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="requests">
+                            <xs:element name="requests" minOccurs="0">
                                 <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="request">
+                                    <xs:sequence>
+                                        <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="name" type="xs:string"/>

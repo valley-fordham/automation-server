@@ -1,7 +1,7 @@
 package com.glenfordham.webserver.automation.handler;
 
 import com.glenfordham.utils.process.ProcessWrapper;
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.utils.StreamUtils;
@@ -13,7 +13,6 @@ import org.xml.sax.SAXException;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  * Broadlink Handler
@@ -60,13 +59,8 @@ public class BroadlinkHandler implements Handler {
         // Load configuration file on every attempt to ensure server does not need restarting when modifying config
         Config config = AutomationConfig.load();
 
-        // Get all Device and Request elements, then attempt to process the request
-        List<Config.Broadlink.Requests.Request> validRequestList = config.getBroadlink().getRequests().getRequest();
-        List<Config.Broadlink.Devices.Device> validDeviceList =  config.getBroadlink().getDevices().getDevice();
-        List<Config.Broadlink.Signals.Signal> validSignalList =  config.getBroadlink().getSignals().getSignal();
-
         // Check if the incoming request matches a configured request name
-        Config.Broadlink.Requests.Request request = validRequestList.stream()
+        Config.Broadlink.Requests.Request request = config.getBroadlink().getRequests().getRequest().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -77,7 +71,7 @@ public class BroadlinkHandler implements Handler {
         }
 
         // Check that the device associated with the request name is configured
-        Config.Broadlink.Devices.Device device = validDeviceList.stream()
+        Config.Broadlink.Devices.Device device = config.getBroadlink().getDevices().getDevice().stream()
                 .filter(deviceEntry -> request.getBroadlinkDeviceName().equalsIgnoreCase(deviceEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -88,7 +82,7 @@ public class BroadlinkHandler implements Handler {
         }
 
         // Check if the incoming request matches a configured request name
-        Config.Broadlink.Signals.Signal signal = validSignalList.stream()
+        Config.Broadlink.Signals.Signal signal = config.getBroadlink().getSignals().getSignal().stream()
                 .filter(signalEntry -> request.getSignalName().equalsIgnoreCase(signalEntry.getName()))
                 .findFirst()
                 .orElse(null);

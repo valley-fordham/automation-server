@@ -1,15 +1,15 @@
 package com.glenfordham.webserver.automation.handler;
 
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.jaxb.Config;
+import com.glenfordham.webserver.logging.LogLevel;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import org.xml.sax.SAXException;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -18,7 +18,6 @@ import javax.mail.internet.MimeMessage;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Properties;
 
 public class EmailHandler implements Handler {
@@ -38,12 +37,8 @@ public class EmailHandler implements Handler {
         // Load configuration file on every attempt to ensure server does not need restarting when modifying config
         Config config = AutomationConfig.load();
 
-        // Get all Device and Request elements, then attempt to process the request
-        List<Config.Email.Mailboxes.Mailbox> validMailboxList = config.getEmail().getMailboxes().getMailbox();
-        List<Config.Email.Requests.Request> validRequestList = config.getEmail().getRequests().getRequest();
-
         // Check if the incoming request matches a configured request name
-        Config.Email.Requests.Request request = validRequestList.stream()
+        Config.Email.Requests.Request request = config.getEmail().getRequests().getRequest().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -54,7 +49,7 @@ public class EmailHandler implements Handler {
         }
 
         // Check that the device associated with the validMailboxList name is configured
-        Config.Email.Mailboxes.Mailbox mailbox = validMailboxList.stream()
+        Config.Email.Mailboxes.Mailbox mailbox = config.getEmail().getMailboxes().getMailbox().stream()
                 .filter(mailboxEntry -> request.getMailboxName().equalsIgnoreCase(mailboxEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -70,43 +65,50 @@ public class EmailHandler implements Handler {
         // Get system properties
         Properties properties = System.getProperties();
 
-        // Setup mail server
         try {
+            // Setup mail server
             properties.put("mail.smtp.host", mailbox.getHost());
             properties.put("mail.smtp.port", mailbox.getPort());
-            properties.put("mail.smtp.ssl.enable", mailbox.isTls().toString());
-            properties.put("mail.smtp.auth", mailbox.isAuthenticate().toString());
+            properties.put("mail.smtp.ssl.enable", mailbox.isTls() ? "true" : "false");
+            properties.put("mail.smtp.auth", (mailbox.isAuthenticate() ? "true" : "false"));
 
-            //TODO: handle no login
-            // Get the Session object.// and pass username and password
+            // Setup the email session, including an authenticator (not used if authentication is off)
             Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(mailbox.getUsername(), mailbox.getPassword());
                 }
             });
-            // Used to debug SMTP issues
-            session.setDebug(true);
+
+            // If log level is debug then also print email debug lines
+            if (Log.getLogLevel().equalsIgnoreCase(LogLevel.DEBUG.get())) {
+                session.setDebug(true);
+            }
             try {
-                // Create a default MimeMessage object.
                 MimeMessage message = new MimeMessage(session);
-                // Set From: header field of the header.
+
                 message.setFrom(new InternetAddress(request.getFrom()));
-                // Set To: header field of the header.
-                // TODO: handle multiple recipients in xsd and here
-                message.addRecipient(Message.RecipientType.TO, new InternetAddress(request.getTo()));
-                // Set Subject: header field
+
+                for (String toEntry : request.getTo()) {
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEntry));
+                }
+
                 message.setSubject(request.getSubject());
-                // Now set the actual message
+
                 if (request.isHtml()) {
                     message.setContent(request.getMessage(), "text/html");
                 } else {
                     message.setText(request.getMessage());
                 }
+
+                for (Config.Email.Requests.Request.Header header : request.getHeader()) {
+                    message.setHeader(header.getName(), header.getText());
+                }
+
                 Log.debug("Attempting to send message...");
                 Transport.send(message);
                 Log.info("Email sent");
-            } catch (MessagingException mE) {
+            } catch (Exception mE) {
                 throw new HandlerException(mE.getMessage(), mE);
             }
         } finally {

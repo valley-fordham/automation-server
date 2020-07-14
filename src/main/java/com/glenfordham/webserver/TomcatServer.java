@@ -2,6 +2,7 @@ package com.glenfordham.webserver;
 
 import com.glenfordham.webserver.config.ConfigProperties;
 import com.glenfordham.webserver.config.Arguments;
+import com.glenfordham.webserver.logging.Log;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;

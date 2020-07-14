@@ -1,6 +1,6 @@
 package com.glenfordham.webserver.config;
 
-import com.glenfordham.webserver.Log;
+import com.glenfordham.webserver.logging.Log;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
