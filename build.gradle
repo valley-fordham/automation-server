@@ -55,7 +55,7 @@ dependencies {
 // Generate JAXB objects from schema at build-time
 task buildJavaFromSchema(type:Exec) {
     workingDir '.\\'
-    commandLine 'cmd', '/c', '.\\tools\\jaxb-ri\\bin\\xjc.bat -d .\\src\\main\\java -p com.glenfordham.webserver.automation.jaxb .\\src\\main\\resources\\com\\glenfordham\\webserver\\automation\\config.xsd'
+    commandLine 'cmd', '/c', '.\\tools\\jaxb-ri\\bin\\xjc.bat -d .\\src\\main\\java -p com.glenfordham.webserver.automation.jaxb .\\src\\main\\resources\\com\\glenfordham\\webserver\\automation\\config\\config.xsd'
     standardOutput = new ByteArrayOutputStream()
     ext.output = {
         return standardOutput.toString()

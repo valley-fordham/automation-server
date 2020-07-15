@@ -1,12 +1,13 @@
 package com.glenfordham.webserver.automation;
 
+import com.glenfordham.webserver.automation.config.AutomationConfigException;
+import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.handler.BroadlinkHandler;
 import com.glenfordham.webserver.automation.handler.CommandLineHandler;
 import com.glenfordham.webserver.automation.handler.EmailHandler;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
-import javax.xml.bind.JAXBException;
 import java.io.OutputStream;
 
 public class Automation {
@@ -46,8 +47,10 @@ public class Automation {
                     default:
                 }
             }
-        } catch (JAXBException jaxbE) {
-            Log.error("Error occurred when loading config file", jaxbE);
+        } catch (AutomationConfigException acE) {
+            Log.error("Error occurred when loading config file", acE);
+        } catch (HandlerException hE) {
+            Log.error("Error occurred within Handler", hE);
         } catch (Exception e) {
             Log.error("Unexpected error occurred", e);
         }

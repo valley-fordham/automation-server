@@ -1,16 +1,15 @@
 package com.glenfordham.webserver.automation.handler;
 
 import com.glenfordham.utils.process.ProcessWrapper;
+import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.logging.Log;
-import com.glenfordham.webserver.automation.AutomationConfig;
+import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
-import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -29,19 +28,13 @@ public class BroadlinkHandler implements Handler {
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
+     * @throws AutomationConfigException if unable to load configuration file
      * @throws HandlerException a generic Exception occurs when handling the request
-     * @throws JAXBException if unable to load configuration file
      * @throws ParameterException if unable to get request name from parameter
      */
     @Override
-    public void start(ParameterMap parameterMap, OutputStream clientOutput) throws HandlerException, JAXBException, ParameterException {
-        try {
-            processRequest(parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst());
-        } catch (IOException | InterruptedException | SAXException e) {
-            // if an error occurs when running broadlink CLI executable,
-            //  or if thread is interrupted while waiting for the process to complete
-            throw new HandlerException(e.getMessage(), e);
-        }
+    public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
+        processRequest(parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst());
     }
 
     /**
@@ -51,11 +44,10 @@ public class BroadlinkHandler implements Handler {
      * If it does, then invoke the broadlink action and device associated with that request name.
      *
      * @param incomingRequestName the name of the request to be actioned
-     * @throws InterruptedException if thread is interrupted while waiting for the process to complete
-     * @throws IOException if an error occurs when running broadlink CLI executable
-     * @throws JAXBException if unable to load configuration file
+     * @throws AutomationConfigException if unable to load configuration file
+     * @throws HandlerException if thread is interrupted while waiting for the process to complete, or if an error occurs when running broadlink CLI executable
      */
-    private void processRequest(String incomingRequestName) throws InterruptedException, IOException, JAXBException, SAXException {
+    private void processRequest(String incomingRequestName) throws AutomationConfigException, HandlerException {
         // Load configuration file on every attempt to ensure server does not need restarting when modifying config
         Config config = AutomationConfig.load();
 
@@ -103,6 +95,12 @@ public class BroadlinkHandler implements Handler {
             if (processWrapper.getProcess().waitFor() != 0) {
                 Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
             }
+        } catch (InterruptedException iE) {
+            Log.error("Interrupted execution of process", iE);
+            Thread.currentThread().interrupt();
+            throw new HandlerException(iE.getMessage(), iE);
+        } catch (IOException e) {
+            throw new HandlerException(e.getMessage(), e);
         }
     }
 }

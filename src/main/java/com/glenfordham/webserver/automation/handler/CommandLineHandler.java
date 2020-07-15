@@ -2,15 +2,14 @@ package com.glenfordham.webserver.automation.handler;
 
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.utils.process.ProcessWrapper;
+import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.logging.Log;
-import com.glenfordham.webserver.automation.AutomationConfig;
+import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
-import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -21,12 +20,12 @@ public class CommandLineHandler implements Handler {
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
+     * @throws AutomationConfigException if unable to load configuration file
      * @throws HandlerException a generic Exception occurs when handling the request
-     * @throws JAXBException if unable to load configuration file
      * @throws ParameterException if unable to get request name from parameter
      */
     @Override
-    public void start(ParameterMap parameterMap, OutputStream clientOutput) throws HandlerException, JAXBException, ParameterException, IOException, SAXException {
+    public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
         String incomingRequestName = parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst();
 
         // Load configuration file on every attempt to ensure server does not need restarting when modifying config
@@ -54,7 +53,11 @@ public class CommandLineHandler implements Handler {
                     Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
                 }
             }
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException iE) {
+            Log.error("Interrupted execution of process", iE);
+            Thread.currentThread().interrupt();
+            throw new HandlerException(iE.getMessage(), iE);
+        } catch (IOException e) {
             throw new HandlerException(e.getMessage(), e);
         }
     }

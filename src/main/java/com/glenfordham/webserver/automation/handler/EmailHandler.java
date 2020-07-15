@@ -1,13 +1,13 @@
 package com.glenfordham.webserver.automation.handler;
 
+import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.logging.Log;
-import com.glenfordham.webserver.automation.AutomationConfig;
+import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.logging.LogLevel;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
-import org.xml.sax.SAXException;
 
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -15,8 +15,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
@@ -27,11 +25,12 @@ public class EmailHandler implements Handler {
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
-     * @throws JAXBException      if unable to load configuration file
+     * @throws AutomationConfigException if unable to load configuration file
+     * @throws HandlerException a generic Exception occurs when handling the request
      * @throws ParameterException if unable to get request name from parameter
      */
     @Override
-    public void start(ParameterMap parameterMap, OutputStream clientOutput) throws HandlerException, JAXBException, ParameterException, IOException, SAXException {
+    public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
         String incomingRequestName = parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst();
 
         // Load configuration file on every attempt to ensure server does not need restarting when modifying config
@@ -67,10 +66,10 @@ public class EmailHandler implements Handler {
 
         try {
             // Setup mail server
-            properties.put("mail.smtp.host", mailbox.getHost());
-            properties.put("mail.smtp.port", mailbox.getPort());
-            properties.put("mail.smtp.ssl.enable", mailbox.isTls() ? "true" : "false");
-            properties.put("mail.smtp.auth", (mailbox.isAuthenticate() ? "true" : "false"));
+            properties.put(Constant.MAIL_HOST.getText(), mailbox.getHost());
+            properties.put(Constant.MAIL_PORT.getText(), mailbox.getPort());
+            properties.put(Constant.MAIL_SSL.getText(), mailbox.isTls() ? "true" : "false");
+            properties.put(Constant.MAIL_AUTH.getText(), (mailbox.isAuthenticate() ? "true" : "false"));
 
             // Setup the email session, including an authenticator (not used if authentication is off)
             Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
@@ -113,10 +112,10 @@ public class EmailHandler implements Handler {
             }
         } finally {
             // Reset the system properties`
-            properties.remove("mail.smtp.host");
-            properties.remove("mail.smtp.port");
-            properties.remove("mail.smtp.ssl.enable");
-            properties.remove("mail.smtp.auth");
+            properties.remove(Constant.MAIL_HOST.getText());
+            properties.remove(Constant.MAIL_PORT.getText());
+            properties.remove(Constant.MAIL_SSL.getText());
+            properties.remove(Constant.MAIL_AUTH.getText());
         }
     }
 }
