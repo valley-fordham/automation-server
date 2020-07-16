@@ -20,27 +20,6 @@
                     generateIsSetMethod="false">
                 <jaxb:serializable uid="1"/>
             </jaxb:globalBindings>
-            <jaxb:bindings node="//xs:simpleType[@name='token_behaviour']">
-                <jaxb:typesafeEnumClass name="TokenBehaviour" />
-            </jaxb:bindings>
-            <jaxb:bindings node="//xs:simpleType[@name='carport_action']">
-                <jaxb:typesafeEnumClass name="CarportAction" />
-            </jaxb:bindings>
-            <jaxb:bindings node="//xs:simpleType[@name='gpio_write_behaviour']">
-                <jaxb:typesafeEnumClass name="GpioWriteBehaviour" />
-            </jaxb:bindings>
-            <jaxb:bindings node="//xs:simpleType[@name='gpio_write_value']">
-                <jaxb:typesafeEnumClass name="GpioWriteValue" />
-            </jaxb:bindings>
-            <jaxb:bindings node="//xs:simpleType[@name='gpio_read_behaviour']">
-                <jaxb:typesafeEnumClass name="GpioReadBehaviour" />
-            </jaxb:bindings>
-            <jaxb:bindings node="//xs:simpleType[@name='gpio_write_value']/xs:restriction/xs:enumeration[@value='0']">
-                <jaxb:typesafeEnumMember name="ZERO"/>
-            </jaxb:bindings>
-            <jaxb:bindings node="//xs:simpleType[@name='gpio_write_value']/xs:restriction/xs:enumeration[@value='1']">
-                <jaxb:typesafeEnumMember name="ONE"/>
-            </jaxb:bindings>
         </xs:appinfo>
     </xs:annotation>
 
@@ -73,6 +52,7 @@
             <xs:enumeration value="seed"/>
         </xs:restriction>
     </xs:simpleType>
+
 
     <!-- Carport -->
     <xs:complexType name="carport">
