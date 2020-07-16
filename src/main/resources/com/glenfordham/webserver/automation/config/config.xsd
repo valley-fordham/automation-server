@@ -1,244 +1,261 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+        xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+        jaxb:version="1.0"
+        jaxb:extensionBindingPrefixes="xjc"
+        xjc:version="2.3.3"
+        elementFormDefault="qualified">
+
+    <!-- JAXB Class generation config -->
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:globalBindings
+                    fixedAttributeAsConstantProperty="true"
+                    typesafeEnumBase="xs:NCName"
+                    choiceContentProperty="true"
+                    typesafeEnumMemberName="generateError"
+                    enableFailFastCheck="false"
+                    generateIsSetMethod="false">
+                <jaxb:serializable uid="1"/>
+            </jaxb:globalBindings>
+        </xs:appinfo>
+    </xs:annotation>
+
+    <!-- Config -->
     <xs:element name="config">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="authentication_token" type="xs:string" minOccurs="0"/>
-                <xs:element name="carport">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="request_types">
-                                <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="request_type">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="action">
-                                                        <xs:simpleType>
-                                                            <xs:restriction base="xs:string">
-                                                                <xs:enumeration value="open"/>
-                                                                <xs:enumeration value="close"/>
-                                                                <xs:enumeration value="trigger"/>
-                                                                <xs:enumeration value="status"/>
-                                                            </xs:restriction>
-                                                        </xs:simpleType>
-                                                    </xs:element>
-                                                    <!-- If two gpio_request_name elements provided, first will be used for door trigger action, second will be used to get door status -->
-                                                    <xs:element name="gpio_request_name" type="xs:string"
-                                                                maxOccurs="2"/>
-                                                    <!-- Used for close action only, how long to wait before re-checking door status after invoking door trigger-->
-                                                    <xs:element name="wait_time" type="xs:integer" minOccurs="0"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="requests">
-                                <xs:complexType>
-                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                                        <xs:element name="authentication_token" type="xs:string" minOccurs="0"/>
-                                        <xs:element name="request">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="authentication_token" type="xs:string"
-                                                                minOccurs="0"/>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="request_type_name"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-
-                <xs:element name="gpio" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="requests" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="write" minOccurs="0">
-                                                        <xs:complexType>
-                                                            <xs:sequence>
-                                                                <xs:element name="pin" type="xs:integer"/>
-                                                                <xs:element name="behaviour">
-                                                                    <xs:simpleType>
-                                                                        <xs:restriction base="xs:string">
-                                                                            <xs:enumeration value="write_then_reset"/>
-                                                                            <xs:enumeration value="write"/>
-                                                                        </xs:restriction>
-                                                                    </xs:simpleType>
-                                                                </xs:element>
-                                                                <xs:element name="value">
-                                                                    <xs:simpleType>
-                                                                        <xs:restriction base="xs:integer">
-                                                                            <xs:enumeration value="0"/>
-                                                                            <xs:enumeration value="1"/>
-                                                                        </xs:restriction>
-                                                                    </xs:simpleType>
-                                                                </xs:element>
-                                                                <xs:element name="wait_time_before_reset"
-                                                                            type="xs:integer" minOccurs="0"/>
-                                                            </xs:sequence>
-                                                        </xs:complexType>
-                                                    </xs:element>
-                                                    <xs:element name="read" minOccurs="0">
-                                                        <xs:complexType>
-                                                            <xs:sequence>
-                                                                <xs:element name="pin" type="xs:integer"/>
-                                                                <xs:element name="behaviour">
-                                                                    <xs:simpleType>
-                                                                        <xs:restriction base="xs:string">
-                                                                            <xs:enumeration value="read"/>
-                                                                        </xs:restriction>
-                                                                    </xs:simpleType>
-                                                                </xs:element>
-                                                            </xs:sequence>
-                                                        </xs:complexType>
-                                                    </xs:element>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="email" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="mailboxes" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="mailbox" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="host" type="xs:string"/>
-                                                    <xs:element name="port" type="xs:integer"/>
-                                                    <xs:element name="authenticate" type="xs:boolean"/>
-                                                    <xs:element name="username" type="xs:string" minOccurs="0"/>
-                                                    <xs:element name="password" type="xs:string" minOccurs="0"/>
-                                                    <xs:element name="tls" type="xs:boolean"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="requests" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="mailbox_name" type="xs:string"/>
-                                                    <xs:element name="to" type="xs:string" maxOccurs="unbounded"/>
-                                                    <xs:element name="from" type="xs:string"/>
-                                                    <xs:element name="subject" type="xs:string"/>
-                                                    <xs:element name="message" minOccurs="0" type="xs:string"/>
-                                                    <xs:element name="html" type="xs:boolean"/>
-                                                    <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
-                                                        <xs:complexType>
-                                                            <xs:sequence>
-                                                                <xs:element name="name" type="xs:string"/>
-                                                                <xs:element name="text" type="xs:string"/>
-                                                            </xs:sequence>
-                                                        </xs:complexType>
-                                                    </xs:element>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="command_line" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="requests" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="command_line" type="xs:string"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="broadlink" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="cli_path" type="xs:string"/>
-                            <xs:element name="devices" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="device" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="device_code" type="xs:string"/>
-                                                    <xs:element name="ip_address" type="xs:string"/>
-                                                    <xs:element name="mac_address" type="xs:string" minOccurs="0"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="signals" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="signal" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="code" type="xs:string"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="requests" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="request" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="name" type="xs:string"/>
-                                                    <xs:element name="broadlink_device_name" type="xs:string"/>
-                                                    <xs:element name="signal_name" type="xs:string"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element name="authentication_token" type="xs:string"/>
+                <xs:element name="carport" type="carport" minOccurs="0"/>
+                <xs:element name="gpio" type="gpio" minOccurs="0"/>
+                <xs:element name="email" type="email" minOccurs="0"/>
+                <xs:element name="command_line" type="command_line" minOccurs="0"/>
+                <xs:element name="broadlink" type="broadlink" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+
+    <!-- Carport -->
+    <xs:complexType name="carport">
+        <xs:sequence>
+            <xs:element name="request" type="carport_request" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="requests"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="carport_request">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="action">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="open"/>
+                        <xs:enumeration value="close"/>
+                        <xs:enumeration value="trigger"/>
+                        <xs:enumeration value="status"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <!-- If two gpio_request_name elements provided, first will be used for door trigger action, second will be used to get door status -->
+            <xs:element name="gpio_request_name" type="xs:string"
+                        maxOccurs="2"/>
+            <!-- Used for close action only, how long to wait before re-checking door status after invoking door trigger-->
+            <xs:element name="wait_time" type="xs:integer" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!-- GPIO -->
+    <xs:complexType name="gpio">
+        <xs:sequence>
+            <xs:element name="request" type="gpio_request" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="requests"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="gpio_request">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="carport_only" type="xs:boolean"/>
+            <xs:element name="write" type="gpio_write" minOccurs="0"/>
+            <xs:element name="read" type="gpio_read" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="gpio_write">
+        <xs:sequence>
+            <xs:element name="pin" type="xs:integer"/>
+            <xs:element name="behaviour">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="write_then_reset"/>
+                        <xs:enumeration value="write"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:enumeration value="0"/>
+                        <xs:enumeration value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="wait_time_before_reset"
+                        type="xs:integer" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="gpio_read">
+        <xs:sequence>
+            <xs:element name="pin" type="xs:integer"/>
+            <xs:element name="behaviour">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="read"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!-- Email -->
+    <xs:complexType name="email">
+        <xs:sequence>
+            <xs:element name="mailbox" type="mailbox" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="mailboxes"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="request" type="email_request" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="requests"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="mailbox">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="host" type="xs:string"/>
+            <xs:element name="port" type="xs:integer"/>
+            <xs:element name="authenticate" type="xs:boolean"/>
+            <xs:element name="username" type="xs:string" minOccurs="0"/>
+            <xs:element name="password" type="xs:string" minOccurs="0"/>
+            <xs:element name="tls" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="email_request">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="mailbox_name" type="xs:string"/>
+            <xs:element name="to" type="xs:string" maxOccurs="unbounded"/>
+            <xs:element name="from" type="xs:string"/>
+            <xs:element name="subject" type="xs:string"/>
+            <xs:element name="message" minOccurs="0" type="xs:string"/>
+            <xs:element name="html" type="xs:boolean"/>
+            <xs:element name="headers" type="email_header" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="email_header">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="text" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!-- Command Line -->
+    <xs:complexType name="command_line">
+        <xs:sequence>
+            <xs:element name="request" type="command_line_request" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="requests"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="command_line_request">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="command_line" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!-- Broadlink -->
+    <xs:complexType name="broadlink">
+        <xs:sequence>
+            <xs:element name="cli_path" type="xs:string"/>
+            <xs:element name="device" type="broadlink_device" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="devices"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="signal" type="broadlink_signal" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="signals"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="request" type="broadlink_request" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="requests"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="broadlink_request">
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="broadlink_device_name" type="xs:string"/>
+                <xs:element name="signal_name" type="xs:string"/>
+            </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="broadlink_signal">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="code" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="broadlink_device">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="device_code" type="xs:string"/>
+            <xs:element name="ip_address" type="xs:string"/>
+            <xs:element name="mac_address" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

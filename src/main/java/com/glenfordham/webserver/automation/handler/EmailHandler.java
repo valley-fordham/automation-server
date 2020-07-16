@@ -1,6 +1,9 @@
 package com.glenfordham.webserver.automation.handler;
 
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
+import com.glenfordham.webserver.automation.jaxb.EmailHeader;
+import com.glenfordham.webserver.automation.jaxb.EmailRequest;
+import com.glenfordham.webserver.automation.jaxb.Mailbox;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
@@ -37,7 +40,7 @@ public class EmailHandler implements Handler {
         Config config = AutomationConfig.load();
 
         // Check if the incoming request matches a configured request name
-        Config.Email.Requests.Request request = config.getEmail().getRequests().getRequest().stream()
+        EmailRequest request = config.getEmail().getRequests().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -48,7 +51,7 @@ public class EmailHandler implements Handler {
         }
 
         // Check that the device associated with the validMailboxList name is configured
-        Config.Email.Mailboxes.Mailbox mailbox = config.getEmail().getMailboxes().getMailbox().stream()
+        Mailbox mailbox = config.getEmail().getMailboxes().stream()
                 .filter(mailboxEntry -> request.getMailboxName().equalsIgnoreCase(mailboxEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -60,7 +63,7 @@ public class EmailHandler implements Handler {
         sendEmail(mailbox, request);
     }
 
-    private void sendEmail(Config.Email.Mailboxes.Mailbox mailbox, Config.Email.Requests.Request request) throws HandlerException {
+    private void sendEmail(Mailbox mailbox, EmailRequest request) throws HandlerException {
         // Get system properties
         Properties properties = System.getProperties();
 
@@ -100,7 +103,7 @@ public class EmailHandler implements Handler {
                     message.setText(request.getMessage());
                 }
 
-                for (Config.Email.Requests.Request.Header header : request.getHeader()) {
+                for (EmailHeader header : request.getHeaders()) {
                     message.setHeader(header.getName(), header.getText());
                 }
 

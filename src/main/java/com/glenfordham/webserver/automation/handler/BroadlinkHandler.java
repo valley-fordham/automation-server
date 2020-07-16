@@ -2,6 +2,9 @@ package com.glenfordham.webserver.automation.handler;
 
 import com.glenfordham.utils.process.ProcessWrapper;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
+import com.glenfordham.webserver.automation.jaxb.BroadlinkDevice;
+import com.glenfordham.webserver.automation.jaxb.BroadlinkRequest;
+import com.glenfordham.webserver.automation.jaxb.BroadlinkSignal;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
@@ -52,7 +55,7 @@ public class BroadlinkHandler implements Handler {
         Config config = AutomationConfig.load();
 
         // Check if the incoming request matches a configured request name
-        Config.Broadlink.Requests.Request request = config.getBroadlink().getRequests().getRequest().stream()
+        BroadlinkRequest request = config.getBroadlink().getRequests().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -63,7 +66,7 @@ public class BroadlinkHandler implements Handler {
         }
 
         // Check that the device associated with the request name is configured
-        Config.Broadlink.Devices.Device device = config.getBroadlink().getDevices().getDevice().stream()
+        BroadlinkDevice device = config.getBroadlink().getDevices().stream()
                 .filter(deviceEntry -> request.getBroadlinkDeviceName().equalsIgnoreCase(deviceEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -74,7 +77,7 @@ public class BroadlinkHandler implements Handler {
         }
 
         // Check if the incoming request matches a configured request name
-        Config.Broadlink.Signals.Signal signal = config.getBroadlink().getSignals().getSignal().stream()
+        BroadlinkSignal signal = config.getBroadlink().getSignals().stream()
                 .filter(signalEntry -> request.getSignalName().equalsIgnoreCase(signalEntry.getName()))
                 .findFirst()
                 .orElse(null);

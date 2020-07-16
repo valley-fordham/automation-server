@@ -3,6 +3,7 @@ package com.glenfordham.webserver.automation.handler;
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.utils.process.ProcessWrapper;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
+import com.glenfordham.webserver.automation.jaxb.CommandLineRequest;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.Parameter;
@@ -32,7 +33,7 @@ public class CommandLineHandler implements Handler {
         Config config = AutomationConfig.load();
 
         // Check if the incoming request matches a configured request name
-        Config.CommandLine.Requests.Request request = config.getCommandLine().getRequests().getRequest().stream()
+        CommandLineRequest request = config.getCommandLine().getRequests().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))
                 .findFirst()
                 .orElse(null);
