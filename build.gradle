@@ -60,5 +60,4 @@ task buildJavaFromSchema(type:Exec) {
     ext.output = {
         return errorOutput.toString()
     }
-
 }

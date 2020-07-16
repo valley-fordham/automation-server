@@ -20,23 +20,59 @@
                     generateIsSetMethod="false">
                 <jaxb:serializable uid="1"/>
             </jaxb:globalBindings>
+            <jaxb:bindings node="//xs:simpleType[@name='token_behaviour']">
+                <jaxb:typesafeEnumClass name="TokenBehaviour" />
+            </jaxb:bindings>
+            <jaxb:bindings node="//xs:simpleType[@name='carport_action']">
+                <jaxb:typesafeEnumClass name="CarportAction" />
+            </jaxb:bindings>
+            <jaxb:bindings node="//xs:simpleType[@name='gpio_write_behaviour']">
+                <jaxb:typesafeEnumClass name="GpioWriteBehaviour" />
+            </jaxb:bindings>
+            <jaxb:bindings node="//xs:simpleType[@name='gpio_write_value']">
+                <jaxb:typesafeEnumClass name="GpioWriteValue" />
+            </jaxb:bindings>
+            <jaxb:bindings node="//xs:simpleType[@name='gpio_read_behaviour']">
+                <jaxb:typesafeEnumClass name="GpioReadBehaviour" />
+            </jaxb:bindings>
+            <jaxb:bindings node="//xs:simpleType[@name='gpio_write_value']/xs:restriction/xs:enumeration[@value='0']">
+                <jaxb:typesafeEnumMember name="ZERO"/>
+            </jaxb:bindings>
+            <jaxb:bindings node="//xs:simpleType[@name='gpio_write_value']/xs:restriction/xs:enumeration[@value='1']">
+                <jaxb:typesafeEnumMember name="ONE"/>
+            </jaxb:bindings>
         </xs:appinfo>
     </xs:annotation>
+
 
     <!-- Config -->
     <xs:element name="config">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="authentication_token" type="xs:string"/>
-                <xs:element name="carport" type="carport" minOccurs="0"/>
-                <xs:element name="gpio" type="gpio" minOccurs="0"/>
-                <xs:element name="email" type="email" minOccurs="0"/>
-                <xs:element name="command_line" type="command_line" minOccurs="0"/>
+                <xs:element name="authentication_token" type="authentication_token"/>
                 <xs:element name="broadlink" type="broadlink" minOccurs="0"/>
+                <xs:element name="carport" type="carport" minOccurs="0"/>
+                <xs:element name="command_line" type="command_line" minOccurs="0"/>
+                <xs:element name="email" type="email" minOccurs="0"/>
+                <xs:element name="gpio" type="gpio" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
+    <!-- Authentication Token -->
+    <xs:complexType name="authentication_token">
+        <xs:sequence>
+            <xs:element name="token" type="xs:string"/>
+            <xs:element name="behaviour" type="token_behaviour"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="token_behaviour">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="static"/>
+            <xs:enumeration value="seed"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <!-- Carport -->
     <xs:complexType name="carport">
@@ -54,16 +90,7 @@
     <xs:complexType name="carport_request">
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
-            <xs:element name="action">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="open"/>
-                        <xs:enumeration value="close"/>
-                        <xs:enumeration value="trigger"/>
-                        <xs:enumeration value="status"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
+            <xs:element name="action" type="carport_action"/>
             <!-- If two gpio_request_name elements provided, first will be used for door trigger action, second will be used to get door status -->
             <xs:element name="gpio_request_name" type="xs:string"
                         maxOccurs="2"/>
@@ -71,6 +98,15 @@
             <xs:element name="wait_time" type="xs:integer" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:simpleType name="carport_action">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="open"/>
+            <xs:enumeration value="close"/>
+            <xs:enumeration value="trigger"/>
+            <xs:enumeration value="status"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 
     <!-- GPIO -->
@@ -98,39 +134,39 @@
     <xs:complexType name="gpio_write">
         <xs:sequence>
             <xs:element name="pin" type="xs:integer"/>
-            <xs:element name="behaviour">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="write_then_reset"/>
-                        <xs:enumeration value="write"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="value">
-                <xs:simpleType>
-                    <xs:restriction base="xs:integer">
-                        <xs:enumeration value="0"/>
-                        <xs:enumeration value="1"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
+            <xs:element name="behaviour" type="gpio_write_behaviour"/>
+            <xs:element name="value" type="gpio_write_value"/>
             <xs:element name="wait_time_before_reset"
                         type="xs:integer" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
+    <xs:simpleType name="gpio_write_behaviour">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="write_then_reset"/>
+            <xs:enumeration value="write"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="gpio_write_value">
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="0"/>
+            <xs:enumeration value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="gpio_read">
         <xs:sequence>
             <xs:element name="pin" type="xs:integer"/>
-            <xs:element name="behaviour">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="read"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
+            <xs:element name="behaviour" type="gpio_read_behaviour"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:simpleType name="gpio_read_behaviour">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="read"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 
     <!-- Email -->

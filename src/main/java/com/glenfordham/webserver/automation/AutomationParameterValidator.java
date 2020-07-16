@@ -1,5 +1,6 @@
 package com.glenfordham.webserver.automation;
 
+import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterList;
@@ -22,8 +23,8 @@ public class AutomationParameterValidator implements ParameterValidator {
             return areUrlParamKeysValid(parameterMap)
                     && isAuthenticationTokenValid(parameterMap.get(Parameter.AUTHENTICATION_TOKEN.get()))
                     && isRequestTypeValid(parameterMap.get(Parameter.REQUEST_TYPE.get()));
-        } catch (ParameterException pE) {
-            Log.error(pE.getMessage(), pE);
+        } catch (AutomationConfigException | ParameterException e) {
+            Log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -63,9 +64,10 @@ public class AutomationParameterValidator implements ParameterValidator {
      *
      * @param authenticationTokens a list of parameter tokens
      * @return true if there is only one authentication token, and the token value is correct
+     * @throws AutomationConfigException if unable to parse the configuration file to extract authentication config
      * @throws ParameterException if authenticationTokens is unexpectedly empty
      */
-    private boolean isAuthenticationTokenValid(ParameterList authenticationTokens) throws ParameterException {
+    private boolean isAuthenticationTokenValid(ParameterList authenticationTokens) throws AutomationConfigException, ParameterException {
         if (areUrlParamsValid(authenticationTokens)) {
             return Authenticator.authenticate(authenticationTokens.getFirst());
         } else {

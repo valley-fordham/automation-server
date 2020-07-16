@@ -54,6 +54,11 @@ public class BroadlinkHandler implements Handler {
         // Load configuration file on every attempt to ensure server does not need restarting when modifying config
         Config config = AutomationConfig.load();
 
+        // Ensure Broadlink element is present in config file
+        if (config.getBroadlink() == null) {
+            throw new HandlerException("No Broadlink configuration in configuration XML");
+        }
+
         // Check if the incoming request matches a configured request name
         BroadlinkRequest request = config.getBroadlink().getRequests().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))

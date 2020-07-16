@@ -48,7 +48,7 @@ public class Automation {
                 }
             }
         } catch (AutomationConfigException acE) {
-            Log.error("Error occurred when loading config file", acE);
+            Log.error("Error occurred loading/validating configuration file", acE);
         } catch (HandlerException hE) {
             Log.error("Error occurred within Handler", hE);
         } catch (Exception e) {
