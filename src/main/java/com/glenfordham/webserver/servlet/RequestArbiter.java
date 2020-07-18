@@ -1,8 +1,8 @@
 package com.glenfordham.webserver.servlet;
 
 import com.glenfordham.utils.StreamUtils;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.automation.Automation;
+import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
 import javax.servlet.ServletOutputStream;
@@ -40,8 +40,9 @@ public class RequestArbiter extends HttpServlet {
             new Automation().processHttpRequest(new ParameterMap(req.getParameterMap()), clientStream);
 
             // If stream still ready after handler processing, assume nothing was written, and return generic response
-            // isReady() does not work correctly in Java8, so let's just wing it
-            StreamUtils.writeString(GENERIC_OUTPUT, clientStream);
+            if (clientStream.isReady()) {
+                StreamUtils.writeString(GENERIC_OUTPUT, clientStream);
+            }
         } catch (Exception e) {
             Log.error("Unexpected error occurred in servlet", e);
         }

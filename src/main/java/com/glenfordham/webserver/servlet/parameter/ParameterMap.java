@@ -1,8 +1,10 @@
 package com.glenfordham.webserver.servlet.parameter;
 
-import org.apache.commons.lang3.StringUtils;
-
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ParameterMap extends HashMap<String, ParameterList> {
@@ -17,7 +19,7 @@ public class ParameterMap extends HashMap<String, ParameterList> {
         for (Map.Entry<String, String[]> entry : requestParams.entrySet()) {
             ParameterList paramList = new ParameterList();
             for (String param : requestParams.get(entry.getKey())) {
-                if (StringUtils.isNotBlank(param)) {
+                if (!param.isBlank()) {
                     paramList.add(param);
                 }
             }
@@ -25,7 +27,30 @@ public class ParameterMap extends HashMap<String, ParameterList> {
         }
     }
 
-    @Override @SuppressWarnings("unchecked")
+    /**
+     * Translates ParameterMap object to a string which can be used for another HTTP request
+     */
+    public String getAsUrlString() {
+        if (this.size() == 0) {
+            return "";
+        }
+        List<String> tempList = new ArrayList<>();
+        for (Entry<String, ParameterList> entry : this.entrySet()) {
+            StringBuilder urlPiece = new StringBuilder("");
+            if (entry.getValue().isEmpty()) {
+                urlPiece.append(entry.getKey());
+            } else {
+                for (String parameterPiece : entry.getValue()) {
+                    urlPiece.append(entry.getKey()).append(parameterPiece.isBlank() ? "" : "=" + URLEncoder.encode(parameterPiece, StandardCharsets.UTF_8));
+                }
+            }
+            tempList.add(urlPiece.toString());
+        }
+        return "?" + String.join("&", tempList);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -68,5 +93,9 @@ public class ParameterMap extends HashMap<String, ParameterList> {
         for (Entry<String, ParameterList> entry : this.entrySet())
             h += entry.hashCode();
         return h;
+    }
+
+    // ensure provided constructor is used
+    private ParameterMap() {
     }
 }

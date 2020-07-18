@@ -4,7 +4,6 @@ import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.automation.jaxb.TokenBehaviour;
-import org.apache.commons.lang3.StringUtils;
 
 public class Authenticator {
 
@@ -20,7 +19,7 @@ public class Authenticator {
         if (config.getAuthenticationToken().getBehaviour() == TokenBehaviour.SEED) {
             return true;
         } else {
-            return StringUtils.isNotBlank(authenticationToken) && authenticationToken.equals(token);
+            return !authenticationToken.isBlank() && authenticationToken.equals(token);
         }
     }
 

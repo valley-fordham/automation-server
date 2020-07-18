@@ -18,7 +18,7 @@
                     typesafeEnumMemberName="generateError"
                     enableFailFastCheck="false"
                     generateIsSetMethod="false">
-                <jaxb:serializable uid="1"/>
+                <jaxb:javaType xmlType="xs:integer" name="java.lang.Integer"/>
             </jaxb:globalBindings>
         </xs:appinfo>
     </xs:annotation>
@@ -34,6 +34,7 @@
                 <xs:element name="command_line" type="command_line" minOccurs="0"/>
                 <xs:element name="email" type="email" minOccurs="0"/>
                 <xs:element name="gpio" type="gpio" minOccurs="0"/>
+                <xs:element name="proxy" type="proxy" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -274,4 +275,44 @@
             <xs:element name="mac_address" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+
+
+    <!-- Proxy -->
+    <xs:complexType name="proxy">
+        <xs:sequence>
+            <xs:element name="host" type="proxy_host" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="hosts"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="request" type="proxy_request" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jaxb:property name="requests"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="proxy_host">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="fqdn" type="xs:string"/>
+            <xs:element name="scheme" type="xs:string"/>
+            <xs:element name="port" type="xs:integer"/>
+            <xs:element name="connection_timeout" type="xs:integer"/>
+            <xs:element name="read_timeout" type="xs:integer"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="proxy_request">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="host" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
 </xs:schema>

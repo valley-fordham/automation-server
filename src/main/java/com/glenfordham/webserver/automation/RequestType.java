@@ -21,6 +21,9 @@ public enum RequestType {
     ),
     GPIO(
             "gpio"
+    ),
+    PROXY(
+            "proxy"
     );
 
     private final String text;

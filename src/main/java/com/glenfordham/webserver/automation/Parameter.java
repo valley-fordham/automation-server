@@ -2,18 +2,18 @@ package com.glenfordham.webserver.automation;
 
 /**
  * Contains all supported URL parameters
- *
+ * <p>
  * eg. ?authentication_token=token&request_type=request_type&request=requestName
  */
 public enum Parameter {
     AUTHENTICATION_TOKEN(
             "authentication_token"
     ),
-    REQUEST_TYPE(
-            "request_type"
-    ),
     REQUEST_NAME(
             "request"
+    ),
+    REQUEST_TYPE(
+            "request_type"
     );
 
     private final String text;
