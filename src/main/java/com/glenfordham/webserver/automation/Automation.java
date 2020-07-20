@@ -1,10 +1,12 @@
 package com.glenfordham.webserver.automation;
 
+import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.handler.*;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
+import javax.servlet.ServletContext;
 import java.io.OutputStream;
 
 public class Automation {
@@ -16,8 +18,9 @@ public class Automation {
      *
      * @param parameterMap the parameters of the HTTP request
      */
-    public void processHttpRequest(ParameterMap parameterMap, OutputStream clientOutput) {
+    public void processHttpRequest(ServletContext context, ParameterMap parameterMap, OutputStream clientOutput) {
         try {
+            AutomationConfig.load((String) context.getAttribute(AutomationConfig.CONFIG_LOCATION_KEY));
             AutomationParameterValidator parameterValidator = new AutomationParameterValidator();
 
             // If URL parameters are not valid, ignore the request

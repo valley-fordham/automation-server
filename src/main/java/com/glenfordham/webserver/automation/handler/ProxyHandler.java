@@ -21,16 +21,14 @@ public class ProxyHandler implements Handler {
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to load configuration file
+     * @throws AutomationConfigException if unable to get configuration
      * @throws HandlerException          a generic Exception occurs when handling the request
      * @throws ParameterException        if unable to get request name from parameter
      */
     @Override
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
         String incomingRequestName = parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst();
-
-        // Load configuration file on every attempt to ensure server does not need restarting when modifying config
-        Config config = AutomationConfig.load();
+        Config config = AutomationConfig.get();
 
         // Check if the incoming request matches a configured request name
         ProxyRequest request = config.getProxy().getRequests().stream()

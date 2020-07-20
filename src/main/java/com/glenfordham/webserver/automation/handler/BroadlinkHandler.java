@@ -1,15 +1,15 @@
 package com.glenfordham.webserver.automation.handler;
 
+import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.utils.process.ProcessWrapper;
+import com.glenfordham.webserver.automation.Parameter;
+import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.jaxb.BroadlinkDevice;
 import com.glenfordham.webserver.automation.jaxb.BroadlinkRequest;
 import com.glenfordham.webserver.automation.jaxb.BroadlinkSignal;
-import com.glenfordham.webserver.logging.Log;
-import com.glenfordham.webserver.automation.config.AutomationConfig;
-import com.glenfordham.webserver.automation.Parameter;
-import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.jaxb.Config;
+import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
@@ -31,9 +31,9 @@ public class BroadlinkHandler implements Handler {
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to load configuration file
-     * @throws HandlerException a generic Exception occurs when handling the request
-     * @throws ParameterException if unable to get request name from parameter
+     * @throws AutomationConfigException if unable to get configuration
+     * @throws HandlerException          a generic Exception occurs when handling the request
+     * @throws ParameterException        if unable to get request name from parameter
      */
     @Override
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
@@ -47,12 +47,11 @@ public class BroadlinkHandler implements Handler {
      * If it does, then invoke the broadlink action and device associated with that request name.
      *
      * @param incomingRequestName the name of the request to be actioned
-     * @throws AutomationConfigException if unable to load configuration file
+     * @throws AutomationConfigException if unable to get configuration
      * @throws HandlerException if thread is interrupted while waiting for the process to complete, or if an error occurs when running broadlink CLI executable
      */
     private void processRequest(String incomingRequestName) throws AutomationConfigException, HandlerException {
-        // Load configuration file on every attempt to ensure server does not need restarting when modifying config
-        Config config = AutomationConfig.load();
+        Config config = AutomationConfig.get();
 
         // Ensure Broadlink element is present in config file
         if (config.getBroadlink() == null) {

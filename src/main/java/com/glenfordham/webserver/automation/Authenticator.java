@@ -14,7 +14,7 @@ public class Authenticator {
      * @return true if the token passes authentication
      */
     static boolean authenticate(String authenticationToken) throws AutomationConfigException {
-        Config config = AutomationConfig.load();
+        Config config = AutomationConfig.get();
         String token = config.getAuthenticationToken().getToken();
         if (config.getAuthenticationToken().getBehaviour() == TokenBehaviour.SEED) {
             return true;

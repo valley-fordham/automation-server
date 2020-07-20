@@ -50,4 +50,7 @@ public class ProcessWrapper implements AutoCloseable {
             Log.error("Unable to destroy process", e);
         }
     }
+
+    private ProcessWrapper() {
+    }
 }

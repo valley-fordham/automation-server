@@ -16,9 +16,9 @@ public interface Handler {
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to load configuration file
-     * @throws HandlerException a generic Exception occurs when handling the request
-     * @throws ParameterException if unable to get request name from parameter
+     * @throws AutomationConfigException if unable to get configuration
+     * @throws HandlerException          a generic Exception occurs when handling the request
+     * @throws ParameterException        if unable to get request name from parameter
      */
     void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException;
 }

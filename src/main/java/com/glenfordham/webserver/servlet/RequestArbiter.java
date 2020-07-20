@@ -36,8 +36,8 @@ public class RequestArbiter extends HttpServlet {
         // Get output stream for client to be optionally used in various request handlers
         try (ServletOutputStream clientStream = resp.getOutputStream()) {
 
-            // Create ParameterMap from request ugly String[] map, and attempt to process the request
-            new Automation().processHttpRequest(new ParameterMap(req.getParameterMap()), clientStream);
+            // Pass context containing configuration, create ParameterMap from request ugly String[] map, and attempt to process the request
+            new Automation().processHttpRequest(getServletContext(), new ParameterMap(req.getParameterMap()), clientStream);
 
             // If stream still ready after handler processing, assume nothing was written, and return generic response
             if (clientStream.isReady()) {

@@ -1,10 +1,9 @@
 package com.glenfordham.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import com.glenfordham.webserver.Application;
+import org.apache.commons.io.FileUtils;
+
+import java.io.*;
 
 /**
  * Helper functions relating to Strings
@@ -42,5 +41,20 @@ public class StreamUtils {
         outputStream.flush();
     }
 
-    private StreamUtils() {}
+    /**
+     * Takes an InputStream and turns it into a File (makes a temporary file)
+     *
+     * @param inputStream the InputStream to turn into a File object
+     * @return a File built from the InputStream
+     * @throws IOException if an error occurs when building the File
+     */
+    public static File getFile(InputStream inputStream) throws IOException {
+        File file = File.createTempFile(Application.class.getPackageName(), null);
+        file.deleteOnExit();
+        FileUtils.copyInputStreamToFile(inputStream, file);
+        return file;
+    }
+
+    private StreamUtils() {
+    }
 }
