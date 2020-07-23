@@ -17,10 +17,12 @@ import java.io.File;
 public class AutomationConfig {
 
     // String constant used to save and retrieve Servlet configuration provided from command line
-    public static final String CONFIG_LOCATION_KEY = "configLocationKey";
+    public static final String CONFIG_LOCATION_KEY = "configLocation";
+    public static final String CONFIG_RELOAD_KEY = "configReload";
 
     private static Config config = null;
     private static boolean loaded = false;
+    private static boolean configReload = false;
 
     /**
      * Loads a configuration XML file and converts it into the JAXB representation
@@ -28,8 +30,7 @@ public class AutomationConfig {
      * @throws AutomationConfigException if an error occurs with loading, validation or conversion
      */
     public static void load(String configFileLocation) throws AutomationConfigException {
-        // TODO: make thread safe, add new argument to control reloads
-        if (!loaded) {
+        if (!loaded || configReload) {
             Log.info("Loading configuration XML");
             // Ensure that external files cannot be loaded
             SchemaFactory schemaFactory;
@@ -72,7 +73,17 @@ public class AutomationConfig {
         return config;
     }
 
-    // use static method
+    /**
+     * Sets the configReload value
+     *
+     * @param value if true, configuration file will be loaded on every request. Should only be used in single-thread
+     *              debug scenarios to ensure thread-safety
+     */
+    public static void setConfigReload(boolean value) {
+        configReload = value;
+    }
+
+    // use static methods
     private AutomationConfig() {
     }
 }

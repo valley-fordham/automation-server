@@ -10,8 +10,6 @@ import java.util.Arrays;
 
 public class CliParser {
 
-    private static CliParser instance = null;
-    private boolean loaded = false;
     private final String exeName = (getClass().getPackage().getImplementationTitle() != null ? getClass().getPackage().getImplementationTitle() : "Web Server");
 
     /**
@@ -20,40 +18,36 @@ public class CliParser {
      * @param args application arguments
      * @return true if all required config has been loaded
      */
-    public synchronized boolean loadConfig(String[] args) {
-        if (!loaded) {
-            // Add all arguments without setting the 'required' flag yet, so that the --help argument works
-            Options options = new Options();
-            Arrays.stream(Arguments.values()).forEach(arguments -> options.addOption(arguments.getName(), arguments.getLongName(), arguments.isArgValueRequired(), arguments.getHelpMessage()));
+    public ConfigProperties loadConfig(String[] args) {
+        // Add all arguments without setting the 'required' flag yet, so that the --help argument works
+        Options options = new Options();
+        Arrays.stream(Arguments.values()).forEach(arguments -> options.addOption(arguments.getName(), arguments.getLongName(), arguments.isArgValueRequired(), arguments.getHelpMessage()));
 
-            // Check if the help argument has been provided and, if so, display help and exit
-            if (isHelpArgumentPresent(options, args)) {
-                return false;
-            }
+        // Check if the help argument has been provided and, if so, display help and exit
+        if (isHelpArgumentPresent(options, args)) {
+            return null;
+        }
 
-            // Reprocess Arguments list and set options as 'required' where needed
-            Arrays.stream(Arguments.values()).filter(Arguments::getIsRequired).forEach(param -> options.addRequiredOption(param.getName(), param.getLongName(), param.isArgValueRequired(), param.getHelpMessage()));
+        // Reprocess Arguments list and set options as 'required' where needed
+        Arrays.stream(Arguments.values()).filter(Arguments::getIsRequired).forEach(param -> options.addRequiredOption(param.getName(), param.getLongName(), param.isArgValueRequired(), param.getHelpMessage()));
 
-            // Parse command line, this time checking that required arguments are present
-            CommandLine cmd = parseArguments(options, args, true);
+        // Parse command line, this time checking that required arguments are present
+        CommandLine cmd = parseArguments(options, args, true);
 
-            // Load command line arguments into ConfigProperties, set values where provided
-            ConfigProperties configProperties = ConfigProperties.getInstance();
-            if (cmd != null) {
-                for (Arguments param : Arguments.values()) {
-                    if (param.getIsConfig() && cmd.hasOption(param.getName())) {
-                        configProperties.addProperty(param, cmd.getOptionValue(param.getName()));
-                    }
+        // Load command line arguments into ConfigProperties, set values where provided
+        ConfigProperties configProperties = new ConfigProperties();
+        if (cmd != null) {
+            for (Arguments param : Arguments.values()) {
+                if (param.getIsConfig() && cmd.hasOption(param.getName())) {
+                    configProperties.addProperty(param, cmd.getOptionValue(param.getName()));
                 }
-                loaded = true;
-            } else {
-                // This should never happen :)
-                return false;
             }
         } else {
-            Log.error("Unable to load CLI arguments, already loaded.");
+            // This should never happen :)
+            return null;
         }
-        return true;
+
+        return configProperties;
     }
 
     private boolean isHelpArgumentPresent(Options options, String[] args) {
@@ -82,22 +76,5 @@ public class CliParser {
             Log.error("Unable to parse arguments", e);
         }
         return null;
-    }
-
-    /**
-     * Singleton pattern
-     * Creates an instance of ConfigProperties if one does not exist
-     *
-     * @return the singleton instance of ConfigProperties
-     */
-    public static synchronized CliParser getInstance() {
-        if (instance == null) {
-            instance = new CliParser();
-        }
-        return instance;
-    }
-
-    // Ensure singleton pattern
-    private CliParser() {
     }
 }

@@ -9,14 +9,12 @@ import java.util.EnumMap;
  */
 public class ConfigProperties {
 
-    private static final EnumMap<Arguments, Object> configMap = new EnumMap<>(Arguments.class);
-
-    private static ConfigProperties instance = null;
+    private final EnumMap<Arguments, Object> configMap = new EnumMap<>(Arguments.class);
 
     /**
      * Creates a default ConfigProperties with default values pulled from Arguments enum. Internal class use only
      */
-    private ConfigProperties() {
+    public ConfigProperties() {
         for (Arguments param : Arguments.values()) {
             addProperty(param, param.getDefaultValue());
         }
@@ -65,18 +63,5 @@ public class ConfigProperties {
      */
     public boolean isPropertySet(Arguments key) {
         return configMap.containsKey(key);
-    }
-
-    /**
-     * Singleton pattern
-     * Creates an instance of ConfigProperties if one does not exist
-     *
-     * @return the singleton instance of ConfigProperties
-     */
-    public static synchronized ConfigProperties getInstance() {
-        if (instance == null) {
-            instance = new ConfigProperties();
-        }
-        return instance;
     }
 }

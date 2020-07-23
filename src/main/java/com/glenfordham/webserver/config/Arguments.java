@@ -14,6 +14,15 @@ public enum Arguments {
             "the location of the config.xml file",
             null
     ),
+    CONFIG_RELOAD(
+            "r",
+            false,
+            true,
+            "reload",
+            false,
+            "if present, config.xml will be loaded on every request",
+            null
+    ),
     HELP(
             "h",
             false,

@@ -24,11 +24,9 @@ public class TomcatServer {
     /**
      * Starts the Tomcat server. Only one running Tomcat instance is supported
      */
-    static synchronized void start() {
+    static synchronized void start(ConfigProperties configProperties) {
         try {
             if (!started) {
-                ConfigProperties configProperties = ConfigProperties.getInstance();
-
                 File root = getRootFolder();
                 Log.infoFormat("Application root: %s", root.getAbsolutePath());
                 Path tempPath = Files.createTempDirectory(configProperties.getPropertyValue(Arguments.TEMP_DIR_PREFIX));
@@ -41,8 +39,9 @@ public class TomcatServer {
 
                 StandardContext ctx = (StandardContext) tomcat.addWebapp("", new File(root.getAbsolutePath()).getAbsolutePath());
 
-                // Load Servlet config into Servlet Context so it can be accessed
+                // Load Servlet config into Servlet Context for accessibility
                 ctx.getServletContext().setAttribute(AutomationConfig.CONFIG_LOCATION_KEY, configProperties.getPropertyValue(Arguments.CONFIG_FILE));
+                ctx.getServletContext().setAttribute(AutomationConfig.CONFIG_RELOAD_KEY, configProperties.isPropertySet(Arguments.CONFIG_RELOAD));
 
                 // Check if running within a jar and use appropriate resource set object
                 String runningUriPath = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
