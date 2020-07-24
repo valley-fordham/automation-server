@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -16,13 +16,13 @@
 if [ -z "$JAXB_HOME" ]
 then
     # search the installation directory
-    
+
     PRG=$0
     progname=`basename $0`
     saveddir=`pwd`
-    
+
     cd "`dirname $PRG`"
-    
+
     while [ -h "$PRG" ] ; do
         ls=`ls -ld "$PRG"`
         link=`expr "$ls" : '.*-> \(.*\)$'`
@@ -34,11 +34,11 @@ then
     done
 
     JAXB_HOME=`dirname "$PRG"`/..
-    
+
     # make it fully qualified
     cd "$saveddir"
     JAXB_HOME=`cd "$JAXB_HOME" && pwd`
-    
+
     cd "$saveddir"
 fi
 
@@ -57,6 +57,7 @@ fi
 #JXC module path
 JAXB_PATH=${JAXB_HOME}/mod/jaxb-xjc.jar:\
 ${JAXB_HOME}/mod/jakarta.xml.bind-api.jar:\
+${JAXB_HOME}/mod/jaxb-core.jar:\
 ${JAXB_HOME}/mod/jaxb-impl.jar:\
 ${JAXB_HOME}/mod/jakarta.activation.jar:\
 
