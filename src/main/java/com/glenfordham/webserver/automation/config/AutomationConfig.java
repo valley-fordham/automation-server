@@ -3,10 +3,10 @@ package com.glenfordham.webserver.automation.config;
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.logging.Log;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
