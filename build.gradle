@@ -66,10 +66,20 @@ task copyToLib(type: Copy) {
 // Analyse project and retrieve modules used
 task getModuleList(dependsOn:"copyToLib",type:Exec) {
     workingDir '.\\'
-    commandLine 'cmd', '/c', 'jdeps --list-deps --multi-release 11 ' + buildDir + '/libs/*'
+    commandLine 'cmd', '/c', 'jdeps --print-module-deps --multi-release 11 ' + buildDir + '/libs/*'
     standardOutput = new ByteArrayOutputStream()
+    // Allows other tasks to get output of this task
     ext.out = {
-        return standardOutput.toString()
+        // Remove unwanted line breaks
+        return standardOutput.toString().replace("\r\n","")
+    }
+}
+
+// Build runtime files with jlink
+task buildJre(dependsOn:"getModuleList",type:Exec) {
+    doFirst {
+        workingDir '.\\'
+        commandLine 'cmd', '/c', 'jlink --add-modules ' + (String)tasks.getModuleList.out() + ' --output ' + buildDir + '/jre/'
     }
 }
 
