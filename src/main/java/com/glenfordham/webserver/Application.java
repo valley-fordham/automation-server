@@ -19,8 +19,6 @@ public class Application {
             }
         } catch (Exception e) {
              Log.error("Unknown error occurred", e);
-        } finally {
-            Log.info("Application exiting");
         }
     }
 }

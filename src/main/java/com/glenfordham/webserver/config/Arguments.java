@@ -34,12 +34,12 @@ public enum Arguments {
     ),
     PORT(
             "p",
-            true,
+            false,
             true,
             "port",
             true,
             "sets the port to listen on  eg. 80",
-            null),
+            "80"),
     TEMP_DIR_PREFIX(
             "t",
             false,

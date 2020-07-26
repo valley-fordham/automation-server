@@ -28,7 +28,6 @@ public class TomcatServer {
         try {
             if (!started) {
                 File root = getRootFolder();
-                Log.infoFormat("Application root: %s", root.getAbsolutePath());
                 Path tempPath = Files.createTempDirectory(configProperties.getPropertyValue(Arguments.TEMP_DIR_PREFIX));
                 System.setProperty("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE", "true");
 
@@ -51,6 +50,8 @@ public class TomcatServer {
                         : new DirResourceSet(resources, "/WEB-INF/classes", new File(runningUriPath).getAbsolutePath(), "/"));
                 ctx.setResources(resources);
 
+                Log.infoFormat("Application root: %s", root.getAbsolutePath());
+                Log.infoFormat("Listening port: %s", configProperties.getPropertyValue(Arguments.PORT));
                 tomcat.start();
                 started = true;
                 tomcat.getServer().await();

@@ -16,6 +16,12 @@ sourceSets.main.java.srcDirs = ['src/main/java/']
 sourceSets.main.resources.srcDirs = [ "src/main/resources" ]
 sourceSets.main.resources.includes = [ "**/*.xml", "**/*.xsd" ]
 
+final String buildJrePath = "$buildDir\\package\\"
+final String libsPath = "$buildDir\\libs\\"
+final String srcPath = sourceSets.main.java.srcDirs[0].toPath().toString()
+final String configPath = sourceSets.main.resources.srcDirs[0].toPath().toString() + "\\com\\glenfordham\\webserver\\automation\\config\\"
+final String toolsPath = ".\\tools\\"
+
 compileJava.dependsOn('buildJavaFromSchema')
 
 jar {
@@ -54,33 +60,52 @@ dependencies {
 // Generate JAXB objects from schema at build-time
 task buildJavaFromSchema(type:Exec) {
     workingDir '.\\'
-    commandLine 'cmd', '/c', '.\\tools\\jaxb-ri\\bin\\xjc.bat -b .\\src\\main\\resources\\com\\glenfordham\\webserver\\automation\\config\\bindings.xml -d .\\src\\main\\java -p com.glenfordham.webserver.automation.jaxb .\\src\\main\\resources\\com\\glenfordham\\webserver\\automation\\config\\config.xsd -extension'
+    commandLine 'cmd', '/c', toolsPath + 'jaxb-ri\\bin\\xjc.bat -b ' + configPath + 'bindings.xml -d ' + srcPath + ' -p com.glenfordham.webserver.automation.jaxb ' + configPath + 'config.xsd -extension'
 }
 
 // Output all dependency jars to a folder
 task copyToLib(type: Copy) {
     from configurations.compileClasspath
-    into "$buildDir/libs"
+    into libsPath
 }
 
 // Analyse project and retrieve modules used
-task getModuleList(dependsOn:"copyToLib",type:Exec) {
+task getModuleList(dependsOn:["copyToLib","jar"],type:Exec) {
     workingDir '.\\'
-    commandLine 'cmd', '/c', 'jdeps --print-module-deps --multi-release 11 ' + buildDir + '/libs/*'
+    commandLine 'cmd', '/c', 'jdeps --print-module-deps --multi-release 11 ' + libsPath + '*'
     standardOutput = new ByteArrayOutputStream()
     // Allows other tasks to get output of this task
     ext.out = {
         // Remove unwanted line breaks
-        return standardOutput.toString().replace("\r\n","")
+        return standardOutput.toString().replace("\r\n", "")
     }
 }
 
 // Build runtime files with jlink
-task buildJre(dependsOn:"getModuleList",type:Exec) {
+task buildJre(dependsOn:["getModuleList","deleteJre"],type:Exec) {
     doFirst {
         workingDir '.\\'
-        commandLine 'cmd', '/c', 'jlink --add-modules ' + (String)tasks.getModuleList.out() + ' --output ' + buildDir + '/jre/'
+        commandLine 'cmd', '/c', 'jlink --add-modules ' + (String) tasks.getModuleList.out() + ' --output ' + buildJrePath
     }
+}
+
+// Delete existing JRE folder
+task deleteJre(type:Delete) {
+    doFirst {
+        try {
+            project.delete buildJrePath
+        } catch (IOException ignore) {}
+    }
+}
+
+// Copy FAT jar to JRE for packaging
+task copyFatJar(dependsOn:"shadowJar",type:Copy) {
+    from file(libsPath + "automation-server-1.0.21-all.jar")
+    into file(buildJrePath)
+}
+
+// Make deploy package TODO: create runtime scripts to remove the need for "java -jar etc"
+task makePackage(dependsOn:["buildJre","copyFatJar"]) {
 }
 
 static def gitCommitNumber() {

@@ -1,10 +1,7 @@
 package com.glenfordham.webserver.config;
 
 import com.glenfordham.webserver.logging.Log;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 
 import java.util.Arrays;
 
@@ -21,18 +18,18 @@ public class CliParser {
     public ConfigProperties loadConfig(String[] args) {
         // Add all arguments without setting the 'required' flag yet, so that the --help argument works
         Options options = new Options();
+
+        // Add all available arguments to Options list and then set options as 'required' where needed
         Arrays.stream(Arguments.values()).forEach(arguments -> options.addOption(arguments.getName(), arguments.getLongName(), arguments.isArgValueRequired(), arguments.getHelpMessage()));
-
-        // Check if the help argument has been provided and, if so, display help and exit
-        if (isHelpArgumentPresent(options, args)) {
-            return null;
-        }
-
-        // Reprocess Arguments list and set options as 'required' where needed
         Arrays.stream(Arguments.values()).filter(Arguments::getIsRequired).forEach(param -> options.addRequiredOption(param.getName(), param.getLongName(), param.isArgValueRequired(), param.getHelpMessage()));
 
         // Parse command line, this time checking that required arguments are present
-        CommandLine cmd = parseArguments(options, args, true);
+        CommandLine cmd = parseArguments(options, args);
+
+        // Check if the help argument has been provided or if a required argument is not provided - if so, display help and exit
+        if (cmd == null || (cmd.hasOption(Arguments.HELP.getName()) || cmd.hasOption(Arguments.HELP.getLongName()))) {
+            new HelpFormatter().printHelp(exeName, options);
+        }
 
         // Load command line arguments into ConfigProperties, set values where provided
         ConfigProperties configProperties = new ConfigProperties();
@@ -43,38 +40,29 @@ public class CliParser {
                 }
             }
         } else {
-            // This should never happen :)
+            // If CLI help has been displayed, do not load config so application will exit
             return null;
         }
 
         return configProperties;
     }
 
-    private boolean isHelpArgumentPresent(Options options, String[] args) {
-        CommandLine cmd = parseArguments(options, args, false);
-        if (cmd == null) {
-            return true;
-        } else if (cmd.hasOption(Arguments.HELP.getName()) || cmd.hasOption(Arguments.HELP.getLongName())) {
-            new HelpFormatter().printHelp(exeName, options);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Wrapper function for CLI argument parsing
      *
-     * @param options         a collection of options available to the application
-     * @param args            the arguments provided to the application
-     * @param stopAtNonOption whether to stop if an unexpected argument is present
+     * @param options a collection of options available to the application
+     * @param args    the arguments provided to the application
      * @return CommandLine object representing the arguments passed by the user
      */
-    CommandLine parseArguments(Options options, String[] args, boolean stopAtNonOption) {
+    CommandLine parseArguments(Options options, String[] args) {
+        CommandLine cmd = null;
         try {
-            return new DefaultParser().parse(options, args, stopAtNonOption);
+            cmd = new DefaultParser().parse(options, args, false);
+        } catch (MissingOptionException | UnrecognizedOptionException parseException) {
+            Log.info(parseException.getMessage());
         } catch (Exception e) {
             Log.error("Unable to parse arguments", e);
         }
-        return null;
+        return cmd;
     }
 }
