@@ -116,6 +116,6 @@ tomcat.*
 # Sonarlint
 .idea/sonarlint/
 
-# Generated java files
+# Generated files
 src/main/java/com/glenfordham/webserver/automation/jaxb
 docs/
