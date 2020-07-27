@@ -118,3 +118,4 @@ tomcat.*
 
 # Generated java files
 src/main/java/com/glenfordham/webserver/automation/jaxb
+docs/
