@@ -10,6 +10,9 @@ public enum Constant {
     MAIL_SSL(
             "mail.smtp.ssl.enable"
     ),
+    MAIL_TLS(
+            "mail.smtp.starttls.enable"
+    ),
     MAIL_AUTH(
             "mail.smtp.auth"
     );

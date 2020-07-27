@@ -29,7 +29,7 @@ public class EmailHandler implements Handler {
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
      * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException          a generic Exception occurs when handling the request
+     * @throws HandlerException          if a generic Exception occurs when handling the request
      * @throws ParameterException        if unable to get request name from parameter
      */
     @Override
@@ -61,62 +61,63 @@ public class EmailHandler implements Handler {
         sendEmail(mailbox, request);
     }
 
-    private void sendEmail(Mailbox mailbox, EmailRequest request) throws HandlerException {
+    /**
+     * Unpacks the email request and sends the email to the linked 'Mailbox' host
+     * TODO: make thread-safe with synchronized
+     *
+     * @param mailbox the receiver of the message
+     * @param request the email request to unpack and turn into a message to be sent
+     * @throws HandlerException if an unexpected error occurs when handling the request
+     */
+    private synchronized void sendEmail(Mailbox mailbox, EmailRequest request) throws HandlerException {
         // Get system properties
         Properties properties = System.getProperties();
 
+        // Setup mail server
+        properties.put(Constant.MAIL_HOST.getText(), mailbox.getHost());
+        properties.put(Constant.MAIL_PORT.getText(), mailbox.getPort());
+        properties.put(Constant.MAIL_TLS.getText(), mailbox.isTls() ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
+        properties.put(Constant.MAIL_SSL.getText(), !mailbox.isTls() ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
+        properties.put(Constant.MAIL_AUTH.getText(), (mailbox.isAuthenticate() ? Boolean.TRUE.toString() : Boolean.FALSE.toString()));
+
+        // Setup the email session, including an authenticator (not used if authentication is off)
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(mailbox.getUsername(), mailbox.getPassword());
+            }
+        });
+
+        // If log level is debug then also print email debug lines
+        if (Log.getLogLevel().equalsIgnoreCase(LogLevel.DEBUG.get())) {
+            session.setDebug(true);
+        }
         try {
-            // Setup mail server
-            properties.put(Constant.MAIL_HOST.getText(), mailbox.getHost());
-            properties.put(Constant.MAIL_PORT.getText(), mailbox.getPort());
-            properties.put(Constant.MAIL_SSL.getText(), mailbox.isTls() ? "true" : "false");
-            properties.put(Constant.MAIL_AUTH.getText(), (mailbox.isAuthenticate() ? "true" : "false"));
+            MimeMessage message = new MimeMessage(session);
 
-            // Setup the email session, including an authenticator (not used if authentication is off)
-            Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(mailbox.getUsername(), mailbox.getPassword());
-                }
-            });
+            message.setFrom(new InternetAddress(request.getFrom()));
 
-            // If log level is debug then also print email debug lines
-            if (Log.getLogLevel().equalsIgnoreCase(LogLevel.DEBUG.get())) {
-                session.setDebug(true);
+            for (String toEntry : request.getTo()) {
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEntry));
             }
-            try {
-                MimeMessage message = new MimeMessage(session);
 
-                message.setFrom(new InternetAddress(request.getFrom()));
+            message.setSubject(request.getSubject());
 
-                for (String toEntry : request.getTo()) {
-                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEntry));
-                }
-
-                message.setSubject(request.getSubject());
-
-                if (request.isHtml()) {
-                    message.setContent(request.getMessage(), "text/html");
-                } else {
-                    message.setText(request.getMessage());
-                }
-
-                for (EmailHeader header : request.getHeaders()) {
-                    message.setHeader(header.getName(), header.getText());
-                }
-
-                Log.debug("Attempting to send message...");
-                Transport.send(message);
-                Log.info("Email sent");
-            } catch (Exception mE) {
-                throw new HandlerException(mE.getMessage(), mE);
+            if (request.isHtml()) {
+                message.setContent(request.getMessage(), "text/html");
+            } else {
+                message.setText(request.getMessage());
             }
-        } finally {
-            // Reset the system properties`
-            properties.remove(Constant.MAIL_HOST.getText());
-            properties.remove(Constant.MAIL_PORT.getText());
-            properties.remove(Constant.MAIL_SSL.getText());
-            properties.remove(Constant.MAIL_AUTH.getText());
+
+            for (EmailHeader header : request.getHeaders()) {
+                message.setHeader(header.getName(), header.getText());
+            }
+
+            Log.debug("Attempting to send message...");
+            Transport.send(message);
+            Log.info("Email sent");
+        } catch (Exception mE) {
+            throw new HandlerException(mE.getMessage(), mE);
         }
     }
 }

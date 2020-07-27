@@ -32,7 +32,7 @@ public class BroadlinkHandler implements Handler {
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
      * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException          a generic Exception occurs when handling the request
+     * @throws HandlerException          if a generic Exception occurs when handling the request
      * @throws ParameterException        if unable to get request name from parameter
      */
     @Override
