@@ -28,8 +28,9 @@ jar {
     manifest {
         attributes(
                 'Main-Class': 'com.glenfordham.webserver.Application',
-                'Implementation-Title': 'automation-server',
-                'Implementation-Version': getArchiveVersion(),
+                'Implementation-Title': project.name,
+                // Use 'version' so Shadow Jar gets version properly
+                'Implementation-Version': version,
         )
     }
 }
@@ -100,7 +101,7 @@ task deleteJre(type:Delete) {
 
 // Copy FAT jar to JRE for packaging
 task copyFatJar(dependsOn:"shadowJar",type:Copy) {
-    from file(libsPath + "automation-server-1.0.21-all.jar")
+    from file(libsPath + project.name + "-" + version + "-all.jar")
     into file(buildJrePath)
 }
 

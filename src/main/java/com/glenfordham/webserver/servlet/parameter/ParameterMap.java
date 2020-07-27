@@ -36,7 +36,7 @@ public class ParameterMap extends HashMap<String, ParameterList> {
         }
         List<String> tempList = new ArrayList<>();
         for (Entry<String, ParameterList> entry : this.entrySet()) {
-            StringBuilder urlPiece = new StringBuilder("");
+            StringBuilder urlPiece = new StringBuilder();
             if (entry.getValue().isEmpty()) {
                 urlPiece.append(entry.getKey());
             } else {
