@@ -1,8 +1,10 @@
-package com.glenfordham.webserver.automation.handler;
+package com.glenfordham.webserver.automation.handler.email;
 
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
+import com.glenfordham.webserver.automation.handler.Handler;
+import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.automation.jaxb.EmailHeader;
 import com.glenfordham.webserver.automation.jaxb.EmailRequest;

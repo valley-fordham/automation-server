@@ -1,4 +1,4 @@
-package com.glenfordham.webserver.automation.handler;
+package com.glenfordham.webserver.automation.handler.email;
 
 public enum Constant {
     MAIL_HOST(

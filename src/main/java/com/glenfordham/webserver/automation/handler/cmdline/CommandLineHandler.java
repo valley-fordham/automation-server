@@ -1,23 +1,25 @@
-package com.glenfordham.webserver.automation.handler;
+package com.glenfordham.webserver.automation.handler.cmdline;
 
 import com.glenfordham.utils.StreamUtils;
+import com.glenfordham.utils.process.ProcessWrapper;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
+import com.glenfordham.webserver.automation.handler.Handler;
+import com.glenfordham.webserver.automation.handler.HandlerException;
+import com.glenfordham.webserver.automation.jaxb.CommandLineRequest;
 import com.glenfordham.webserver.automation.jaxb.Config;
-import com.glenfordham.webserver.automation.jaxb.ProxyHost;
-import com.glenfordham.webserver.automation.jaxb.ProxyRequest;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
+import java.io.IOException;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
-public class ProxyHandler implements Handler {
+public class CommandLineHandler implements Handler {
     /**
-     * Processes a proxy type request. Proxy requests are forwarded on to the configured destination.
+     * Processes a Command Line type request. Matches request against configuration XML and triggers command defined
+     * against the request name
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
@@ -31,7 +33,7 @@ public class ProxyHandler implements Handler {
         Config config = AutomationConfig.get();
 
         // Check if the incoming request matches a configured request name
-        ProxyRequest request = config.getProxy().getRequests().stream()
+        CommandLineRequest request = config.getCommandLine().getRequests().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))
                 .findFirst()
                 .orElse(null);
@@ -41,29 +43,23 @@ public class ProxyHandler implements Handler {
             return;
         }
 
-        // Check that the device associated with the request name is configured
-        ProxyHost host = config.getProxy().getHosts().stream()
-                .filter(deviceEntry -> request.getHost().equalsIgnoreCase(deviceEntry.getName()))
-                .findFirst()
-                .orElse(null);
-
-        if (host == null) {
-            Log.error("Host name not configured: " + request.getHost());
-            return;
-        }
-
+        // Invoke the executable using ProcessWrapper to ensure all streams and the process are closed.
+        // Wait for the process to complete and log error if an error code is returned
+        String executePath = request.getCommandLine();
+        Log.debug("Executing process: " + executePath);
         try {
-            URL url = new URL(host.getScheme() + "://" + host.getFqdn() + ":" + host.getPort() + "/" + parameterMap.getAsUrlString());
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setConnectTimeout(host.getConnectionTimeout());
-            con.setReadTimeout(host.getConnectionTimeout());
-            con.setInstanceFollowRedirects(false);
-            clientOutput.write(StreamUtils.getString(con.getInputStream()).getBytes());
-            clientOutput.flush();
-            clientOutput.close();
-        } catch (Exception e) {
-            throw new HandlerException("Error occurred when making proxy request", e);
+            try (ProcessWrapper processWrapper = new ProcessWrapper(
+                    Runtime.getRuntime().exec(executePath))) {
+                if (processWrapper.getProcess().waitFor() != 0) {
+                    Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
+                }
+            }
+        } catch (InterruptedException iE) {
+            Log.error("Interrupted execution of process", iE);
+            Thread.currentThread().interrupt();
+            throw new HandlerException(iE.getMessage(), iE);
+        } catch (IOException e) {
+            throw new HandlerException(e.getMessage(), e);
         }
     }
 }

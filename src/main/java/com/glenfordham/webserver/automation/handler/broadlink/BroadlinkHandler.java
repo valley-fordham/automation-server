@@ -1,10 +1,12 @@
-package com.glenfordham.webserver.automation.handler;
+package com.glenfordham.webserver.automation.handler.broadlink;
 
-import com.glenfordham.utils.StreamUtils;
-import com.glenfordham.utils.process.ProcessWrapper;
+import com.glenfordham.utils.process.cmd.CmdLine;
+import com.glenfordham.utils.process.cmd.CmdLineException;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
+import com.glenfordham.webserver.automation.handler.Handler;
+import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.jaxb.BroadlinkDevice;
 import com.glenfordham.webserver.automation.jaxb.BroadlinkRequest;
 import com.glenfordham.webserver.automation.jaxb.BroadlinkSignal;
@@ -13,7 +15,6 @@ import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -91,23 +92,13 @@ public class BroadlinkHandler implements Handler {
             return;
         }
 
-        // Invoke the Broadlink executable using ProcessWrapper to ensure all streams and the process are closed.
-        // Wait for the process to complete and log error if an error code is returned
-        String executePath = config.getBroadlink().getCliPath()
-                + " --device \"" + device.getDeviceCode() + " " + device.getIpAddress() + " " + device.getMacAddress()
-                + "\" --send " + signal.getCode();
-        Log.debug("Executing process: " + executePath);
-        try (ProcessWrapper processWrapper = new ProcessWrapper(
-                Runtime.getRuntime().exec(executePath))) {
-            if (processWrapper.getProcess().waitFor() != 0) {
-                Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
-            }
-        } catch (InterruptedException iE) {
-            Log.error("Interrupted execution of process", iE);
-            Thread.currentThread().interrupt();
-            throw new HandlerException(iE.getMessage(), iE);
-        } catch (IOException e) {
-            throw new HandlerException(e.getMessage(), e);
+        // Invoke the Broadlink executable and configured command line
+        try {
+            new CmdLine(config.getBroadlink().getCliPath()
+                    + " --device \"" + device.getDeviceCode() + " " + device.getIpAddress() + " " + device.getMacAddress()
+                    + "\" --send " + signal.getCode()).exec();
+        } catch (CmdLineException e) {
+            throw new HandlerException("Error occurred when executing Broadlink process", e);
         }
     }
 }

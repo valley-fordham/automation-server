@@ -32,6 +32,10 @@ public class RequestArbiter extends HttpServlet {
             }
         } catch (AutomationConfigException e) {
             Log.error("Unable to initialise configuration file at servlet start-up", e);
+            // If configuration reload is off, exit the application
+            if (this.getServletContext().getAttribute(AutomationConfig.CONFIG_RELOAD_KEY).equals(false)) {
+                System.exit(1);
+            }
         }
     }
 

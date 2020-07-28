@@ -2,7 +2,12 @@ package com.glenfordham.webserver.automation;
 
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
-import com.glenfordham.webserver.automation.handler.*;
+import com.glenfordham.webserver.automation.handler.HandlerException;
+import com.glenfordham.webserver.automation.handler.broadlink.BroadlinkHandler;
+import com.glenfordham.webserver.automation.handler.cmdline.CommandLineHandler;
+import com.glenfordham.webserver.automation.handler.email.EmailHandler;
+import com.glenfordham.webserver.automation.handler.gpio.GpioHandler;
+import com.glenfordham.webserver.automation.handler.proxy.ProxyHandler;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
@@ -44,6 +49,8 @@ public class Automation {
                         new EmailHandler().start(parameterMap, clientOutput);
                         return;
                     case GPIO:
+                        new GpioHandler().start(parameterMap, clientOutput);
+                        return;
                     case PROXY:
                         new ProxyHandler().start(parameterMap, clientOutput);
                         return;
