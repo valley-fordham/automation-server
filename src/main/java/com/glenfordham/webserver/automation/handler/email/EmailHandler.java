@@ -39,6 +39,11 @@ public class EmailHandler implements Handler {
         String incomingRequestName = parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst();
         Config config = AutomationConfig.get();
 
+        // Ensure Email element is present in config file
+        if (config.getEmail() == null) {
+            throw new HandlerException("No Email configuration in configuration XML");
+        }
+
         // Check if the incoming request matches a configured request name
         EmailRequest request = config.getEmail().getRequests().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))
@@ -65,7 +70,7 @@ public class EmailHandler implements Handler {
 
     /**
      * Unpacks the email request and sends the email to the linked 'Mailbox' host
-     * TODO: make thread-safe with synchronized
+     * TODO: make thread-safe with something _better than_ synchronized
      *
      * @param mailbox the receiver of the message
      * @param request the email request to unpack and turn into a message to be sent
@@ -76,11 +81,11 @@ public class EmailHandler implements Handler {
         Properties properties = System.getProperties();
 
         // Setup mail server
-        properties.put(Constant.MAIL_HOST.getText(), mailbox.getHost());
-        properties.put(Constant.MAIL_PORT.getText(), mailbox.getPort());
-        properties.put(Constant.MAIL_TLS.getText(), mailbox.isTls() ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
-        properties.put(Constant.MAIL_SSL.getText(), !mailbox.isTls() ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
-        properties.put(Constant.MAIL_AUTH.getText(), (mailbox.isAuthenticate() ? Boolean.TRUE.toString() : Boolean.FALSE.toString()));
+        properties.put(Constant.MAIL_HOST.get(), mailbox.getHost());
+        properties.put(Constant.MAIL_PORT.get(), mailbox.getPort());
+        properties.put(Constant.MAIL_TLS.get(), mailbox.isTls() ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
+        properties.put(Constant.MAIL_SSL.get(), !mailbox.isTls() ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
+        properties.put(Constant.MAIL_AUTH.get(), (mailbox.isAuthenticate() ? Boolean.TRUE.toString() : Boolean.FALSE.toString()));
 
         // Setup the email session, including an authenticator (not used if authentication is off)
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {

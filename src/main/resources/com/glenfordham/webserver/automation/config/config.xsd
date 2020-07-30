@@ -15,7 +15,6 @@
                     fixedAttributeAsConstantProperty="true"
                     typesafeEnumBase="xs:NCName"
                     choiceContentProperty="true"
-                    typesafeEnumMemberName="generateError"
                     enableFailFastCheck="false"
                     generateIsSetMethod="false">
                 <jaxb:javaType xmlType="xs:integer" name="java.lang.Integer"/>

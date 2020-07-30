@@ -32,6 +32,11 @@ public class CommandLineHandler implements Handler {
         String incomingRequestName = parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst();
         Config config = AutomationConfig.get();
 
+        // Ensure Gpio element is present in config file
+        if (config.getCommandLine() == null) {
+            throw new HandlerException("No CommandLine configuration in configuration XML");
+        }
+
         // Check if the incoming request matches a configured request name
         CommandLineRequest request = config.getCommandLine().getRequests().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))

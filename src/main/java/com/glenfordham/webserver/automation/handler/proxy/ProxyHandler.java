@@ -32,6 +32,11 @@ public class ProxyHandler implements Handler {
         String incomingRequestName = parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst();
         Config config = AutomationConfig.get();
 
+        // Ensure Proxy element is present in config file
+        if (config.getProxy() == null) {
+            throw new HandlerException("No Proxy configuration in configuration XML");
+        }
+
         // Check if the incoming request matches a configured request name
         ProxyRequest request = config.getProxy().getRequests().stream()
                 .filter(requestEntry -> incomingRequestName.equalsIgnoreCase(requestEntry.getName()))

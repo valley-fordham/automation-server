@@ -15,9 +15,14 @@ import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * GpioHandler
+ *
+ * For Raspberry Pi's only. This interfaces with the GPIO process that sits on the PATH environment variable.
+ */
 public class GpioHandler implements Handler {
     /**
-     * Processes a GPIO type request. Matches request against configuration XML and triggers configured GPIO action
+     * Processes a GPIO type request. Matches request against configuration XML and triggers configured GPIO action.
      *
      * @param parameterMap complete ParameterMap object, containing both parameter keys and values
      * @param clientOutput client OutputStream, for writing a response
@@ -29,6 +34,11 @@ public class GpioHandler implements Handler {
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
         String incomingRequestName = parameterMap.get(Parameter.REQUEST_NAME.get()).getFirst();
         Config config = AutomationConfig.get();
+
+        // Ensure Gpio element is present in config file
+        if (config.getGpio() == null) {
+            throw new HandlerException("No Gpio configuration in configuration XML");
+        }
 
         // Check if the incoming request matches a configured request name
         GpioRequest request = config.getGpio().getRequests().stream()
@@ -131,7 +141,7 @@ public class GpioHandler implements Handler {
     private String execute(Constant gpioCommand, int pin, GpioWriteValue writeValue) throws HandlerException {
         // Invoke the GPIO executable and return the response
         try {
-            return new CmdLine("gpio " + gpioCommand.getText() + " " + pin + " " + (writeValue != null ? writeValue.value() : "")).exec();
+            return new CmdLine("gpio " + gpioCommand.get() + " " + pin + " " + (writeValue != null ? writeValue.value() : "")).exec();
         } catch (CmdLineException e) {
             throw new HandlerException("Error occurred when executing gpio process", e);
         }

@@ -4,6 +4,7 @@ import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.handler.broadlink.BroadlinkHandler;
+import com.glenfordham.webserver.automation.handler.carport.CarportHandler;
 import com.glenfordham.webserver.automation.handler.cmdline.CommandLineHandler;
 import com.glenfordham.webserver.automation.handler.email.EmailHandler;
 import com.glenfordham.webserver.automation.handler.gpio.GpioHandler;
@@ -42,6 +43,8 @@ public class Automation {
                         new BroadlinkHandler().start(parameterMap, clientOutput);
                         return;
                     case CARPORT:
+                        new CarportHandler().start(parameterMap, clientOutput);
+                        return;
                     case CMD_LINE:
                         new CommandLineHandler().start(parameterMap, clientOutput);
                         return;

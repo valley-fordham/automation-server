@@ -28,7 +28,7 @@ public enum Constant {
      *
      * @return text value
      */
-    public String getText() {
+    public String get() {
         return text;
     }
 }
