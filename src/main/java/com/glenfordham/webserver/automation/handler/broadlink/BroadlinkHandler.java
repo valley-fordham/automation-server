@@ -18,8 +18,6 @@ import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import java.io.OutputStream;
 
 /**
- * Broadlink Handler
- *
  * Broadlink actions require the broadlink CLI path (including Python path) and a number of parameters configured.
  * The required values will be dependent on your device.
  * See https://github.com/mjg59/python-broadlink for more information.

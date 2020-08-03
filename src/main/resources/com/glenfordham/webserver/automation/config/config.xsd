@@ -74,8 +74,10 @@
             <!-- If two gpio_request_name elements provided, first will be used for door trigger action, second will be used to get door status -->
             <xs:element name="gpio_request_name" type="xs:string"
                         maxOccurs="2"/>
-            <!-- Used for close action only, how long to wait before re-checking door status after invoking door trigger-->
+            <!-- Used for close action only, how long to wait in milliseconds before re-checking door status, after invoking door trigger -->
             <xs:element name="wait_time" type="xs:integer" minOccurs="0"/>
+            <!-- Used for close action only, configure what value represents the door being closed -->
+            <xs:element name="door_closed_value" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -116,6 +118,7 @@
             <xs:element name="pin" type="xs:integer"/>
             <xs:element name="behaviour" type="gpio_write_behaviour"/>
             <xs:element name="value" type="gpio_write_value"/>
+            <!-- How long to wait in milliseconds before resetting the value of the pin to its original value -->
             <xs:element name="wait_time_before_reset"
                         type="xs:integer" minOccurs="0"/>
         </xs:sequence>
