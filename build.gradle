@@ -16,7 +16,8 @@ sourceSets.main.java.srcDirs = ['src/main/java/']
 sourceSets.main.resources.srcDirs = [ "src/main/resources" ]
 sourceSets.main.resources.includes = [ "**/*.xml", "**/*.xsd" ]
 
-final String buildJrePath = "$buildDir\\package\\"
+final String packagePath = "$buildDir\\package\\"
+final String buildJrePath = packagePath + "$project.name-$version\\"
 final String libsPath = "$buildDir\\libs\\"
 final String srcPath = sourceSets.main.java.srcDirs[0].toPath().toString()
 final String configPath = sourceSets.main.resources.srcDirs[0].toPath().toString() + "\\com\\glenfordham\\webserver\\automation\\config\\"
@@ -82,8 +83,8 @@ task getModuleList(dependsOn:["copyToLib","jar"],type:Exec) {
     }
 }
 
-// Build runtime files with jlink
-task buildJre(dependsOn:["getModuleList","deleteJre"],type:Exec) {
+// Build Windows runtime files with jlink
+task buildWinJre(dependsOn:["getModuleList","cleanWinJre"],type:Exec) {
     doFirst {
         workingDir '.\\'
         commandLine 'cmd', '/c', 'jlink --add-modules ' + (String) tasks.getModuleList.out() + ' --output ' + buildJrePath
@@ -91,7 +92,7 @@ task buildJre(dependsOn:["getModuleList","deleteJre"],type:Exec) {
 }
 
 // Delete existing JRE folder
-task deleteJre(type:Delete) {
+task cleanWinJre(type:Delete) {
     doFirst {
         try {
             project.delete buildJrePath
@@ -106,7 +107,16 @@ task copyFatJar(dependsOn:"shadowJar",type:Copy) {
 }
 
 // Make deploy package TODO: create runtime scripts to remove the need for "java -jar etc"
-task makePackage(dependsOn:["buildJre","copyFatJar"]) {
+task makePackageWindows(dependsOn:["buildWinJre","copyFatJar"]) {
+}
+
+// Zip Windows JRE and fat jar
+task zipPackageWindows(dependsOn:"makePackageWindows",type:Zip) {
+    from buildJrePath
+    include '*'
+    include '*/*' //to include contents of a folder present inside Reports directory
+    archiveName project.name + "-" + version +'-win.zip'
+    destinationDir(file(packagePath))
 }
 
 static def gitCommitNumber() {
