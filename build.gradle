@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'java-library'
     id "com.github.johnrengelman.shadow" version "6.0.0"
@@ -16,12 +18,14 @@ sourceSets.main.java.srcDirs = ['src/main/java/']
 sourceSets.main.resources.srcDirs = [ "src/main/resources" ]
 sourceSets.main.resources.includes = [ "**/*.xml", "**/*.xsd" ]
 
-final String packagePath = "$buildDir\\package\\"
-final String buildJrePath = packagePath + "$project.name-$version\\"
-final String libsPath = "$buildDir\\libs\\"
+final OperatingSystem os = DefaultNativePlatform.currentOperatingSystem
+final String sep = File.separator
+final String packagePath = "$buildDir${sep}package${sep}"
+final String buildJrePath = packagePath + "$project.name-$version${sep}"
+final String libsPath = "$buildDir${sep}libs${sep}"
 final String srcPath = sourceSets.main.java.srcDirs[0].toPath().toString()
-final String configPath = sourceSets.main.resources.srcDirs[0].toPath().toString() + "\\com\\glenfordham\\webserver\\automation\\config\\"
-final String toolsPath = ".\\tools\\"
+final String configPath = sourceSets.main.resources.srcDirs[0].toPath().toString() + "${sep}com${sep}glenfordham${sep}webserver${sep}automation${sep}config${sep}"
+final String toolsPath = ".${sep}tools${sep}"
 
 compileJava.dependsOn('buildJavaFromSchema')
 
@@ -61,8 +65,15 @@ dependencies {
 
 // Generate JAXB objects from schema at build-time
 task buildJavaFromSchema(type:Exec) {
-    workingDir '.\\'
-    commandLine 'cmd', '/c', toolsPath + 'jaxb-ri\\bin\\xjc.bat -b ' + configPath + 'bindings.xml -d ' + srcPath + ' -p com.glenfordham.webserver.automation.jaxb ' + configPath + 'config.xsd -extension'
+    workingDir ".${sep}"
+    final runPath = configPath + 'bindings.xml -d ' + srcPath + ' -p com.glenfordham.webserver.automation.jaxb ' + configPath + 'config.xsd -extension'
+    if (os.isWindows()) {
+        commandLine 'cmd', '/c', toolsPath + "jaxb-ri${sep}bin${sep}xjc.bat -b " + runPath
+    } else if (os.isLinux()) {
+        commandLine toolsPath + "jaxb-ri${sep}bin${sep}xjc.sh -b " + runPath
+    } else {
+        throw new GradleException("Unable to build with OS: " + os.toString())
+    }
 }
 
 // Output all dependency jars to a folder
@@ -73,8 +84,16 @@ task copyToLib(type: Copy) {
 
 // Analyse project and retrieve modules used
 task getModuleList(dependsOn:["copyToLib","jar"],type:Exec) {
-    workingDir '.\\'
-    commandLine 'cmd', '/c', 'jdeps --print-module-deps --multi-release 11 ' + libsPath + '*'
+    workingDir ".${sep}"
+    final runPath = 'jdeps --print-module-deps --multi-release 11 ' + libsPath + '*'
+    if (os.isWindows()) {
+        commandLine 'cmd', '/c', runPath
+    } else if (os.isLinux()) {
+        commandLine runPath
+    } else {
+        throw new GradleException("Unable to build with OS: " + os.toString())
+    }
+
     standardOutput = new ByteArrayOutputStream()
     // Allows other tasks to get output of this task
     ext.out = {
@@ -86,7 +105,7 @@ task getModuleList(dependsOn:["copyToLib","jar"],type:Exec) {
 // Build Windows runtime files with jlink
 task buildWinJre(dependsOn:["getModuleList","cleanWinJre"],type:Exec) {
     doFirst {
-        workingDir '.\\'
+        workingDir ".${sep}"
         commandLine 'cmd', '/c', 'jlink --add-modules ' + (String) tasks.getModuleList.out() + ' --output ' + buildJrePath
     }
 }
@@ -114,7 +133,7 @@ task makePackageWindows(dependsOn:["buildWinJre","copyFatJar"]) {
 task zipPackageWindows(dependsOn:"makePackageWindows",type:Zip) {
     from buildJrePath
     include '*'
-    include '*/*' //to include contents of a folder present inside Reports directory
+    include "*${sep}*" //to include contents of a folder present inside Reports directory
     archiveName project.name + "-" + version +'-win.zip'
     destinationDir(file(packagePath))
 }
