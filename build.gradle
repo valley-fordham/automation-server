@@ -23,7 +23,7 @@ final String sep = File.separator
 final String packagePath = "$buildDir${sep}package${sep}"
 final String buildJrePath = packagePath + "$project.name-$version${sep}"
 final String libsPath = "$buildDir${sep}libs${sep}"
-final String toolsPath = ".${sep}tools${sep}"
+final String toolsPath = "tools${sep}"
 
 compileJava.dependsOn('buildJavaFromSchema')
 
