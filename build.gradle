@@ -23,8 +23,6 @@ final String sep = File.separator
 final String packagePath = "$buildDir${sep}package${sep}"
 final String buildJrePath = packagePath + "$project.name-$version${sep}"
 final String libsPath = "$buildDir${sep}libs${sep}"
-final String srcPath = sourceSets.main.java.srcDirs[0].toPath().toString()
-final String configPath = sourceSets.main.resources.srcDirs[0].toPath().toString() + "${sep}com${sep}glenfordham${sep}webserver${sep}automation${sep}config${sep}"
 final String toolsPath = ".${sep}tools${sep}"
 
 compileJava.dependsOn('buildJavaFromSchema')
@@ -66,11 +64,15 @@ dependencies {
 // Generate JAXB objects from schema at build-time
 task buildJavaFromSchema(type:Exec) {
     workingDir ".${sep}"
-    final runPath = configPath + 'bindings.xml -d ' + srcPath + ' -p com.glenfordham.webserver.automation.jaxb ' + configPath + 'config.xsd -extension'
+    final classOutput = 'com.glenfordham.webserver.automation.jaxb'
+    final String configPath = sourceSets.main.resources.srcDirs[0].toPath().toString() + "${sep}com${sep}glenfordham${sep}webserver${sep}automation${sep}config${sep}"
+    final String srcPath = sourceSets.main.java.srcDirs[0].toPath().toString()
+    final bindings = 'bindings.xml'
+    final config = 'config.xsd'
     if (os.isWindows()) {
-        commandLine 'cmd', '/c', toolsPath + "jaxb-ri${sep}bin${sep}xjc.bat -b " + runPath
+        commandLine 'cmd', '/c', toolsPath+'jaxb-ri\\bin\\xjc.bat','-b',configPath+bindings,'-d',srcPath,'-p',classOutput,configPath+config,'-extension'
     } else if (os.isLinux()) {
-        commandLine toolsPath + "jaxb-ri${sep}bin${sep}xjc.sh -b " + runPath
+        commandLine toolsPath + 'jaxb-ri/bin/xjc.sh','-b',configPath+bindings,'-d',srcPath,'-p',classOutput,configPath+config,'-extension'
     } else {
         throw new GradleException("Unable to build with OS: " + os.toString())
     }
