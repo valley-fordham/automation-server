@@ -7,7 +7,7 @@
         <RollingFile
                 name="ROLLING_FILE"
                 fileName="logs/automation-server.log"
-                filePattern="logs/$${date:yyyy-MM}/automation-server-%d{MM-dd-yyyy}.log.zip">
+                filePattern="logs/automation-server-%d{MM-dd-yyyy}.log.zip">
             <PatternLayout pattern="%d{DEFAULT} %-5level: %logger{36} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
