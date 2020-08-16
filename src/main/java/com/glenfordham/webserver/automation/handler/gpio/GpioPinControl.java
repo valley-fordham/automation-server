@@ -1,6 +1,6 @@
 package com.glenfordham.webserver.automation.handler.gpio;
 
-import com.glenfordham.utils.process.cmd.CmdLine;
+import com.glenfordham.utils.process.cmd.CommandLine;
 import com.glenfordham.utils.process.cmd.CmdLineException;
 import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.jaxb.*;
@@ -85,7 +85,7 @@ public class GpioPinControl {
 	private static String execute(Constant gpioCommand, int pin, GpioWriteValue writeValue) throws HandlerException {
 		// Invoke the GPIO executable and return the response
 		try {
-			return new CmdLine("gpio " + gpioCommand.get() + " " + pin + " " + (writeValue != null ? writeValue.value() : "")).exec();
+			return new CommandLine("gpio " + gpioCommand.get() + " " + pin + " " + (writeValue != null ? writeValue.value() : "")).exec();
 		} catch (CmdLineException e) {
 			throw new HandlerException("Error occurred when executing gpio process", e);
 		}

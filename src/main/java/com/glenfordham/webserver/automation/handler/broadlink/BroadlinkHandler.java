@@ -1,6 +1,6 @@
 package com.glenfordham.webserver.automation.handler.broadlink;
 
-import com.glenfordham.utils.process.cmd.CmdLine;
+import com.glenfordham.utils.process.cmd.CommandLine;
 import com.glenfordham.utils.process.cmd.CmdLineException;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
@@ -92,9 +92,9 @@ public class BroadlinkHandler implements Handler {
 
         // Invoke the Broadlink executable and configured command line
         try {
-            new CmdLine(config.getBroadlink().getCliPath()
-                    + " --device \"" + device.getDeviceCode() + " " + device.getIpAddress() + " " + device.getMacAddress()
-                    + "\" --send " + signal.getCode()).exec();
+            new CommandLine(config.getBroadlink().getCliPath()
+                    + " --send " + signal.getCode()
+                    + " --device \"" + device.getDeviceCode() + " " + device.getIpAddress() + " " + device.getMacAddress() + "\"").exec();
         } catch (CmdLineException e) {
             throw new HandlerException("Error occurred when executing Broadlink process", e);
         }
