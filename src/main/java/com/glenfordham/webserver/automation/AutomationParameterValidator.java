@@ -22,7 +22,8 @@ public class AutomationParameterValidator implements ParameterValidator {
         try {
             return areUrlParamKeysValid(parameterMap)
                     && isAuthenticationTokenValid(parameterMap.get(Parameter.AUTHENTICATION_TOKEN.get()))
-                    && isRequestTypeValid(parameterMap.get(Parameter.REQUEST_TYPE.get()));
+                    && isRequestTypeValid(parameterMap.get(Parameter.REQUEST_TYPE.get()))
+                    && (parameterMap.containsKey(Parameter.REQUEST_NAME.get()) && !parameterMap.get(Parameter.REQUEST_NAME.get()).isEmpty());
         } catch (AutomationConfigException | ParameterException e) {
             Log.error(e.getMessage(), e);
             return false;
@@ -39,7 +40,8 @@ public class AutomationParameterValidator implements ParameterValidator {
     public boolean areUrlParamKeysValid(ParameterMap parameterMap) throws ParameterException {
         // If proxy request type, URL parameter validation is handled in the Proxy handler.
         // Make sure that the minimum parameter values are present.
-        if (parameterMap.get(Parameter.REQUEST_TYPE.get()).getFirst().equalsIgnoreCase(RequestType.PROXY.get())) {
+        if (parameterMap.containsKey(Parameter.REQUEST_TYPE.get())
+                && parameterMap.get(Parameter.REQUEST_TYPE.get()).getFirst().equalsIgnoreCase(RequestType.PROXY.get())) {
             return Arrays.stream(Parameter.values()).allMatch(e->parameterMap.containsKey(e.get()));
         }
         return parameterMap.keySet().stream().noneMatch(key -> Arrays.stream(Parameter.values())

@@ -17,7 +17,7 @@ public class ParameterList extends ArrayList<String> {
     /**
      * Gets the first value in the ParameterList
      *
-     * @return the first String in the ParamaterList
+     * @return the first String in the ParameterList
      * @throws ParameterException if the ParameterList is empty
      */
     public String getFirst() throws ParameterException {
