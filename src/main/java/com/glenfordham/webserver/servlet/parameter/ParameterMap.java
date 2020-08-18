@@ -28,6 +28,23 @@ public class ParameterMap extends HashMap<String, ParameterList> {
     }
 
     /**
+     * Builds a new ParameterMap from the existing map, and then filters it by the parameter list provided.
+     * Only URL parameters in the filter list will be present in the new ParameterMap
+     *
+     * @param filterList the list with which to filter the ParameterMap by
+     * @return a new ParameterMap, filtered to the required URL parameters
+     */
+    public ParameterMap filterByList(List<String> filterList) {
+        ParameterMap filteredParameterMap = (ParameterMap) this.clone();
+        for (String key : this.keySet()) {
+            if (filterList.stream().noneMatch(e->e.equalsIgnoreCase(key))) {
+                filteredParameterMap.remove(key);
+            }
+        }
+        return filteredParameterMap;
+    }
+
+    /**
      * Translates ParameterMap object to a string which can be used for another HTTP request
      */
     public String getAsUrlString() {

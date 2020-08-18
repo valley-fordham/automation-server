@@ -314,6 +314,15 @@
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="host" type="xs:string"/>
+            <!-- Only these URL parameters can be forwarded to the proxy host -->
+            <!-- Not all need to be provided in original request -->
+            <xs:element name="forward_parameter" type="xs:string" maxOccurs="unbounded">
+                <xs:annotation>
+                     <xs:appinfo>
+                        <jaxb:property name="forward_parameters"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 

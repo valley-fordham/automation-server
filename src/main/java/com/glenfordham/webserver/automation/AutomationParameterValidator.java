@@ -36,7 +36,12 @@ public class AutomationParameterValidator implements ParameterValidator {
      * @return true if all keys are valid
      */
     @Override
-    public boolean areUrlParamKeysValid(ParameterMap parameterMap) {
+    public boolean areUrlParamKeysValid(ParameterMap parameterMap) throws ParameterException {
+        // If proxy request type, URL parameter validation is handled in the Proxy handler.
+        // Make sure that the minimum parameter values are present.
+        if (parameterMap.get(Parameter.REQUEST_TYPE.get()).getFirst().equalsIgnoreCase(RequestType.PROXY.get())) {
+            return Arrays.stream(Parameter.values()).allMatch(e->parameterMap.containsKey(e.get()));
+        }
         return parameterMap.keySet().stream().noneMatch(key -> Arrays.stream(Parameter.values())
                 .noneMatch(e -> e.get().equals(key)));
     }
@@ -91,7 +96,7 @@ public class AutomationParameterValidator implements ParameterValidator {
                 }
             }
         }
-        Log.error("Invalid request type" + (requestTypes != null ? ": " + requestTypes.getFirst() : " - not provided"));
+        Log.error("Invalid request type");
         return false;
     }
 }

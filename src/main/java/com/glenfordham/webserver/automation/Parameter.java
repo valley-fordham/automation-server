@@ -3,14 +3,14 @@ package com.glenfordham.webserver.automation;
 /**
  * Contains all supported URL parameters
  * <p>
- * eg. ?authentication_token=token&request_type=request_type&request=requestName
+ * eg. ?authentication_token=token&request_type=request_type&request_name=requestName
  */
 public enum Parameter {
     AUTHENTICATION_TOKEN(
             "authentication_token"
     ),
     REQUEST_NAME(
-            "request"
+            "request_name"
     ),
     REQUEST_TYPE(
             "request_type"

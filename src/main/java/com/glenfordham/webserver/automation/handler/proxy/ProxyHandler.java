@@ -2,6 +2,7 @@ package com.glenfordham.webserver.automation.handler.proxy;
 
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.Parameter;
+import com.glenfordham.webserver.automation.RequestType;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.handler.Handler;
@@ -16,6 +17,7 @@ import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class ProxyHandler implements Handler {
     /**
@@ -44,7 +46,7 @@ public class ProxyHandler implements Handler {
                 .orElse(null);
 
         if (request == null) {
-            Log.error("Invalid request name: " + incomingRequestName);
+            Log.error("Invalid request name");
             return;
         }
 
@@ -59,12 +61,17 @@ public class ProxyHandler implements Handler {
             return;
         }
 
+        // Get list of parameters to forward in the proxy request.
+        // Only forward the parameters as specified in configuration, others will be ignored.
+        ParameterMap forwardParameterMap = parameterMap.filterByList(request.getForwardParameters());
+
+        // Send request to configured proxy host with configured forward parameters, and return response to original requester
         try {
-            URL url = new URL(host.getScheme() + "://" + host.getFqdn() + ":" + host.getPort() + "/" + parameterMap.getAsUrlString());
+            URL url = new URL(host.getScheme() + "://" + host.getFqdn() + ":" + host.getPort() + "/" + forwardParameterMap.getAsUrlString());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setConnectTimeout(host.getConnectionTimeout());
-            con.setReadTimeout(host.getConnectionTimeout());
+            con.setReadTimeout(host.getReadTimeout());
             con.setInstanceFollowRedirects(false);
             clientOutput.write(StreamUtils.getString(con.getInputStream()).getBytes());
             clientOutput.flush();

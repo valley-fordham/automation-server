@@ -31,7 +31,7 @@ public class Automation {
 
             // If URL parameters are not valid, ignore the request
             if (!parameterValidator.isParameterMapValid(parameterMap)) {
-                Log.debug("Invalid request: " + parameterMap.toString());
+                Log.debug("Invalid request");
                 return;
             }
             Log.debug("Valid request");

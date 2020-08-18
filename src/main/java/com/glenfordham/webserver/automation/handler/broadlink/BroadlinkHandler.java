@@ -64,7 +64,7 @@ public class BroadlinkHandler implements Handler {
                 .orElse(null);
 
         if (request == null) {
-            Log.error("Invalid request name: " + incomingRequestName);
+            Log.error("Invalid request name");
             return;
         }
 

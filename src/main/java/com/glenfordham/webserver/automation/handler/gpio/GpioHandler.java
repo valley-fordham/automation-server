@@ -43,7 +43,7 @@ public class GpioHandler implements Handler {
                 .orElse(null);
 
         if (request == null || request.isCarportOnly()) {
-            Log.error("Invalid request name: " + incomingRequestName);
+            Log.error("Invalid request name");
             return;
         }
 

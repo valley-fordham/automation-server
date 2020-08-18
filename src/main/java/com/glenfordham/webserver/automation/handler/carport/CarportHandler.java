@@ -55,7 +55,7 @@ public class CarportHandler implements Handler {
 				.orElse(null);
 
 		if (carportRequest == null) {
-			Log.error("Invalid request name: " + incomingRequestName);
+			Log.error("Invalid request name");
 			return;
 		}
 
