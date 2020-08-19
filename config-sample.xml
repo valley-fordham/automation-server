@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+	<authentication_token>
+		<token>yourAuthenticationToken</token>
+		<behaviour>static</behaviour>
+	</authentication_token>
+	
+	<broadlink>
+		<cli_path>/path/to/python-broadlink/cli/broadlink_cli</cli_path>
+		<device>
+			<name>lounge</name>
+			<device_code>0x27c2</device_code>
+			<ip_address>10.1.1.1</ip_address>
+			<mac_address>250f51770f78</mac_address>
+		</device>
+		<device>
+			<name>computer_room</name>
+			<device_code>0x27c2</device_code>
+			<ip_address>10.1.1.2</ip_address>
+			<mac_address>540d51770f78</mac_address>
+		</device>
+		
+		<signal>
+			<name>aircon_on</name>
+			<code>26004c0272370f2a0f290f0e0f0d0f0e0f29100d0f0d10290f2a0f0d10290f0d100d0e2a1029100d0e2b0f290f0e0e0e0f2a0e0e0f0e0e2a0f0e0f0d0f0e0e0e0f0e0e0e0f0e0e0e100d0f0d100d0e0e0f0e0e0e0f0d100d0f0d0f0e0f0d0f0e0e2a0f0e0e0e100d0e0e100d0e2a10290f0e0e0e0f0e0e0e0f2a0f2a0e0e0f0d0f0e0e0e0f0e0f0d10290f2a0e0e10290f29100d0e0e0f0e0f290f0e0f0d100d0e0e10290f0d10290f2a0f0d0e2b0e0e0f0e0e0e0e2b0e0e100d0e0e0f0d0f0e100d0e0e0f0d0f0e100d0f0d0f0e0f0d100d0f0d0f0e0e0e0f0e0f0d0e0f0f0d0f0e0e0e0f0e0f0d0f0d100d0f0d100d0f2a0e0e100d0e0e0f0e0e0e0e0e0f0e0f0d0f0e0f0d100d0f0d0f0e0e0e0e0e100d0f0e0f0d100d0f2a0e2a100d0f290f2a10290f0d0f00022f75390f290f2a0f0d100d0f0d0f2a0f0d0f0e0f2a0f290f0e0f290f0e100d0f290f2a0f0d0f2a10290f0d100d0f290f0e0f0d0f2a0f0e0f0d0f0e0e0e0f0e0e0e0f0e0e0e0e0e0f0e0e0e100d0e0e0f0e0f0d0f0e0e0e0f0d100d0f0e0e2a100d0f0d100d0f0d0f0e0e2a0f2a0e0e0f0e0e0e100d0e2a0f2a0f0e0e0e0f0d0f0e0e0e100d0e2a0f2a0f0e0e2a0f2a0f0d0f0e0f0d0f2a0f0d0f0e0e0e0f0e0e2a0f0e0e2a0f2a0e0e0f2a0f0d100d0e0e0f2a0e0e0f0d0f0e0f0d100d0f0d100d0f0d100d0f0d100d0f0d100d0f0d0f0e0f0d0f0d0f0e0f0d0f0e0f0d0f0e0f0d0f0e0e0e0f0d0f0e0f0d0f0e0f290f0e0f0d0f0e0e0e0f0e0e0e100d0e0e0f0d0f0e0e0e0f0e0f0d0f0d0f0e0f0d100d0e0e100d0f2a0e2a100d0f2910290f290f0e0f000d05000000000000000000000000</code>
+		</signal>
+		<signal>
+			<name>aircon_off</name>
+			<code>26004c0271390f290f2a0f0e0e0e0f0d0f2a0e0e0f0f0d2b0f290f0e0f290f0e0f0e0e2a0f290f0e0e2a0f2a0f0e0e0e0f2a0e0f0e0e0f290f0e0e0e0e0f0e0e0f0e0f0e0e0e0e0e0f0e0e0e0f0e0e0f0e0e0f0e0e0e0e0e0f0e0e0e0f0e0e0e0f0e0e0e0f0d0f0f0d0f0e0f0e2a0f290e0f0f0e0d0e100d0f290f2a0f0d0f0e0f0d0f0f0d0e0f0e0e2a0f2a0e0e10290f2a0e0f0d0f0f0d0f2a0e0e0f0e0f0d0f0e0f290f0e0f2a0f0e0e0d0f2a0e0e0f0f0e0e0f290e0f0e0e0f0e0e0e0f0d0f0e0e0f0e0f0d0f0e0e0f0e0d0f0e0f0d0f0f0e0d0f0e0f0d0e0f0e0f0e0d0f100c0f0e0e0f0e0e0f0e0f0d0f0d0f0e0e2a0f0e0f0d0f0e0e0e0f0e0e0e0f0e0e0f0e0e0f0d0e0f0e0e0f0e0e0e0f0d0f0e0e0e0f0e0e0f0e0e0f2a0e0e0f2a0e0e0f2a0e0e0f00023476380f2a10290f0d0f0e0f0d0f2a0e0e0f0e0f290f2a0e0e0f2a0e0f0e0e0f2a0f290f0e0f290f2a0f0e0e0e0e2b0e0e0e0e0f2a0e0f0e0e0e0e0f0e0e0e0f0e0f0d0f0e0e0e0f0e0e0e0f0e0e0e0e0f0e0e0f0e0e0e0f0e0e0e0f0e0e0e0f0d0f0e0f0d0f0e0e0e10290e2b0f0d0e0f0e0f0e0e0f290f2a0f0e0e0e0f0e0e0e0e0e0f0e0e2b0e2a0f0e0f290f2a0f0e0e0e0f0e0e2a0f0e0e0e100d0e0e0f2a100d0f290e0f0e0e0f2a0e0e0f0d0f0e0e2a0f0e0e0e0f0e0e0e0f0e0e0f0e0e0e0f0f0d0f0e0e0e0e0f0e0e0f0d0e0f0f0d0f0e0f0d0f0e0f0d0f0e0e0e100d0f0e0e0e0e0f0f0d0e0f0e0e0f2a0e0e0f0e0f0d0f0d0f0e0e0e0f0e0e0e0e0f0e0e0f0e0f0d0f0e0e0e0e0e0f0e0e0e0f0e0e0e0f0e0e2a0f0e0e2a0f0e0e2b0f0d0e000d05000000000000000000000000</code>
+		</signal>
+	</broadlink>
+	
+	<carport>
+		<request>
+			<name>close_door</name>
+			<action>close</action>
+			<gpio_request_name>trigger_door</gpio_request_name>
+			<gpio_request_name>read_door_status</gpio_request_name>
+			<wait_time>15</wait_time>
+		</request>
+		<request>
+			<name>check_status</name>
+			<action>status</action>
+			<gpio_request_name>read_door_status</gpio_request_name>
+		</request>
+		<request>
+			<name>open_door</name>
+			<action>open</action>
+			<gpio_request_name>trigger_door</gpio_request_name>
+		</request>
+		<request>
+			<name>trigger_door</name>
+			<action>trigger</action>
+			<gpio_request_name>trigger_door</gpio_request_name>
+		</request>
+	</carport>
+	
+	<command_line>
+		<request>
+			<name>wake_pc</name>
+			<command_line>wakeonlan 1C:87:2C:61:42:21</command_line>
+		</request>
+	</command_line>
+	
+	<email>
+		<mailbox>
+			<name>gmail</name>
+			<host>smtp.gmail.com</host>
+			<port>587</port>
+			<authenticate>true</authenticate>
+			<username>yourGmailLogin</username>
+			<password>yourGmailPassword</password>
+			<tls>true</tls>
+		</mailbox>
+		<request>
+			<name>pointless_email</name>
+			<mailbox_name>gmail</mailbox_name>
+			<to>to@mail</to>
+			<to>to2@mail</to>
+			<from>from@mail</from>
+			<subject>Read me!</subject>
+			<message>Nothing to see here!</message>
+			<html>false</html>
+		</request>
+	</email>
+	
+	<gpio>
+		<request>
+			<name>trigger_door</name>
+			<carport_only>false</carport_only>
+			<write>
+				<pin>7</pin>
+				<behaviour>write_then_reset</behaviour>
+				<value>1</value>
+				<wait_time_before_reset>1000</wait_time_before_reset>
+			</write>
+		</request>
+		<request>
+			<name>read_door_status</name>
+			<carport_only>false</carport_only>
+			<read>
+				<pin>7</pin>
+				<behaviour>read</behaviour>
+			</read>
+		</request>
+	</gpio>
+	
+	<proxy>
+		<host>
+			<name>aHost</name>
+			<fqdn>mydomain.com</fqdn>
+			<scheme>http</scheme>
+			<port>80</port>
+			<connection_timeout>5000</connection_timeout>
+			<read_timeout>5000</read_timeout>
+		</host>
+		<request>
+			<name>your_request_name</name>
+			<host>aHost</host>
+		</request>
+	</proxy>
+</config>
