@@ -1,0 +1,32 @@
+name: Releases
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+      - name: Fix Gradle
+        run: gradle wrapper --stacktrace
+      - name: Build Fat Jar
+        run: ./gradlew shadowJar --stacktrace
+      - name: set up JDK 14
+        uses: actions/setup-java@v1
+        with:
+         java-version: 14
+      - name: Build Zips
+        run: ./gradlew runtimeZip --stacktrace
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "build/libs/automation-server*all.jar,automation-server*.zip"
