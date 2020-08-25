@@ -28,5 +28,7 @@ jobs:
         run: ./gradlew runtimeZip --stacktrace
       - uses: ncipollo/release-action@v1
         with:
+          allowUpdates: true
+          omitNameDuringUpdate: true
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "build/libs/automation-server*all.jar,automation-server*.zip"
