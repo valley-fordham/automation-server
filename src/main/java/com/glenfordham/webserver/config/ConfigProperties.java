@@ -16,7 +16,9 @@ public class ConfigProperties {
      */
     public ConfigProperties() {
         for (Arguments param : Arguments.values()) {
-            addProperty(param, param.getDefaultValue());
+            if (param.getDefaultValue() != null) {
+                addProperty(param, param.getDefaultValue());
+            }
         }
     }
 

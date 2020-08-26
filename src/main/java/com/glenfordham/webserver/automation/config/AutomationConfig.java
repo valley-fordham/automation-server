@@ -81,6 +81,7 @@ public class AutomationConfig {
      */
     public static void setConfigReload(boolean value) {
         configReload = value;
+        Log.info("Configuration XML will reload on every request.");
     }
 
     // use static methods
