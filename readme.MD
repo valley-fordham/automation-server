@@ -6,15 +6,19 @@ A highly configurable, Java-based web server to help you automate your home.
 - Send simple HTTP requests to invoke various functionality
 - Works great with other automation services like IFTTT
 - Send IR commands*, invoke command-line calls, send emails, forward requests to other servers on your network or control a carport door*
-- Highly configurable to suit your environment - turn on as much or as little as you need!
+- Highly configurable to suit your environment - set up as much or as little as you need!
 
-*Extra hardware may be required!
+    *Extra hardware may be required!
 
+## Installation
 
-## Install
+### Install on your Raspberry Pi
 1. Install Java 11 on the host
-2. Download and install the latest [release](https://github.com/valley-fordham/automation-server/releases)
+2. Download the latest jar from [releases](https://github.com/valley-fordham/automation-server/releases) to the host
 3. Setup your configuration within the config.xml file - a sample to get you started is in the repository
+
+### Install on another Operating System
+- Packages are also available with a bundled JDK for immediate deployment.
 
 
 ## Usage

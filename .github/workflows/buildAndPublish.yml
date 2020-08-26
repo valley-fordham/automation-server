@@ -31,4 +31,4 @@ jobs:
           allowUpdates: true
           omitNameDuringUpdate: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "build/libs/automation-server*all.jar,automation-server*.zip"
+          artifacts: "build/libs/automation-server*all.jar,build/automation-server*.zip"
