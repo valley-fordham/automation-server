@@ -29,6 +29,7 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
+          bodyFile: release-notes.MD
           omitNameDuringUpdate: true
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "build/libs/automation-server*all.jar,build/automation-server*.zip"
