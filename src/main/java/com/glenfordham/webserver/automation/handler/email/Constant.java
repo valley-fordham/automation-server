@@ -1,5 +1,8 @@
 package com.glenfordham.webserver.automation.handler.email;
 
+/**
+ * Defines constants used bv the {@link com.glenfordham.webserver.automation.handler.email} package.
+ */
 public enum Constant {
     MAIL_HOST(
             "mail.smtp.host"
@@ -24,9 +27,9 @@ public enum Constant {
     }
 
     /**
-     * Returns the text value of the Constant
+     * Gets the text value of the Constant.
      *
-     * @return text value
+     * @return The text value of the Constant.
      */
     public String get() {
         return text;

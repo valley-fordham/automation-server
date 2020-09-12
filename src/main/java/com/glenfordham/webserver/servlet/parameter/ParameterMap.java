@@ -7,12 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines a ParameterMap object, used to represent URL parameters that appear in the URL request. Removes the need to
+ * handle String arrays required in the regular Servlet request parameter maps.
+ */
 public class ParameterMap extends HashMap<String, ParameterList> {
 
     /**
-     * Extends the default Servlet request parameter map to remove the need to handle String[]
+     * Extends the default Servlet request parameter map to remove the need to handle String[].
      *
-     * @param requestParams the servlet request parameter map to create the ParameterMap from
+     * @param requestParams The servlet request parameter map to create the ParameterMap from.
      */
     public ParameterMap(Map<String, String[]> requestParams) {
         super();
@@ -29,10 +33,10 @@ public class ParameterMap extends HashMap<String, ParameterList> {
 
     /**
      * Builds a new ParameterMap from the existing map, and then filters it by the parameter list provided.
-     * Only URL parameters in the filter list will be present in the new ParameterMap
+     * Only URL parameters in the filter list will be present in the new ParameterMap.
      *
-     * @param filterList the list with which to filter the ParameterMap by
-     * @return a new ParameterMap, filtered to the required URL parameters
+     * @param filterList List with which to filter the ParameterMap by.
+     * @return A new ParameterMap, filtered to the required URL parameters.
      */
     public ParameterMap filterByList(List<String> filterList) {
         ParameterMap filteredParameterMap = (ParameterMap) this.clone();
@@ -45,7 +49,9 @@ public class ParameterMap extends HashMap<String, ParameterList> {
     }
 
     /**
-     * Translates ParameterMap object to a string which can be used for another HTTP request
+     * Translates ParameterMap object to a string which can be used for another HTTP request.
+     *
+     * @return A safely-encoded URL string built from the ParameterMap.
      */
     public String getAsUrlString() {
         if (this.size() == 0) {

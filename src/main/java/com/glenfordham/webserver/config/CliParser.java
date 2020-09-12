@@ -5,15 +5,19 @@ import org.apache.commons.cli.*;
 
 import java.util.Arrays;
 
+/**
+ * Defines a parser which can load all command-line arguments provided to this application and load them into a globally
+ * accessible object.
+ */
 public class CliParser {
 
     private final String exeName = (getClass().getPackage().getImplementationTitle() != null ? getClass().getPackage().getImplementationTitle() : "Web Server");
 
     /**
-     * Parses CLI arguments and loads into the static ConfigProperties instance
+     * Parses CLI arguments and loads into the static ConfigProperties instance.
      *
-     * @param args application arguments
-     * @return true if all required config has been loaded
+     * @param args Application arguments to be loaded into the ConfigProperties instance.
+     * @return True if all required config has been loaded.
      */
     public ConfigProperties loadConfig(String[] args) {
         // Add all arguments without setting the 'required' flag yet, so that the --help argument works
@@ -48,11 +52,11 @@ public class CliParser {
     }
 
     /**
-     * Wrapper function for CLI argument parsing
+     * Wrapper function for CLI argument parsing.
      *
-     * @param options a collection of options available to the application
-     * @param args    the arguments provided to the application
-     * @return CommandLine object representing the arguments passed by the user
+     * @param options Collection of Options/Arguments available to the application.
+     * @param args    Options/Arguments provided to the application.
+     * @return A CommandLine object representing the arguments passed by the user.
      */
     CommandLine parseArguments(Options options, String[] args) {
         CommandLine cmd = null;

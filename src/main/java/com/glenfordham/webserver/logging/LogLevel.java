@@ -1,5 +1,8 @@
 package com.glenfordham.webserver.logging;
 
+/**
+ * Defines the available log levels used by this application
+ */
 public enum LogLevel {
     INFO(
             "INFO"
@@ -9,6 +12,9 @@ public enum LogLevel {
     ),
     DEBUG(
             "DEBUG"
+    ),
+    TRACE(
+            "TRACE"
     );
 
     private final String text;
@@ -18,9 +24,9 @@ public enum LogLevel {
     }
 
     /**
-     * Returns the Log level
+     * Gets the Log level.
      *
-     * @return the parameter name
+     * @return The log level as text.
      */
     public String get() {
         return text;

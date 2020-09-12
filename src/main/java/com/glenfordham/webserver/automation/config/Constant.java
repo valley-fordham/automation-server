@@ -1,5 +1,8 @@
 package com.glenfordham.webserver.automation.config;
 
+/**
+ * Defines constant values used by the {@link com.glenfordham.webserver.automation.config} package.
+ */
 public enum Constant {
     CONFIG_XSD(
             "config.xsd"
@@ -12,9 +15,9 @@ public enum Constant {
     }
 
     /**
-     * Returns the text value of the Constant
+     * Gets the text value of the Constant.
      *
-     * @return text value
+     * @return The text value of the constant.
      */
     public String getText() {
         return text;

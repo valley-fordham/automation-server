@@ -1,5 +1,8 @@
 package com.glenfordham.webserver.automation.handler.gpio;
 
+/**
+ * Defines constants used bv the {@link com.glenfordham.webserver.automation.handler.gpio} package.
+ */
 public enum Constant {
     GPIO_WRITE(
             "write"
@@ -15,9 +18,9 @@ public enum Constant {
     }
 
     /**
-     * Returns the text value of the Constant
+     * Gets the text value of the Constant.
      *
-     * @return text value
+     * @return The text value of the Constant.
      */
     public String get() {
         return text;

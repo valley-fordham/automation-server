@@ -3,7 +3,7 @@ package com.glenfordham.webserver.automation;
 /**
  * Contains all supported URL parameters
  * <p>
- * eg. ?authentication_token=token&request_type=request_type&request_name=requestName
+ * eg. ?authentication_token=token&amp;request_type=request_type&amp;request=requestName
  */
 public enum Parameter {
     AUTHENTICATION_TOKEN(
@@ -23,19 +23,19 @@ public enum Parameter {
     }
 
     /**
-     * Returns the name of the parameter
+     * Gets the name of the parameter
      *
-     * @return the parameter name
+     * @return The parameter name.
      */
     public String get() {
         return text;
     }
 
     /**
-     * Returns the Enum form of the passed in text
+     * Gets the Enum form of the passed in text
      *
-     * @param text the String to be translated to an Enum
-     * @return the Enum - returns null on failure
+     * @param text String to be translated to an Enum.
+     * @return The Enum - returns null on failure to match on an Enum.
      */
     public static Parameter get(String text) {
         for (Parameter parameter : Parameter.values()) {

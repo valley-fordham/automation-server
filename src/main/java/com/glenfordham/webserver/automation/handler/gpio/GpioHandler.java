@@ -5,7 +5,8 @@ import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.handler.Handler;
 import com.glenfordham.webserver.automation.handler.HandlerException;
-import com.glenfordham.webserver.automation.jaxb.*;
+import com.glenfordham.webserver.automation.jaxb.Config;
+import com.glenfordham.webserver.automation.jaxb.GpioRequest;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
@@ -14,17 +15,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * For Raspberry Pi's only. This interfaces with the GPIO process that sits on the PATH environment variable.
+ * This handler interfaces with the GPIO process that sits on the PATH environment variable. For Raspberry Pi's only.
  */
 public class GpioHandler implements Handler {
+
     /**
      * Processes a GPIO type request. Matches request against configuration XML and triggers configured GPIO action.
      *
-     * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException          if a generic Exception occurs when handling the request
-     * @throws ParameterException        if unable to get request name from parameter
+     * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+     * @param clientOutput Client OutputStream, for writing a response.
+     * @throws AutomationConfigException If unable to get configuration.
+     * @throws HandlerException          If a generic Exception occurs when handling the request.
+     * @throws ParameterException        If unable to get request name from parameter.
      */
     @Override
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {

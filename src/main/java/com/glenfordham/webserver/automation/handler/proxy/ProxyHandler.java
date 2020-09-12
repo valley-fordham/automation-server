@@ -2,7 +2,6 @@ package com.glenfordham.webserver.automation.handler.proxy;
 
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.Parameter;
-import com.glenfordham.webserver.automation.RequestType;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.handler.Handler;
@@ -17,17 +16,22 @@ import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
+/**
+ * ProxyHandler processes proxy type requests, and allows the forward of a request to another Automation Server, or
+ * other web service that processes URL parameters only. This handler will only forward URL parameters, and does not
+ * forward other request body elements.
+ */
 public class ProxyHandler implements Handler {
+
     /**
      * Processes a proxy type request. Proxy requests are forwarded on to the configured destination.
      *
-     * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException          if a generic Exception occurs when handling the request
-     * @throws ParameterException        if unable to get request name from parameter
+     * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+     * @param clientOutput Client OutputStream, for writing a response.
+     * @throws AutomationConfigException If unable to get configuration.
+     * @throws HandlerException          If a generic Exception occurs when handling the request.
+     * @throws ParameterException        If unable to get request name from parameter.
      */
     @Override
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {

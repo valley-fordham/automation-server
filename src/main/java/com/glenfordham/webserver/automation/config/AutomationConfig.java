@@ -14,6 +14,9 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 
+/**
+ * Represents configuration XML that complies to the Automation Server XML schema.
+ */
 public class AutomationConfig {
 
     // String constant used to save and retrieve Servlet configuration provided from command line
@@ -25,9 +28,10 @@ public class AutomationConfig {
     private static boolean configReload = false;
 
     /**
-     * Loads a configuration XML file and converts it into the JAXB representation
+     * Loads a configuration XML file and converts it into the JAXB representation.
      *
-     * @throws AutomationConfigException if an error occurs with loading, validation or conversion
+     * @param configFileLocation Path to the configuration file relative to the application run path.
+     * @throws AutomationConfigException If an error occurs with loading, validation or conversion.
      */
     public static void load(String configFileLocation) throws AutomationConfigException {
         if (!loaded || configReload) {
@@ -63,8 +67,8 @@ public class AutomationConfig {
     /**
      * Get the loaded Automation configuration file
      *
-     * @return Config object
-     * @throws AutomationConfigException if configuration file is not yet loaded
+     * @return The Config object.
+     * @throws AutomationConfigException If configuration file is not yet loaded.
      */
     public static Config get() throws AutomationConfigException {
         if (config == null) {
@@ -74,10 +78,10 @@ public class AutomationConfig {
     }
 
     /**
-     * Sets the configReload value
+     * Sets the configReload value.
      *
-     * @param value if true, configuration file will be loaded on every request. Should only be used in single-thread
-     *              debug scenarios to ensure thread-safety
+     * @param value If true, configuration file will be loaded on every request. Should only be used in single-thread
+     *              debug scenarios to ensure thread-safety.
      */
     public static void setConfigReload(boolean value) {
         configReload = value;

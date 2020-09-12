@@ -2,8 +2,8 @@ package com.glenfordham.webserver.automation;
 
 /**
  * Contains all supported request types
- *
- * eg. /?authentication_token=token&request_type=broadlink&request=requestName
+ * <p>
+ * eg. /?authentication_token=token&amp;request_type=broadlink&amp;request=requestName
  */
 public enum RequestType {
 
@@ -33,19 +33,19 @@ public enum RequestType {
     }
 
     /**
-     * Returns the text value of the RequestType
+     * Gets the text value of the RequestType.
      *
-     * @return text value
+     * @return The text value.
      */
     public String get() {
         return text;
     }
 
     /**
-     * Returns the Enum form of the passed in text
+     * Returns the Enum form of the passed in text.
      *
-     * @param text the String to be translated to an Enum
-     * @return the Enum - returns null on failure
+     * @param text String to be translated to an Enum.
+     * @return The Enum - returns null on failure to match on an Enum.
      */
     public static RequestType get(String text) {
         for (RequestType requestType : RequestType.values()) {

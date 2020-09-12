@@ -116,8 +116,16 @@
 			<read_timeout>5000</read_timeout>
 		</host>
 		<request>
-			<name>your_request_name</name>
+			<name>a_proxy_request</name>
 			<host>aHost</host>
+			<for_automation_server>true</for_automation_server>
+		</request>
+		<request>
+			<name>another_proxy_request</name>
+			<host>aHost</host>
+			<for_automation_server>false</for_automation_server>
+			<forward_parameter>parameter_one</forward_parameter>
+			<forward_parameter>parameter_two</forward_parameter>
 		</request>
 	</proxy>
 </config>

@@ -1,18 +1,21 @@
 package com.glenfordham.webserver.automation.handler.gpio;
 
-import com.glenfordham.utils.process.cmd.CommandLine;
 import com.glenfordham.utils.process.cmd.CmdLineException;
+import com.glenfordham.utils.process.cmd.CommandLine;
 import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.jaxb.*;
 import com.glenfordham.webserver.logging.Log;
 
+/**
+ * Defines behaviour for the various types of GpioRequest.
+ */
 public class GpioPinControl {
 	/**
-	 * Processes the GPIO request
+	 * Processes the GPIO request.
 	 *
-	 * @param request the GpioRequest to be processed
-	 * @return a String response if a Gpio read was performed, or null if only a write was performed
-	 * @throws HandlerException if a generic Exception occurs when handling the request
+	 * @param request GpioRequest to be processed.
+	 * @return A String if a Gpio read was performed, or null if only a write was performed.
+	 * @throws HandlerException If a generic Exception occurs when handling the request.
 	 */
 	public static String process(GpioRequest request) throws HandlerException {
 		String response = null;
@@ -26,11 +29,11 @@ public class GpioPinControl {
 	}
 
 	/**
-	 * Processes a GpioRead request
+	 * Processes a GpioRead request.
 	 *
-	 * @param readRequest the GpioRead request to be processed
-	 * @return a String response of the read request
-	 * @throws HandlerException if a generic Exception occurs when handling the request
+	 * @param readRequest GpioRead request to be processed.
+	 * @return A String with the response of the read request.
+	 * @throws HandlerException If a generic Exception occurs when handling the request.
 	 */
 	private static String process(GpioRead readRequest) throws HandlerException {
 		GpioReadBehaviour readBehaviour = readRequest.getBehaviour();
@@ -42,10 +45,10 @@ public class GpioPinControl {
 	}
 
 	/**
-	 * Processes a GpioWrite request
+	 * Processes a GpioWrite request.
 	 *
-	 * @param writeRequest the GpioWrite request to be processed
-	 * @throws HandlerException if an exception occurs when attempting to sleep the thread
+	 * @param writeRequest GpioWrite request to be processed.
+	 * @throws HandlerException If an exception occurs when attempting to sleep the thread.
 	 */
 	private static void process(GpioWrite writeRequest) throws HandlerException {
 		GpioWriteBehaviour writeBehaviour = writeRequest.getBehaviour();
@@ -74,13 +77,13 @@ public class GpioPinControl {
 	}
 
 	/**
-	 * Executes a provided Gpio Command
+	 * Executes a provided Gpio Commandl
 	 *
-	 * @param gpioCommand the Gpio command to be performed, either 'read' or 'write'
-	 * @param pin         the pin to perform the command on
-	 * @param writeValue  the value to write, if a write is being performed
-	 * @return String response of Gpio if a read is performed
-	 * @throws HandlerException if an error occurs when running the Gpio process
+	 * @param gpioCommand Gpio command to be performed, either 'read' or 'write'.
+	 * @param pin         Pin to perform the command on.
+	 * @param writeValue  Value to write, if a write is being performed.
+	 * @return A String with the response of the Gpio pin, if a read is performed.
+	 * @throws HandlerException If an error occurs when running the Gpio process.
 	 */
 	private static String execute(Constant gpioCommand, int pin, GpioWriteValue writeValue) throws HandlerException {
 		// Invoke the GPIO executable and return the response

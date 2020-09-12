@@ -12,10 +12,10 @@ import java.util.Arrays;
 public class AutomationParameterValidator implements ParameterValidator {
 
     /**
-     * Validates all passed in parameters based on the Automation package requirements
+     * Validates all passed in parameters based on the Automation package requirements.
      *
-     * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @return true is parameterMap is valid
+     * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+     * @return True is parameterMap is valid.
      */
     @Override
     public boolean isParameterMapValid(ParameterMap parameterMap) {
@@ -31,10 +31,10 @@ public class AutomationParameterValidator implements ParameterValidator {
     }
 
     /**
-     * Iterate over all parameter map keys and check if they are valid parameters against the Parameter Enum
+     * Iterate over all parameter map keys and check if they are valid parameters against the Parameter Enum.
      *
-     * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @return true if all keys are valid
+     * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+     * @return True if all keys are valid.
      */
     @Override
     public boolean areUrlParamKeysValid(ParameterMap parameterMap) throws ParameterException {
@@ -49,10 +49,10 @@ public class AutomationParameterValidator implements ParameterValidator {
     }
 
     /**
-     * Checks if the parameter values are valid
+     * Checks if the parameter values are valid for a given parameter key.
      *
-     * @param urlParams list of token values to be validated, belonging to a single parameter key
-     * @return true if only one value for each key has been provided
+     * @param urlParams List of token values to be validated, belonging to a single parameter key.
+     * @return True if only one value for each key has been provided.
      */
     @Override
     public boolean areUrlParamsValid(ParameterList urlParams) {
@@ -67,12 +67,12 @@ public class AutomationParameterValidator implements ParameterValidator {
     }
 
     /**
-     * Checks if the provided authentication token is valid
+     * Checks if the provided authentication token is valid.
      *
-     * @param authenticationTokens a list of parameter tokens
-     * @return true if there is only one authentication token, and the token value is correct
-     * @throws AutomationConfigException if unable to parse the configuration file to extract authentication config
-     * @throws ParameterException if authenticationTokens is unexpectedly empty
+     * @param authenticationTokens List of parameter tokens.
+     * @return True if there is only one authentication token, and the token value is correct.
+     * @throws AutomationConfigException If unable to parse the configuration file to extract authentication config.
+     * @throws ParameterException If authenticationTokens is empty.
      */
     private boolean isAuthenticationTokenValid(ParameterList authenticationTokens) throws AutomationConfigException, ParameterException {
         if (areUrlParamsValid(authenticationTokens)) {
@@ -84,11 +84,11 @@ public class AutomationParameterValidator implements ParameterValidator {
     }
 
     /**
-     * Checks if the provided request type is valid
+     * Checks if the provided request type is valid.
      *
-     * @param requestTypes a list of request types
-     * @return true if there is only one request type, and the token value is a valid request type
-     * @throws ParameterException thrown if requestTypes is unexpectedly empty
+     * @param requestTypes List of request types.
+     * @return True if there is only one request type, and the token value is a valid request type.
+     * @throws ParameterException If requestTypes is empty.
      */
     private boolean isRequestTypeValid(ParameterList requestTypes) throws ParameterException {
         if (areUrlParamsValid(requestTypes)) {

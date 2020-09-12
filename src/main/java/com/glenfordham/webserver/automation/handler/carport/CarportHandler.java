@@ -6,7 +6,10 @@ import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.handler.Handler;
 import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.handler.gpio.GpioPinControl;
-import com.glenfordham.webserver.automation.jaxb.*;
+import com.glenfordham.webserver.automation.jaxb.CarportAction;
+import com.glenfordham.webserver.automation.jaxb.CarportRequest;
+import com.glenfordham.webserver.automation.jaxb.Config;
+import com.glenfordham.webserver.automation.jaxb.GpioRequest;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
@@ -17,8 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * For Raspberry Pi's only. CarportHandler relies on the GpioHandler and GPIO configuration to be present. Set up a
- * dedicated Gpio Request with set as 'Carport Only' for both triggering the door and reading the current status.
+ * CarportHandler relies on the GpioHandler and GPIO configuration to be present. Use dedicated Gpio requests for each
+ * action, using the 'Carport Only' flag. This handler is compatible with Raspberry Pi's only.
  */
 public class CarportHandler implements Handler {
 
@@ -31,11 +34,11 @@ public class CarportHandler implements Handler {
 	 * Processes a Carport type request. Carport requests are used to control a carport door through a Raspberry PI
 	 * GPIO interface.
 	 *
-	 * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-	 * @param clientOutput client OutputStream, for writing a response
-	 * @throws AutomationConfigException if unable to get configuration
-	 * @throws HandlerException          if a generic Exception occurs when handling the request
-	 * @throws ParameterException        if unable to get request name from parameter
+	 * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+	 * @param clientOutput Client OutputStream, for writing a response.
+	 * @throws AutomationConfigException If unable to get configuration.
+	 * @throws HandlerException          If a generic Exception occurs when handling the request.
+	 * @throws ParameterException        If unable to get request name from parameter.
 	 */
 	@Override
 	public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
@@ -77,9 +80,9 @@ public class CarportHandler implements Handler {
 	 * Retrieves the linked GpioRequest configuration for door trigger and read status, and uses these to perform the
 	 * required Carport Door commands.
 	 *
-	 * @param carportRequest the CarportRequest to be processed
-	 * @param carportGpioRequests the list of configured 'Carport Only' GpioRequests
-	 * @throws HandlerException if an error occurs invoking the Gpio process
+	 * @param carportRequest CarportRequest to be processed.
+	 * @param carportGpioRequests List of configured 'Carport Only' GpioRequests.
+	 * @throws HandlerException If an error occurs invoking the Gpio process.
 	 */
 	void processRequest(CarportRequest carportRequest, List<GpioRequest> carportGpioRequests) throws HandlerException {
 		// Retrieve the Gpio request to use for triggering the door
@@ -114,15 +117,15 @@ public class CarportHandler implements Handler {
 	}
 
 	/**
-	 * Closes the carport door. Multiple attempts are made such that if the door is almost closed but was previously on the way down,
-	 * it will be re-opened fully and then fully closed. The wait time should represent how long it takes for the door to
-	 * go from fully open to fully closed.
+	 * Closes the carport door. Multiple attempts are made such that if the door is almost closed but was previously
+	 * on the way down, it will be re-opened fully and then fully closed. The wait time should represent how long it
+	 * takes for the door to go from fully open to fully closed.
 	 *
-	 * @param triggerRequest The GpioRequest to be used for triggering the door
-	 * @param readRequest The GpioRequest to be used for checking if the door is open/closed
-	 * @param doorClosedValue The value expected to be returned from the readRequest if the door is closed
-	 * @param waitTime The time to wait between sending a trigger request and performing another door status check
-	 * @throws HandlerException if an error occurs while processing GpioRequests or if the sleeping thread is interrupted
+	 * @param triggerRequest GpioRequest to be used for triggering the door.
+	 * @param readRequest GpioRequest to be used for checking if the door is open/closed.
+	 * @param doorClosedValue Value expected to be returned from the readRequest if the door is closed.
+	 * @param waitTime Time to wait in milliseconds between sending a trigger request and performing another door status check.
+	 * @throws HandlerException If an error occurs while processing GpioRequests or if the sleeping thread is interrupted.
 	 */
 	private void closeDoor(GpioRequest triggerRequest, GpioRequest readRequest, String doorClosedValue, int waitTime) throws HandlerException {
 		int attempts = 0;
@@ -140,12 +143,12 @@ public class CarportHandler implements Handler {
 	}
 
 	/**
-	 * Opens the carport door. Checks
+	 * Opens the carport door. Checks if the door is already open before triggering the option action.
 	 *
-	 * @param triggerRequest The GpioRequest to be used for triggering the door
-	 * @param readRequest The GpioRequest to be used for checking if the door is open/closed
-	 * @param doorClosedValue The value expected to be returned from the readRequest if the door is closed
-	 * @throws HandlerException if an error occurs while processing GpioRequests
+	 * @param triggerRequest GpioRequest to be used for triggering the door.
+	 * @param readRequest GpioRequest to be used for checking if the door is open/closed.
+	 * @param doorClosedValue Value expected to be returned from the readRequest if the door is closed.
+	 * @throws HandlerException If an error occurs while processing GpioRequests.
 	 */
 	private void openDoor(GpioRequest triggerRequest, GpioRequest readRequest, String doorClosedValue) throws HandlerException {
 		if (!GpioPinControl.process(readRequest).equalsIgnoreCase(doorClosedValue)) {
@@ -154,10 +157,10 @@ public class CarportHandler implements Handler {
 	}
 
 	/**
-	 * Checks the current status of the carport door and returns the value
+	 * Checks the current status of the carport door and returns the value.
 	 *
-	 * @param readRequest The GpioRequest to be used for checking if the door is open/closed
-	 * @throws HandlerException if an error occurs while processing the GpioRequest
+	 * @param readRequest GpioRequest to be used for checking if the door is open/closed.
+	 * @throws HandlerException If an error occurs while processing the GpioRequest.
 	 */
 	private void readDoorStatus(GpioRequest readRequest) throws HandlerException {
 		try {
@@ -168,10 +171,10 @@ public class CarportHandler implements Handler {
 	}
 
 	/**
-	 * Sends the door trigger request, equivalent to pressing the carport door remote button
+	 * Sends the door trigger request, equivalent to pressing the carport door remote button.
 	 *
-	 * @param triggerRequest The GpioRequest to be used for triggering the door
-	 * @throws HandlerException If an error occurs while processing the GpioRequest
+	 * @param triggerRequest GpioRequest to be used for triggering the door.
+	 * @throws HandlerException If an error occurs while processing the GpioRequest.
 	 */
 	private void sendDoorTrigger(GpioRequest triggerRequest) throws HandlerException {
 		GpioPinControl.process(triggerRequest);
