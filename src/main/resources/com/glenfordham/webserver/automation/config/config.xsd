@@ -314,9 +314,11 @@
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="host" type="xs:string"/>
+            <!-- If set to true, this will automatically forward the 'PROXY_' prefixed URL parameters -->
+            <xs:element name="for_automation_server" type="xs:boolean"/>
             <!-- Only these URL parameters can be forwarded to the proxy host -->
             <!-- Not all need to be provided in original request -->
-            <xs:element name="forward_parameter" type="xs:string" maxOccurs="unbounded">
+            <xs:element name="forward_parameter" type="xs:string" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
                      <xs:appinfo>
                         <jaxb:property name="forward_parameters"/>
