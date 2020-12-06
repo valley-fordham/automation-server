@@ -1,8 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Web Server" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.glenfordham.webserver.Application" />
-    <module name="webserver.main" />
-    <option name="PROGRAM_PARAMETERS" value="-p 80" />
+    <module name="automation-server.main" />
+    <option name="PROGRAM_PARAMETERS" value="-c &quot;Z:\My Documents\Development\automation-server\config.xml&quot; -r" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/build" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
