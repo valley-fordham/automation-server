@@ -11,11 +11,14 @@ import com.glenfordham.webserver.automation.jaxb.ProxyHost;
 import com.glenfordham.webserver.automation.jaxb.ProxyRequest;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
+import com.glenfordham.webserver.servlet.parameter.ParameterList;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * ProxyHandler processes proxy type requests, and allows the forward of a request to another Automation Server, or
@@ -65,9 +68,29 @@ public class ProxyHandler implements Handler {
             return;
         }
 
-        // Get list of parameters to forward in the proxy request.
-        // Only forward the parameters as specified in configuration, others will be ignored.
-        ParameterMap forwardParameterMap = parameterMap.filterByList(request.getForwardParameters());
+        // If proxy request is for another automation server, check that all proxy parameters are present
+        if (request.isForAutomationServer()
+                && !Arrays.stream(ProxyParameterMapping.values()).allMatch(e->parameterMap.containsKey(e.getText())) ) {
+            Log.error("Proxy request for another automation server does not contain all required URL parameters");
+            return;
+        }
+
+        // Get list of parameters to forward in the proxy request
+        ParameterMap forwardParameterMap;
+        List<String> proxyParameters = request.getForwardParameters();
+        // If proxy request is for another automation server, ensure standard parameters are forwarded in request
+        if (request.isForAutomationServer()) {
+            for (ProxyParameterMapping mapping : ProxyParameterMapping.values()) {
+                proxyParameters.add(mapping.getText());
+            }
+        }
+        // Forward the parameters as specified in configuration, others will be ignored
+        forwardParameterMap = parameterMap.filterByList(request.getForwardParameters());
+
+        // Remove 'proxy_' prefixes so request can be processed by the forward host
+        if (request.isForAutomationServer()) {
+            forwardParameterMap = removeProxyPrefixes(forwardParameterMap);
+        }
 
         // Send request to configured proxy host with configured forward parameters, and return response to original requester
         try {
@@ -83,5 +106,20 @@ public class ProxyHandler implements Handler {
         } catch (Exception e) {
             throw new HandlerException("Error occurred when making proxy request", e);
         }
+    }
+
+    /**
+     * Remove the 'proxy_' prefix text from URL parameters in order to be forwarded to another automation server
+     *
+     * @param parameterMap The parameter map with keys to remove 'proxy_' prefix text from
+     * @return A parameterMap with 'proxy_' prefix text removed from each key
+     */
+    private ParameterMap removeProxyPrefixes(ParameterMap parameterMap) {
+        for (ProxyParameterMapping mapping : ProxyParameterMapping.values()) {
+            ParameterList tempParameterList = parameterMap.get(mapping.getText());
+            parameterMap.remove(mapping.getText());
+            parameterMap.put(mapping.getParameter().get(), tempParameterList);
+        }
+        return parameterMap;
     }
 }
