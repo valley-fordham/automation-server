@@ -1,7 +1,7 @@
 package com.glenfordham.webserver.automation.handler.broadlink;
 
-import com.glenfordham.utils.process.cmd.CommandLine;
 import com.glenfordham.utils.process.cmd.CmdLineException;
+import com.glenfordham.utils.process.cmd.CommandLine;
 import com.glenfordham.webserver.automation.Parameter;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
@@ -20,19 +20,19 @@ import java.io.OutputStream;
 /**
  * Broadlink actions require the broadlink CLI path (including Python path) and a number of parameters configured.
  * The required values will be dependent on your device.
- * See https://github.com/mjg59/python-broadlink for more information.
+ * @see <a href="https://github.com/mjg59/python-broadlink">python-broadlink on GitHub</a>
  */
 public class BroadlinkHandler implements Handler {
 
     /**
      * Processes a broadlink type request. Matches request against configuration XML and triggers Broadlink action
-     * on the device configured against the request
+     * on the device configured against the request.
      *
-     * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException          if a generic Exception occurs when handling the request
-     * @throws ParameterException        if unable to get request name from parameter
+     * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+     * @param clientOutput Client OutputStream, for writing a response.
+     * @throws AutomationConfigException If unable to get configuration.
+     * @throws HandlerException          If a generic Exception occurs when handling the request.
+     * @throws ParameterException        If unable to get request name from parameter.
      */
     @Override
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
@@ -45,9 +45,9 @@ public class BroadlinkHandler implements Handler {
      * Checks that the request matches a supported request in the configuration file.
      * If it does, then invoke the broadlink action and device associated with that request name.
      *
-     * @param incomingRequestName the name of the request to be actioned
-     * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException if thread is interrupted while waiting for the process to complete, or if an error occurs when running broadlink CLI executable
+     * @param incomingRequestName Name of the request to be actioned.
+     * @throws AutomationConfigException If unable to get configuration.
+     * @throws HandlerException If thread is interrupted while waiting for the process to complete, or if an error occurs when running broadlink CLI executable.
      */
     private void processRequest(String incomingRequestName) throws AutomationConfigException, HandlerException {
         Config config = AutomationConfig.get();

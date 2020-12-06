@@ -5,20 +5,24 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
+/**
+ * Defines a list of URL parameters and provides convenience methods for access. URL parameters can appear in a URL
+ * multiple times, so this list will sort all values for a given URL parameter key.
+ */
 public class ParameterList extends ArrayList<String> {
 
     /**
-     * Extends a plain ArrayList of Strings to provide convenience methods
+     * Extends a plain ArrayList of Strings to provide convenience methods.
      */
     ParameterList() {
         super();
     }
 
     /**
-     * Gets the first value in the ParameterList
+     * Gets the first value in the ParameterList.
      *
-     * @return the first String in the ParameterList
-     * @throws ParameterException if the ParameterList is empty
+     * @return The first String in the ParameterList.
+     * @throws ParameterException If the ParameterList is empty.
      */
     public String getFirst() throws ParameterException {
         if (this.size() > 0) {

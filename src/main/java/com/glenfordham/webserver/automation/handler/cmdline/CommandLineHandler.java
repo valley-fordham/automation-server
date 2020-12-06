@@ -16,16 +16,20 @@ import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * CommandLine handler is used for processing command prompt and terminal commands in the same way that they would
+ * process when executed against the operating system.
+ */
 public class CommandLineHandler implements Handler {
     /**
      * Processes a Command Line type request. Matches request against configuration XML and triggers command defined
-     * against the request name
+     * against the request name.
      *
-     * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException          if a generic Exception occurs when handling the request
-     * @throws ParameterException        if unable to get request name from parameter
+     * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+     * @param clientOutput Client OutputStream, for writing a response.
+     * @throws AutomationConfigException If unable to get configuration.
+     * @throws HandlerException          If a generic Exception occurs when handling the request.
+     * @throws ParameterException        If unable to get request name from parameter.
      */
     @Override
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {

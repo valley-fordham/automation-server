@@ -5,13 +5,16 @@ import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.automation.jaxb.TokenBehaviour;
 
+/**
+ * Defines an Authenticator object used to validate an authentication token.
+ */
 public class Authenticator {
 
     /**
      * Authenticates the provided token
      *
-     * @param authenticationToken the token to be authenticated
-     * @return true if the token passes authentication
+     * @param authenticationToken Token to be authenticated.
+     * @return True if the token passes authentication.
      */
     static boolean authenticate(String authenticationToken) throws AutomationConfigException {
         Config config = AutomationConfig.get();

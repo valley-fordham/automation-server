@@ -17,12 +17,15 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Defines an embedded Tomcat Server to be used as the web listener for web requests
+ */
 public class TomcatServer {
 
     private static boolean started = false;
 
     /**
-     * Starts the Tomcat server. Only one running Tomcat instance is supported
+     * Starts the Tomcat server. Only one running Tomcat instance is supported.
      */
     static synchronized void start(ConfigProperties configProperties) {
         try {
@@ -69,14 +72,14 @@ public class TomcatServer {
     }
 
     /**
-     * Gets the root folder of the Tomcat directory
+     * Gets the root folder of the Tomcat directory.
      *
-     * @return a File containing the absolute root path
-     * @throws URISyntaxException if unable to convert location to URI
+     * @return A File containing the absolute root path.
+     * @throws URISyntaxException If unable to convert location to URI.
      */
     private static File getRootFolder() throws URISyntaxException {
         File root;
-        String runningJarPath = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replaceAll("\\\\", "/");
+        String runningJarPath = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replace("\\\\", "/");
         int lastIndexOf = runningJarPath.lastIndexOf("/target/");
         if (lastIndexOf < 0) {
             root = new File("");

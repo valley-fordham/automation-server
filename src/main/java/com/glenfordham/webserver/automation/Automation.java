@@ -15,14 +15,19 @@ import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import javax.servlet.ServletContext;
 import java.io.OutputStream;
 
+/**
+ * Defines an entry point used to handle a HTTP request to be processed by the Automation Server.
+ */
 public class Automation {
 
     /**
      * Attempts to process HTTP request.
-     * Checks that URL parameters are valid, then identifies the request type and triage's the request to the appropriate
-     * handler.
+     * Checks that URL parameters are valid, then identifies the request type and triage's the request to the
+     * appropriate handler.
      *
-     * @param parameterMap the parameters of the HTTP request
+     * @param context      ServletContext used to retrieve configuration.
+     * @param parameterMap Parameters of the HTTP request.
+     * @param clientOutput OutputStream which will be delivered to the client.
      */
     public void processHttpRequest(ServletContext context, ParameterMap parameterMap, OutputStream clientOutput) {
         try {

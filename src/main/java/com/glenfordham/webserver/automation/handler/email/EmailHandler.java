@@ -23,16 +23,19 @@ import javax.mail.internet.MimeMessage;
 import java.io.OutputStream;
 import java.util.Properties;
 
+/**
+ * Email handler is used for processing requests of the email request type.
+ */
 public class EmailHandler implements Handler {
     /**
      * Processes an Email type request. Matches request against configuration XML and triggers email action
      * on the mailbox configured against the request.
      *
-     * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException          if a generic Exception occurs when handling the request
-     * @throws ParameterException        if unable to get request name from parameter
+     * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+     * @param clientOutput Client OutputStream, for writing a response.
+     * @throws AutomationConfigException If unable to get configuration.
+     * @throws HandlerException          If a generic Exception occurs when handling the request.
+     * @throws ParameterException        If unable to get request name from parameter.
      */
     @Override
     public void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException {
@@ -69,14 +72,14 @@ public class EmailHandler implements Handler {
     }
 
     /**
-     * Unpacks the email request and sends the email to the linked 'Mailbox' host
-     * TODO: make thread-safe with something _better than_ synchronized
+     * Unpacks the email request and sends the email to the linked 'Mailbox' host.
      *
-     * @param mailbox the receiver of the message
-     * @param request the email request to unpack and turn into a message to be sent
-     * @throws HandlerException if an unexpected error occurs when handling the request
+     * @param mailbox Mail server to send the email with.
+     * @param request Email request to unpack and turn into an email to be sent.
+     * @throws HandlerException If an unexpected error occurs when handling the request.
      */
     private synchronized void sendEmail(Mailbox mailbox, EmailRequest request) throws HandlerException {
+        // TODO: make thread-safe with something _better than_ synchronized
         // Get system properties
         Properties properties = System.getProperties();
 

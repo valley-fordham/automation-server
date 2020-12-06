@@ -2,6 +2,10 @@ package com.glenfordham.webserver.automation.handler.proxy;
 
 import com.glenfordham.webserver.automation.Parameter;
 
+/**
+ * Defines mappings between Proxy URL parameters and standard URL parameters as defined in
+ * {@link com.glenfordham.webserver.automation.Parameter}.
+ */
 public enum ProxyParameterMapping {
 	PROXY_AUTHENTICATION_TOKEN(
 			"proxy_authentication_token",
@@ -25,14 +29,19 @@ public enum ProxyParameterMapping {
 	}
 
 	/**
-	 * Returns the text value of the Constant
+	 * Gets the text value of the Proxy Parameter Mapping..
 	 *
-	 * @return text value
+	 * @return The text value of the Proxy Parameter Mapping..
 	 */
 	public String getText() {
 		return text;
 	}
 
+	/**
+	 * Gets the standard URL Parameter of the Proxy Parameter Mapping..
+	 *
+	 * @return The standard Parameter of the Proxy Parameter Mapping.
+	 */
 	public Parameter getParameter() {
 		return parameter;
 	}

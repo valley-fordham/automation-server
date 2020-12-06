@@ -4,12 +4,15 @@ import org.apache.logging.log4j.LogManager;
 
 import java.util.Formatter;
 
+/**
+ * Defines a logging object against which all logging events can be called.
+ */
 public class Log {
 
     /**
-     * Gets the log for the calling class
+     * Gets the log for the calling class.
      *
-     * @return the log for the calling class
+     * @return The log for the calling class.
      */
     private static org.apache.logging.log4j.Logger getLog() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -20,9 +23,9 @@ public class Log {
     }
 
     /**
-     * Gets the log level for the calling class
+     * Gets the log level for the calling class.
      *
-     * @return the log level for the calling class
+     * @return The log level for the calling class.
      */
     public static String getLogLevel() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -34,9 +37,9 @@ public class Log {
 
 
     /**
-     * Writes to log as debug
+     * Writes a debug log event.
      *
-     * @param message debug message to be written
+     * @param message Debug message to be written.
      */
     public static void debug(String message) {
         getLog().debug(message);
@@ -44,9 +47,9 @@ public class Log {
 
 
     /**
-     * Writes to log as debug
+     * Writes a debug log event.
      *
-     * @param cause throwable to be written
+     * @param cause Throwable to be written.
      */
     public static void debug(Throwable cause) {
         getLog().debug(cause.getMessage(), cause);
@@ -54,10 +57,10 @@ public class Log {
 
 
     /**
-     * Writes to log as debug
+     * Writes a debug log event.
      *
-     * @param message debug message to be written
-     * @param cause   throwable to be written
+     * @param message Debug message to be written.
+     * @param cause   Throwable to be written.
      */
     public static void debug(String message, Throwable cause) {
         getLog().debug(message, cause);
@@ -65,9 +68,9 @@ public class Log {
 
 
     /**
-     * Writes to log as error
+     * Writes an error log event.
      *
-     * @param message error message to be written
+     * @param message Error message to be written.
      */
     public static void error(String message) {
         getLog().error(message);
@@ -75,9 +78,9 @@ public class Log {
 
 
     /**
-     * Writes to log as error
+     * Writes an error log event.
      *
-     * @param cause throwable to be written
+     * @param cause Throwable to be written.
      */
     public static void error(Throwable cause) {
         getLog().error(cause.getMessage(), cause);
@@ -85,10 +88,10 @@ public class Log {
 
 
     /**
-     * Writes to log as error
+     * Writes an error log event.
      *
-     * @param message error message to be written
-     * @param cause throwable to be written
+     * @param message Error message to be written.
+     * @param cause Throwable to be written.
      */
     public static void error(String message, Throwable cause) {
         getLog().error(message, cause);
@@ -96,19 +99,19 @@ public class Log {
 
 
     /**
-     * Writes to log as info
+     * Writes an info log event.
      *
-     * @param message info message to be written
+     * @param message Info message to be written.
      */
     public static void info(String message) {
         getLog().info(message);
     }
 
     /**
-     * Writes to log as info
+     * Writes an error log event.
      *
-     * @param printfFormatMessage info message to be written, containing placeholders eg. %s
-     * @param args strings to be used in the formatter
+     * @param printfFormatMessage Info message to be written, containing placeholders. eg. %s
+     * @param args Strings to be used in the formatter.
      */
     public static void infoFormat(String printfFormatMessage, Object ... args) {
         try (Formatter formatter = new Formatter()) {
@@ -118,9 +121,9 @@ public class Log {
 
 
     /**
-     * Writes to log as trace
+     * Writes a trace log event.
      *
-     * @param message trace message to be written
+     * @param message Trace message to be written.
      */
     public static void trace(String message) {
         getLog().trace(message);

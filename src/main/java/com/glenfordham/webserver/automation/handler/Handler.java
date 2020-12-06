@@ -7,18 +7,18 @@ import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import java.io.OutputStream;
 
 /**
- * Standard interface for Handlers.
+ * Interface for building Automation Server request handlers
  */
 public interface Handler {
 
     /**
-     * Entry point for handler
+     * Entry point for a request handler.
      *
-     * @param parameterMap complete ParameterMap object, containing both parameter keys and values
-     * @param clientOutput client OutputStream, for writing a response
-     * @throws AutomationConfigException if unable to get configuration
-     * @throws HandlerException          if a generic Exception occurs when handling the request
-     * @throws ParameterException        if unable to get request name from parameter
+     * @param parameterMap Complete ParameterMap object, containing both parameter keys and values.
+     * @param clientOutput Client OutputStream, for writing a response.
+     * @throws AutomationConfigException If unable to get configuration.
+     * @throws HandlerException          If a generic Exception occurs when handling the request.
+     * @throws ParameterException        If unable to get request name from parameter.
      */
     void start(ParameterMap parameterMap, OutputStream clientOutput) throws AutomationConfigException, HandlerException, ParameterException;
 }

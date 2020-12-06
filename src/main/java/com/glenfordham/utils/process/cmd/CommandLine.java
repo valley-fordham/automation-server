@@ -8,6 +8,9 @@ import org.apache.commons.lang3.SystemUtils;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * The CommandLine class represents the hosts' Command Prompt or Terminal.
+ */
 public class CommandLine {
 
     private String commandLineToRun;
@@ -17,10 +20,10 @@ public class CommandLine {
     }
 
     /**
-     * Executes a new process with the provided command-line
+     * Executes a new process with the provided command-line.
      *
-     * @return the output of the command line process
-     * @throws CmdLineException if an error occurs when attempting to invoke the process
+     * @return A String output of the command line process.
+     * @throws CmdLineException If an error occurs when attempting to invoke the process.
      */
     public String exec() throws CmdLineException {
         if (commandLineToRun.isEmpty()) {
@@ -40,8 +43,7 @@ public class CommandLine {
         // Invoke the executable using ProcessWrapper to ensure all streams and the process are closed.
         // Wait for the process to complete and log error if an error code is returned
         Log.debug("Executing process: " + Arrays.toString(osSafeCmdLine));
-        try {
-            ProcessWrapper processWrapper = new ProcessWrapper(new ProcessBuilder(osSafeCmdLine).start());
+        try (ProcessWrapper processWrapper = new ProcessWrapper(new ProcessBuilder(osSafeCmdLine).start()))  {
             final int processReturnValue = processWrapper.getProcess().waitFor();
             Log.debug("Process returned:" + processReturnValue);
             if (processReturnValue != 0) {
@@ -62,18 +64,18 @@ public class CommandLine {
     }
 
     /**
-     * Gets the current command line value
+     * Gets the current command line value.
      *
-     * @return the command line set against the CmdLine
+     * @return A String containing the command line set against the CmdLine object.
      */
     public String getCommandLineToRun() {
         return commandLineToRun;
     }
 
     /**
-     * Sets the command line to the provided String
+     * Sets the command line to the provided String.
      *
-     * @param commandLineToRun String containing the command line to run
+     * @param commandLineToRun String containing the command line to run.
      */
     public void setCommandLineToRun(String commandLineToRun) {
         this.commandLineToRun = commandLineToRun;

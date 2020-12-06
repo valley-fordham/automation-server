@@ -6,16 +6,17 @@ import org.apache.commons.io.FileUtils;
 import java.io.*;
 
 /**
- * Helper functions relating to Strings
+ * Contains helper functions relating to Streams.
  */
 public class StreamUtils {
+    // TODO: make into lib
 
     /**
-     * Gets a String object from an InputStream and closes the InputStream
+     * Gets a String object from an InputStream and closes the InputStream.
      *
-     * @param inputStream the InputStream to extract the String from
-     * @return a String containing the text from the InputStream
-     * @throws IOException if an error occurs when reading the text
+     * @param inputStream InputStream to extract the String from.
+     * @return A String containing the text from the InputStream.
+     * @throws IOException If an error occurs when reading the text.
      */
     public static String getString(InputStream inputStream) throws IOException {
         try (InputStreamReader isReader = new InputStreamReader(inputStream)) {
@@ -30,11 +31,11 @@ public class StreamUtils {
     }
 
     /**
-     * Writes text to an OutputStream and flushes the text immediately. Closing is left for the caller
+     * Writes text to an OutputStream and flushes the text immediately. Closing is the responsibility of the caller.
      *
-     * @param text the message to write to the OutputStream
-     * @param outputStream the OutputStream to be written to
-     * @throws IOException if an error occurs when writing the text
+     * @param text Message to write to the OutputStream.
+     * @param outputStream OutputStream to be written to.
+     * @throws IOException If an error occurs when writing the text.
      */
     public static void writeString(String text, OutputStream outputStream) throws IOException {
         outputStream.write(text.getBytes());
@@ -42,11 +43,11 @@ public class StreamUtils {
     }
 
     /**
-     * Takes an InputStream and turns it into a File (makes a temporary file)
+     * Takes an InputStream and turns it into a File (makes a temporary file).
      *
-     * @param inputStream the InputStream to turn into a File object
-     * @return a File built from the InputStream
-     * @throws IOException if an error occurs when building the File
+     * @param inputStream InputStream to turn into a File object.
+     * @return A File built from the InputStream.
+     * @throws IOException If an error occurs when building the File.
      */
     public static File getFile(InputStream inputStream) throws IOException {
         File file = File.createTempFile(Application.class.getPackageName(), null);

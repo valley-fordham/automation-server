@@ -1,7 +1,7 @@
 package com.glenfordham.webserver.config;
 
 /**
- * Contains all supported application arguments
+ * Defines all supported application arguments.
  */
 public enum Arguments {
 
@@ -68,27 +68,27 @@ public enum Arguments {
     }
 
     /**
-     * Returns the name of the parameter
+     * Gets the name of the parameter.
      *
-     * @return the parameter name
+     * @return The parameter name.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Returns whether is the argument is required or not
+     * Gets whether the argument is required or not.
      *
-     * @return true if the argument is required
+     * @return True if the argument is required.
      */
     public boolean getIsRequired() {
         return isRequired;
     }
 
     /**
-     * Returns whether is the argument is application config or not
+     * Gets whether the argument is application configuration or not.
      *
-     * @return true if the argument is application config
+     * @return True if the argument is application configuration.
      */
     public boolean getIsConfig() {
         return isConfig;
@@ -96,36 +96,36 @@ public enum Arguments {
 
 
     /**
-     * Returns the long name variant of the argument
+     * Gets the long name variant of the argument.
      *
-     * @return the argument long name variant
+     * @return The argument long name variant.
      */
     public String getLongName() {
         return longName;
     }
 
     /**
-     * Returns whether an argument (value) is required for the argument
+     * Gets whether an argument value is required for the argument.
      *
-     * @return true if an argument is required
+     * @return True if an argument value is required.
      */
     public boolean isArgValueRequired() {
         return isArgValueRequired;
     }
 
     /**
-     * Returns the help message for the given argument, used by commons-cli
+     * Gets the help message for the given argument, used by commons-cli
      *
-     * @return help message
+     * @return The help message.
      */
     public String getHelpMessage() {
         return helpMessage;
     }
 
     /**
-     * Returns the default value for the argument
+     * Gets the default value for the argument.
      *
-     * @return default value
+     * @return The default value.
      */
     public String getDefaultValue() {
         return defaultValue;
