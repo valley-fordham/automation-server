@@ -60,23 +60,24 @@ repositories {
 }
 
 dependencies {
-    final String tomcatVersion = '9.0.36'
+    final String tomcatVersion = '9.0.56'
 
     testImplementation 'junit:junit:4.12'
 
-    implementation 'com.sun.mail:javax.mail:1.6.2'
-    implementation 'commons-cli:commons-cli:1.4'
-    implementation 'commons-io:commons-io:2.7'
-    implementation 'jakarta.activation:jakarta.activation-api:2.0.0'
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.0'
-    implementation 'org.apache.commons:commons-lang3:3.11'
-    implementation 'org.apache.logging.log4j:log4j-core:2.13.3'
+    implementation 'com.sun.mail:jakarta.mail:2.0.1'
+    implementation 'commons-cli:commons-cli:1.5.0'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'jakarta.activation:jakarta.activation-api:2.0.1'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.16.0'
     implementation 'org.apache.tomcat.embed:tomcat-embed-core:'+tomcatVersion
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:'+tomcatVersion
     implementation 'org.apache.tomcat:tomcat-jasper:'+tomcatVersion
     implementation 'org.apache.tomcat:tomcat-jasper-el:'+tomcatVersion
     implementation 'org.apache.tomcat:tomcat-jsp-api:'+tomcatVersion
-    implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.0'
+    implementation 'org.eclipse.angus:angus-activation:1.0.0-M1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.2'
 }
 
 // Generate JAXB objects from schema at build-time
