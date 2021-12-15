@@ -13,13 +13,13 @@ import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.logging.LogLevel;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import jakarta.mail.Message;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.OutputStream;
 import java.util.Properties;
 
@@ -91,7 +91,7 @@ public class EmailHandler implements Handler {
         properties.put(Constant.MAIL_AUTH.get(), (mailbox.isAuthenticate() ? Boolean.TRUE.toString() : Boolean.FALSE.toString()));
 
         // Setup the email session, including an authenticator (not used if authentication is off)
-        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+        Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(mailbox.getUsername(), mailbox.getPassword());
