@@ -4,16 +4,16 @@ plugins {
     id 'idea'
     id 'java'
     id 'java-library'
-    id "com.github.johnrengelman.shadow" version "6.0.0"
-    id 'org.beryx.runtime' version '1.11.3'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'org.beryx.runtime' version '1.12.7'
 }
 
 group 'com.glenfordham'
 version '1.0.'+gitCommitNumber()
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 sourceSets.main.java.srcDirs = ['src/main/java/']
@@ -43,15 +43,15 @@ runtime {
     imageDir = file("${buildDir}${sep}automation-server")
     imageZip = file("${buildDir}${sep}automation-server-${version}.zip")
     targetPlatform("linux-s390x") {
-        jdkHome = jdkDownload("https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-14.0.1%2B7.1/OpenJDK14U-jdk_x64_windows_hotspot_14.0.1_7.zip")
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3%2B7/OpenJDK17U-jdk_s390x_linux_hotspot_17.0.3_7.tar.gz")
     }
 
     targetPlatform("win") {
-        jdkHome = jdkDownload("https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-14.0.1%2B7.1/OpenJDK14U-jdk_x64_windows_hotspot_14.0.1_7.zip")
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3%2B7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.3_7.zip")
     }
 
     targetPlatform("mac") {
-        jdkHome = jdkDownload("https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-14.0.1%2B7/OpenJDK14U-jdk_x64_mac_hotspot_14.0.1_7.tar.gz")
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3%2B7/OpenJDK17U-jdk_x64_mac_hotspot_17.0.3_7.tar.gz")
     }
 }
 
@@ -60,24 +60,20 @@ repositories {
 }
 
 dependencies {
-    final String tomcatVersion = '9.0.56'
-
-    testImplementation 'junit:junit:4.12'
-
     implementation 'com.sun.mail:jakarta.mail:2.0.1'
     implementation 'commons-cli:commons-cli:1.5.0'
     implementation 'commons-io:commons-io:2.11.0'
-    implementation 'jakarta.activation:jakarta.activation-api:2.0.1'
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+    implementation 'jakarta.activation:jakarta.activation-api:2.1.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.apache.logging.log4j:log4j-core:2.16.0'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:'+tomcatVersion
-    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:'+tomcatVersion
-    implementation 'org.apache.tomcat:tomcat-jasper:'+tomcatVersion
-    implementation 'org.apache.tomcat:tomcat-jasper-el:'+tomcatVersion
-    implementation 'org.apache.tomcat:tomcat-jsp-api:'+tomcatVersion
-    implementation 'org.eclipse.angus:angus-activation:1.0.0-M1'
-    implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.64'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.64'
+    implementation 'org.apache.tomcat:tomcat-jasper:9.0.64'
+    implementation 'org.apache.tomcat:tomcat-jasper-el:9.0.64'
+    implementation 'org.apache.tomcat:tomcat-jsp-api:9.0.64'
+    implementation 'org.eclipse.angus:angus-activation:1.0.0'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.0'
 }
 
 // Generate JAXB objects from schema at build-time
@@ -105,3 +101,13 @@ static def gitCommitNumber() {
         return commitNumber.trim().toInteger()
     }
 }
+
+task deleteGeneratedFiles(type: Delete) {
+    delete fileTree(dir: sourceSets.main.java.srcDirs[0].toPath().toString() + "${sep}com${sep}glenfordham${sep}webserver${sep}automation${sep}jaxb${sep}",
+            // Ensure that only generated files are deleted
+            exclude: { FileTreeElement details ->
+                details.file.name.contains('JaxbObject') || details.file.name.contains('package-info')
+            }
+    )
+}
+clean.dependsOn(deleteGeneratedFiles)

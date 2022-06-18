@@ -12,9 +12,12 @@ import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import org.apache.commons.lang3.BooleanUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
 
 /**
  * CommandLine handler is used for processing command prompt and terminal commands in the same way that they would
@@ -59,8 +62,13 @@ public class CommandLineHandler implements Handler {
         try {
             try (ProcessWrapper processWrapper = new ProcessWrapper(
                     Runtime.getRuntime().exec(executePath))) {
-                if (processWrapper.getProcess().waitFor() != 0) {
+                // This waitFor implementation continues to wait if nothing is written to STDOUT, so we use a 30-second timeout
+                if (!processWrapper.getProcess().waitFor(30, TimeUnit.SECONDS)) {
+                    // Write the error to the logs, but not to the client as they don't need to know the details
                     Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
+                    Log.info(String.valueOf(request.isOutputReturned()));
+                } else if (BooleanUtils.isTrue(request.isOutputReturned())) {
+                    clientOutput.write(StreamUtils.getString(processWrapper.getProcess().getInputStream()).getBytes(StandardCharsets.UTF_8));
                 }
             }
         } catch (InterruptedException iE) {

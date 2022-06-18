@@ -18,6 +18,8 @@
                     enableFailFastCheck="false"
                     generateIsSetMethod="false">
                 <jaxb:javaType xmlType="xs:integer" name="java.lang.Integer"/>
+                <jaxb:serializable/>
+                <xjc:superClass name="com.glenfordham.webserver.automation.jaxb.JaxbObject" />
             </jaxb:globalBindings>
         </xs:appinfo>
     </xs:annotation>
@@ -222,6 +224,7 @@
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="command_line" type="xs:string"/>
+            <xs:element name="output_returned" type="xs:boolean" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
