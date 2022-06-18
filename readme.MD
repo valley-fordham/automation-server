@@ -244,6 +244,8 @@ The following is an example of what a command_line configuration could look like
 - name: Name of the pre-configured request. This name will be referenced in your webhook URL.
 - command_line: Command to invoke on the host. This should match exactly with what you would type to invoke the same
   command in your Windows Command Prompt or Linux Terminal.
+- output_returned: Determine whether the stdout of the process will be returned to the client as text. Defaults to
+  'false'.
 
 ##### Example Webhook Request
 `localhost/?authentication_token=myToken123&request_type=command_line&request_name=wake_pc`
