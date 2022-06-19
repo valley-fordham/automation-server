@@ -17,7 +17,6 @@ import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * CarportHandler relies on the GpioHandler and GPIO configuration to be present. Use dedicated Gpio requests for each
@@ -70,7 +69,7 @@ public class CarportHandler implements Handler {
 		}
 
 		// Get all carport only Gpio requests
-		List<GpioRequest> carportGpioRequests = config.getGpio().getRequests().stream().filter(GpioRequest::isCarportOnly).collect(Collectors.toList());
+		List<GpioRequest> carportGpioRequests = config.getGpio().getRequests().stream().filter(GpioRequest::isCarportOnly).toList();
 		processRequest(carportRequest, carportGpioRequests);
 	}
 
@@ -101,18 +100,11 @@ public class CarportHandler implements Handler {
 
 		// Invoke appropriate carport action
 		switch (carportRequest.getAction()) {
-			case TRIGGER:
-				sendDoorTrigger(triggerRequest);
-				break;
-			case STATUS:
-				readDoorStatus(readRequest);
-				break;
-			case OPEN:
-				openDoor(triggerRequest, readRequest, carportRequest.getDoorClosedValue());
-				break;
-			case CLOSE:
-				closeDoor(triggerRequest, readRequest, carportRequest.getDoorClosedValue(), carportRequest.getWaitTime());
-				break;
+			case TRIGGER -> sendDoorTrigger(triggerRequest);
+			case STATUS -> readDoorStatus(readRequest);
+			case OPEN -> openDoor(triggerRequest, readRequest, carportRequest.getDoorClosedValue());
+			case CLOSE ->
+					closeDoor(triggerRequest, readRequest, carportRequest.getDoorClosedValue(), carportRequest.getWaitTime());
 		}
 	}
 

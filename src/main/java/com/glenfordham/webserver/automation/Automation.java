@@ -44,25 +44,12 @@ public class Automation {
             RequestType requestType = RequestType.get(parameterMap.get(Parameter.REQUEST_TYPE.get()).getFirst());
             if (requestType != null) {
                 switch (requestType) {
-                    case BROADLINK:
-                        new BroadlinkHandler().start(parameterMap, clientOutput);
-                        return;
-                    case CARPORT:
-                        new CarportHandler().start(parameterMap, clientOutput);
-                        return;
-                    case CMD_LINE:
-                        new CommandLineHandler().start(parameterMap, clientOutput);
-                        return;
-                    case EMAIL:
-                        new EmailHandler().start(parameterMap, clientOutput);
-                        return;
-                    case GPIO:
-                        new GpioHandler().start(parameterMap, clientOutput);
-                        return;
-                    case PROXY:
-                        new ProxyHandler().start(parameterMap, clientOutput);
-                        return;
-                    default:
+                    case BROADLINK -> new BroadlinkHandler().start(parameterMap, clientOutput);
+                    case CARPORT -> new CarportHandler().start(parameterMap, clientOutput);
+                    case CMD_LINE -> new CommandLineHandler().start(parameterMap, clientOutput);
+                    case EMAIL -> new EmailHandler().start(parameterMap, clientOutput);
+                    case GPIO -> new GpioHandler().start(parameterMap, clientOutput);
+                    case PROXY -> new ProxyHandler().start(parameterMap, clientOutput);
                 }
             }
         } catch (AutomationConfigException acE) {
