@@ -66,7 +66,6 @@ public class CommandLineHandler implements Handler {
                 if (!processWrapper.getProcess().waitFor(30, TimeUnit.SECONDS)) {
                     // Write the error to the logs, but not to the client as they don't need to know the details
                     Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
-                    Log.info(String.valueOf(request.isOutputReturned()));
                 } else if (BooleanUtils.isTrue(request.isOutputReturned())) {
                     clientOutput.write(StreamUtils.getString(processWrapper.getProcess().getInputStream()).getBytes(StandardCharsets.UTF_8));
                 }
