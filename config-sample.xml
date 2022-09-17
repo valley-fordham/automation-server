@@ -5,7 +5,7 @@
 		<token>yourAuthenticationToken</token>
 		<behaviour>static</behaviour>
 	</authentication_token>
-	
+
 	<broadlink>
 		<cli_path>/path/to/python-broadlink/cli/broadlink_cli</cli_path>
 		<device>
@@ -20,7 +20,7 @@
 			<ip_address>10.1.1.2</ip_address>
 			<mac_address>540d51770f78</mac_address>
 		</device>
-		
+
 		<signal>
 			<name>aircon_on</name>
 			<code>26004c0272370f2a0f290f0e0f0d0f0e0f29100d0f0d10290f2a0f0d10290f0d100d0e2a1029100d0e2b0f290f0e0e0e0f2a0e0e0f0e0e2a0f0e0f0d0f0e0e0e0f0e0e0e0f0e0e0e100d0f0d100d0e0e0f0e0e0e0f0d100d0f0d0f0e0f0d0f0e0e2a0f0e0e0e100d0e0e100d0e2a10290f0e0e0e0f0e0e0e0f2a0f2a0e0e0f0d0f0e0e0e0f0e0f0d10290f2a0e0e10290f29100d0e0e0f0e0f290f0e0f0d100d0e0e10290f0d10290f2a0f0d0e2b0e0e0f0e0e0e0e2b0e0e100d0e0e0f0d0f0e100d0e0e0f0d0f0e100d0f0d0f0e0f0d100d0f0d0f0e0e0e0f0e0f0d0e0f0f0d0f0e0e0e0f0e0f0d0f0d100d0f0d100d0f2a0e0e100d0e0e0f0e0e0e0e0e0f0e0f0d0f0e0f0d100d0f0d0f0e0e0e0e0e100d0f0e0f0d100d0f2a0e2a100d0f290f2a10290f0d0f00022f75390f290f2a0f0d100d0f0d0f2a0f0d0f0e0f2a0f290f0e0f290f0e100d0f290f2a0f0d0f2a10290f0d100d0f290f0e0f0d0f2a0f0e0f0d0f0e0e0e0f0e0e0e0f0e0e0e0e0e0f0e0e0e100d0e0e0f0e0f0d0f0e0e0e0f0d100d0f0e0e2a100d0f0d100d0f0d0f0e0e2a0f2a0e0e0f0e0e0e100d0e2a0f2a0f0e0e0e0f0d0f0e0e0e100d0e2a0f2a0f0e0e2a0f2a0f0d0f0e0f0d0f2a0f0d0f0e0e0e0f0e0e2a0f0e0e2a0f2a0e0e0f2a0f0d100d0e0e0f2a0e0e0f0d0f0e0f0d100d0f0d100d0f0d100d0f0d100d0f0d100d0f0d0f0e0f0d0f0d0f0e0f0d0f0e0f0d0f0e0f0d0f0e0e0e0f0d0f0e0f0d0f0e0f290f0e0f0d0f0e0e0e0f0e0e0e100d0e0e0f0d0f0e0e0e0f0e0f0d0f0d0f0e0f0d100d0e0e100d0f2a0e2a100d0f2910290f290f0e0f000d05000000000000000000000000</code>
@@ -29,8 +29,32 @@
 			<name>aircon_off</name>
 			<code>26004c0271390f290f2a0f0e0e0e0f0d0f2a0e0e0f0f0d2b0f290f0e0f290f0e0f0e0e2a0f290f0e0e2a0f2a0f0e0e0e0f2a0e0f0e0e0f290f0e0e0e0e0f0e0e0f0e0f0e0e0e0e0e0f0e0e0e0f0e0e0f0e0e0f0e0e0e0e0e0f0e0e0e0f0e0e0e0f0e0e0e0f0d0f0f0d0f0e0f0e2a0f290e0f0f0e0d0e100d0f290f2a0f0d0f0e0f0d0f0f0d0e0f0e0e2a0f2a0e0e10290f2a0e0f0d0f0f0d0f2a0e0e0f0e0f0d0f0e0f290f0e0f2a0f0e0e0d0f2a0e0e0f0f0e0e0f290e0f0e0e0f0e0e0e0f0d0f0e0e0f0e0f0d0f0e0e0f0e0d0f0e0f0d0f0f0e0d0f0e0f0d0e0f0e0f0e0d0f100c0f0e0e0f0e0e0f0e0f0d0f0d0f0e0e2a0f0e0f0d0f0e0e0e0f0e0e0e0f0e0e0f0e0e0f0d0e0f0e0e0f0e0e0e0f0d0f0e0e0e0f0e0e0f0e0e0f2a0e0e0f2a0e0e0f2a0e0e0f00023476380f2a10290f0d0f0e0f0d0f2a0e0e0f0e0f290f2a0e0e0f2a0e0f0e0e0f2a0f290f0e0f290f2a0f0e0e0e0e2b0e0e0e0e0f2a0e0f0e0e0e0e0f0e0e0e0f0e0f0d0f0e0e0e0f0e0e0e0f0e0e0e0e0f0e0e0f0e0e0e0f0e0e0e0f0e0e0e0f0d0f0e0f0d0f0e0e0e10290e2b0f0d0e0f0e0f0e0e0f290f2a0f0e0e0e0f0e0e0e0e0e0f0e0e2b0e2a0f0e0f290f2a0f0e0e0e0f0e0e2a0f0e0e0e100d0e0e0f2a100d0f290e0f0e0e0f2a0e0e0f0d0f0e0e2a0f0e0e0e0f0e0e0e0f0e0e0f0e0e0e0f0f0d0f0e0e0e0e0f0e0e0f0d0e0f0f0d0f0e0f0d0f0e0f0d0f0e0e0e100d0f0e0e0e0e0f0f0d0e0f0e0e0f2a0e0e0f0e0f0d0f0d0f0e0e0e0f0e0e0e0e0f0e0e0f0e0f0d0f0e0e0e0e0e0f0e0e0e0f0e0e0e0f0e0e2a0f0e0e2a0f0e0e2b0f0d0e000d05000000000000000000000000</code>
 		</signal>
+
+		<request>
+			<name>lounge_air_con_on</name>
+			<broadlink_device_name>lounge</broadlink_device_name>
+			<signal_name>aircon_on</signal_name>
+		</request>
+
+		<request>
+			<name>computer_room_air_con_on</name>
+			<broadlink_device_name>computer_room</broadlink_device_name>
+			<signal_name>aircon_on</signal_name>
+		</request>
+
+		<request>
+			<name>lounge_air_con_off</name>
+			<broadlink_device_name>lounge</broadlink_device_name>
+			<signal_name>aircon_off</signal_name>
+		</request>
+
+		<request>
+			<name>computer_room_air_con_off</name>
+			<broadlink_device_name>computer_room</broadlink_device_name>
+			<signal_name>aircon_off</signal_name>
+		</request>
 	</broadlink>
-	
+
 	<carport>
 		<request>
 			<name>close_door</name>
@@ -55,14 +79,20 @@
 			<gpio_request_name>trigger_door</gpio_request_name>
 		</request>
 	</carport>
-	
+
 	<command_line>
 		<request>
 			<name>wake_pc</name>
 			<command_line>wakeonlan 1C:87:2C:61:42:21</command_line>
 		</request>
+
+		<request>
+			<name>run_python_script</name>
+			<command_line>python main.py</command_line>
+			<output_returned>true</output_returned>
+		</request>
 	</command_line>
-	
+
 	<email>
 		<mailbox>
 			<name>gmail</name>
@@ -84,7 +114,7 @@
 			<html>false</html>
 		</request>
 	</email>
-	
+
 	<gpio>
 		<request>
 			<name>trigger_door</name>
@@ -105,7 +135,7 @@
 			</read>
 		</request>
 	</gpio>
-	
+
 	<proxy>
 		<host>
 			<name>aHost</name>

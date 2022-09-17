@@ -13,7 +13,7 @@ A highly configurable, Java-based web server to help you automate your home.
 ## Installation
 
 ### Install on your Raspberry Pi
-1. Install Java 11 on the host
+1. Install Java 17 on the host
 2. Download the latest jar from [releases](https://github.com/valley-fordham/automation-server/releases) to the host
 3. Setup your configuration within the config.xml file - a sample to get you started is in the repository
 
@@ -21,13 +21,12 @@ A highly configurable, Java-based web server to help you automate your home.
 - Packages are also available with a bundled JDK to suit your target operating system, for immediate deployment
 
 #### Installation Options
-- *jar* - for use in Raspberry Pi environments already running OpenJDK 11
-- *zip* - these packages also include OpenJDK14.
+- *jar* - for use in Raspberry Pi environments already running JDK17
+- *zip* - these packages also include JDK17.
     
     Zip package options are suitable for environments that do not already have the appropriate OpenJDK installed. Use the package that suits your target operating system
-- *from source* - unzip to your host or git clone this repository, and build with the OpenJDK11 or OpenJDK14 using `./gradlew shadowJar` or `./gradlew runtime`
+- *from source* - unzip to your host or git clone this repository, and build with JDK17 using `./gradlew shadowJar` or `./gradlew runtime`
 
-    Please note: building your own runtime package using the `runtime` gradle task will only work with OpenJDK14+
 
 
 ## Usage
@@ -237,6 +236,7 @@ The following is an example of what a command_line configuration could look like
 		<request>
 			<name>wake_pc</name>
 			<command_line>wakeonlan 1C:87:2C:61:42:21</command_line>
+			<output_returned>true</output_returned>
 		</request>
 	</command_line>
 
@@ -244,6 +244,8 @@ The following is an example of what a command_line configuration could look like
 - name: Name of the pre-configured request. This name will be referenced in your webhook URL.
 - command_line: Command to invoke on the host. This should match exactly with what you would type to invoke the same
   command in your Windows Command Prompt or Linux Terminal.
+- output_returned: Determine whether the stdout of the process will be returned to the client as text. Defaults to
+  'false' if not provided.
 
 ##### Example Webhook Request
 `localhost/?authentication_token=myToken123&request_type=command_line&request_name=wake_pc`

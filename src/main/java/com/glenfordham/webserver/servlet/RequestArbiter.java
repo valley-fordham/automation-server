@@ -6,13 +6,12 @@ import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(
         name = "RequestArbiter",
@@ -40,16 +39,19 @@ public class RequestArbiter extends HttpServlet {
     }
 
     private static final String GENERIC_OUTPUT =
-            "<html lang=\"en\">\n" +
-                    "\t<head>\n" +
-                    "\t\t<title>Web Server</title>\n" +
-                    "\t</head>\n" +
-                    "\t<body>\n" +
-                    "\t\t<div class='main'>\n" +
-                    "      \t\tNothing to see here folks.\n" +
-                    "\t\t</div>\n" +
-            "\t</body>\n" +
-            "</html>\n";
+            """
+            <html lang="en">
+            \t<head>
+            \t\t<title>Web Server</title>
+            \t</head>
+            \t<body>
+            \t\t<div class='main'>
+                  \t\tNothing to see here folks.
+            \t\t</div>
+            \t</body>
+            </html>
+            
+            """;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {

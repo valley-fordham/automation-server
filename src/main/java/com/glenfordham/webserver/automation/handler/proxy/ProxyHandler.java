@@ -89,7 +89,7 @@ public class ProxyHandler implements Handler {
 
         // Remove 'proxy_' prefixes so request can be processed by the forward host
         if (request.isForAutomationServer()) {
-            forwardParameterMap = removeProxyPrefixes(forwardParameterMap);
+            filterProxyPrefixes(forwardParameterMap);
         }
 
         // Send request to configured proxy host with configured forward parameters, and return response to original requester
@@ -112,14 +112,12 @@ public class ProxyHandler implements Handler {
      * Remove the 'proxy_' prefix text from URL parameters in order to be forwarded to another automation server
      *
      * @param parameterMap The parameter map with keys to remove 'proxy_' prefix text from
-     * @return A parameterMap with 'proxy_' prefix text removed from each key
      */
-    private ParameterMap removeProxyPrefixes(ParameterMap parameterMap) {
+    private void filterProxyPrefixes(ParameterMap parameterMap) {
         for (ProxyParameterMapping mapping : ProxyParameterMapping.values()) {
             ParameterList tempParameterList = parameterMap.get(mapping.getText());
             parameterMap.remove(mapping.getText());
             parameterMap.put(mapping.getParameter().get(), tempParameterList);
         }
-        return parameterMap;
     }
 }
