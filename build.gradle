@@ -42,16 +42,17 @@ jar {
 runtime {
     imageDir = file("${buildDir}${sep}automation-server")
     imageZip = file("${buildDir}${sep}automation-server-${version}.zip")
+
     targetPlatform("linux-s390x") {
-        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3%2B7/OpenJDK17U-jdk_s390x_linux_hotspot_17.0.3_7.tar.gz")
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.4.1%2B1/OpenJDK17U-jdk_s390x_linux_hotspot_17.0.4.1_1.tar.gz")
     }
 
     targetPlatform("win") {
-        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3%2B7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.3_7.zip")
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.4.1%2B1/OpenJDK17U-jdk_x64_windows_hotspot_17.0.4.1_1.zip")
     }
 
     targetPlatform("mac") {
-        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3%2B7/OpenJDK17U-jdk_x64_mac_hotspot_17.0.3_7.tar.gz")
+        jdkHome = jdkDownload("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.4.1%2B1/OpenJDK17U-jdk_x64_mac_hotspot_17.0.4.1_1.tar.gz")
     }
 }
 
@@ -67,11 +68,11 @@ dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.64'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.64'
-    implementation 'org.apache.tomcat:tomcat-jasper:9.0.64'
-    implementation 'org.apache.tomcat:tomcat-jasper-el:9.0.64'
-    implementation 'org.apache.tomcat:tomcat-jsp-api:9.0.64'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.0.23'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.0.23'
+    implementation 'org.apache.tomcat:tomcat-jasper:10.0.23'
+    implementation 'org.apache.tomcat:tomcat-jasper-el:10.0.23'
+    implementation 'org.apache.tomcat:tomcat-jsp-api:10.0.23'
     implementation 'org.eclipse.angus:angus-activation:1.0.0'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.0'
 }

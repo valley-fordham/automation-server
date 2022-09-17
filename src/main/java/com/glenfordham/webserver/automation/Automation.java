@@ -11,8 +11,8 @@ import com.glenfordham.webserver.automation.handler.gpio.GpioHandler;
 import com.glenfordham.webserver.automation.handler.proxy.ProxyHandler;
 import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import jakarta.servlet.ServletContext;
 
-import javax.servlet.ServletContext;
 import java.io.OutputStream;
 
 /**

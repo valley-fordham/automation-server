@@ -13,7 +13,7 @@ A highly configurable, Java-based web server to help you automate your home.
 ## Installation
 
 ### Install on your Raspberry Pi
-1. Install Java 11 on the host
+1. Install Java 17 on the host
 2. Download the latest jar from [releases](https://github.com/valley-fordham/automation-server/releases) to the host
 3. Setup your configuration within the config.xml file - a sample to get you started is in the repository
 
@@ -21,13 +21,12 @@ A highly configurable, Java-based web server to help you automate your home.
 - Packages are also available with a bundled JDK to suit your target operating system, for immediate deployment
 
 #### Installation Options
-- *jar* - for use in Raspberry Pi environments already running OpenJDK 11
-- *zip* - these packages also include OpenJDK14.
+- *jar* - for use in Raspberry Pi environments already running JDK17
+- *zip* - these packages also include JDK17.
     
     Zip package options are suitable for environments that do not already have the appropriate OpenJDK installed. Use the package that suits your target operating system
-- *from source* - unzip to your host or git clone this repository, and build with the OpenJDK11 or OpenJDK14 using `./gradlew shadowJar` or `./gradlew runtime`
+- *from source* - unzip to your host or git clone this repository, and build with JDK17 using `./gradlew shadowJar` or `./gradlew runtime`
 
-    Please note: building your own runtime package using the `runtime` gradle task will only work with OpenJDK14+
 
 
 ## Usage
