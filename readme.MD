@@ -3,17 +3,16 @@
 A highly configurable, Java-based web server to help you automate your home.
 
 ### Features:
-- Send simple HTTP requests to invoke various functionality
+- Using simple HTTP calls, send IR commands, invoke command-line calls, send emails, forward requests to other servers on your network, or control a carport door*
 - Works great with other automation services like IFTTT
-- Send IR commands, invoke command-line calls, send emails, forward requests to other servers on your network, or control a carport door*
 - Highly configurable to suit your environment - set up as much or as little as you need!
 
-    *Extra hardware may be required!
+    *Extra hardware required
 
 ## Installation
 
 ### Install on your Raspberry Pi
-1. Install Java 17 on the host
+1. Install Java 17 on the host ([SDKMAN!](https://sdkman.io/) is an easy method)
 2. Download the latest jar from [releases](https://github.com/valley-fordham/automation-server/releases) to the host
 3. Setup your configuration within the config.xml file - a sample to get you started is in the repository
 
@@ -21,10 +20,10 @@ A highly configurable, Java-based web server to help you automate your home.
 - Packages are also available with a bundled JDK to suit your target operating system, for immediate deployment
 
 #### Installation Options
-- *jar* - for use in Raspberry Pi environments already running JDK17
+- *jar* - for use in environments already running JDK17
 - *zip* - these packages also include JDK17.
     
-    Zip package options are suitable for environments that do not already have the appropriate OpenJDK installed. Use the package that suits your target operating system
+    Zip package options are suitable for environments that do not already have the appropriate JDK installed. Use the package that suits your target operating system
 - *from source* - unzip to your host or git clone this repository, and build with JDK17 using `./gradlew shadowJar` or `./gradlew runtime`
 
 
@@ -77,10 +76,10 @@ from external sources causing havoc on your hosts and network
 reasonably small
 
 Please examine the provided 'config-sample.xml' to see how a complete configuration file should look. This configuration
-file will be validated against a schema, and any issues will be reported on start-up, and on subsequent requests if the
-'-r' argument is provided at run-time.
+file will be validated against a schema. Any issues will be reported on start-up. If the '-r' argument is provided at 
+application startup, every request will reload the configuration file - helpful for debugging.
 
-A configuration file will require at least one authentication token element, and one request type, in order for the
+A configuration file will require at least one authentication token element and one request type in order for the
 automation server to function.
 
 ### Authentication Token
@@ -100,13 +99,14 @@ Example: Authentication Token Configuration
 
 ### Broadlink
 #### What is Broadlink, and the Broadlink Request Type?
-The manufacturer Broadlink make a number of devices which can be used as IR (infra-red) blasters, a.k.a. universal
+Broadlink is a manufacturer of devices which can be used as IR (infra-red) blasters, a.k.a. universal
 remotes. There are a number of open-source APIs on the internet which allow interfacing with these devices without the
 use of the manufacturer provided software. When using Automation Server, in order to interface with Broadlink devices
 using the 'broadlink' request type, you will need to set up the Broadlink CLI, which can be found on GitHub
 [here](https://github.com/mjg59/python-broadlink).
+
 If you're new to the Broadlink CLI, it's recommended you test the above tools independently of Automation Server until
-you're able to record signal codes from devices and then re-send them through your Broadlink devices.
+you are comfortable with them.
 
 #### How to configure the 'broadlink' request type
 The broadlink element is made up of 4 primary elements:
@@ -373,11 +373,14 @@ the earlier Carport request type example:
 
 ### Proxy
 #### What is the Proxy Request type?
-The GPIO proxy request type allows the Automation Server to take a web-hook and forward it to another server. This
-allows you to configure your primary Automation Server as a proxy server in order to avoid opening up other internal
-servers to the wider internet. Automation Server can forward requests to any server that supports web-hooks and that only
-require URL parameters to invoke actions. It does not support forwarding other HTTP content at this time. Automation
-Server can also forward requests to another Automation Servers.
+The proxy request type allows the Automation Server to receive a request and forward it to another server. This
+allows you to configure your primary Automation Server as a proxy server in order to avoid opening up other servers in
+your internal network to the wider internet. Automation Server can forward requests to servers that support web-hooks
+and only require URL parameters to invoke actions. It does not support forwarding other HTTP content at this time.
+
+Automation Server can also forward requests to other Automation Servers. It is not possible to proxy to a chain of
+3 or more automation servers. eg. An automation server can proxy requests to another automation server, but the second
+automation server cannot forward that request again
 
 #### How to configure the 'proxy' request type
 The email element is made up of 2 primary elements:

@@ -4,7 +4,6 @@ import com.glenfordham.utils.process.cmd.CmdLineException;
 import com.glenfordham.utils.process.cmd.CommandLine;
 import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.jaxb.*;
-import com.glenfordham.webserver.logging.Log;
 
 /**
  * Defines behaviour for the various types of GpioRequest.
@@ -61,7 +60,6 @@ public class GpioPinControl {
 			try {
 				Thread.sleep(writeRequest.getWaitTimeBeforeReset());
 			} catch (InterruptedException e) {
-				Log.error("Interrupted execution of process", e);
 				Thread.currentThread().interrupt();
 				throw new HandlerException(e.getMessage(), e);
 			}
@@ -90,7 +88,7 @@ public class GpioPinControl {
 		try {
 			return new CommandLine("gpio " + gpioCommand.get() + " " + pin + " " + (writeValue != null ? writeValue.value() : "")).exec();
 		} catch (CmdLineException e) {
-			throw new HandlerException("Error occurred when executing gpio process", e);
+			throw new HandlerException(String.format("Error occurred when executing gpio process. %s", e.getMessage()), e);
 		}
 	}
 

@@ -16,7 +16,7 @@
     </Appenders>
     <Loggers>
         <Root level="debug">
-            <AppenderRef ref="STD_OUT" level="debug"/>
+            <AppenderRef ref="STD_OUT" level="info"/>
             <AppenderRef ref="ROLLING_FILE" level="info"/>
         </Root>
     </Loggers>

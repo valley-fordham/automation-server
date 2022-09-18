@@ -3,13 +3,14 @@ package com.glenfordham.webserver;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.config.Arguments;
 import com.glenfordham.webserver.config.ConfigProperties;
-import com.glenfordham.webserver.logging.Log;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.JarResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.BindException;
@@ -22,6 +23,8 @@ import java.nio.file.Path;
  */
 public class TomcatServer {
 
+    private static final Logger logger = LogManager.getLogger();
+
     private static boolean started = false;
 
     /**
@@ -31,7 +34,7 @@ public class TomcatServer {
         try {
             if (!started) {
                 File root = getRootFolder();
-                Path tempPath = Files.createTempDirectory(configProperties.getPropertyValue(Arguments.TEMP_DIR_PREFIX));
+                Path tempPath = Files.createTempDirectory("automation-server");
                 System.setProperty("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE", "true");
 
                 Tomcat tomcat = new Tomcat();
@@ -44,6 +47,7 @@ public class TomcatServer {
                 // Load Servlet config into Servlet Context for accessibility
                 ctx.getServletContext().setAttribute(AutomationConfig.CONFIG_LOCATION_KEY, configProperties.getPropertyValue(Arguments.CONFIG_FILE));
                 ctx.getServletContext().setAttribute(AutomationConfig.CONFIG_RELOAD_KEY, configProperties.isPropertySet(Arguments.CONFIG_RELOAD));
+                ctx.getServletContext().setAttribute(AutomationConfig.CONFIG_DEBUG_KEY, configProperties.isPropertySet(Arguments.DEBUG));
 
                 // Check if running within a jar and use appropriate resource set object
                 String runningUriPath = Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
@@ -53,20 +57,24 @@ public class TomcatServer {
                         : new DirResourceSet(resources, "/WEB-INF/classes", new File(runningUriPath).getAbsolutePath(), "/"));
                 ctx.setResources(resources);
 
-                Log.infoFormat("Application root: %s", root.getAbsolutePath());
-                Log.infoFormat("Listening port: %s", configProperties.getPropertyValue(Arguments.PORT));
+                logger.info("Application root: {}", root.getAbsolutePath());
+                logger.info("Listening port: {}", configProperties.getPropertyValue(Arguments.PORT));
                 tomcat.start();
                 started = true;
                 tomcat.getServer().await();
             } else {
-                Log.error("Unable to start Tomcat. Tomcat is already started.");
+                logger.error("Unable to start Tomcat. Tomcat is already started.");
             }
         } catch (Exception e) {
             // Annoyingly, BindExceptions are nested inside LifeCycle exceptions
             if (e.getCause() instanceof BindException) {
-                Log.error("Unable to start. A process is already bound to port.");
+                logger.error("Unable to start. A process is already bound to port.");
             } else {
-                Log.error("Unexpected error occurred when starting Tomcat.", e);
+                if (configProperties.isPropertySet(Arguments.DEBUG)) {
+                    logger.error(e.getMessage(), e);
+                } else {
+                    logger.error(e.getMessage());
+                }
             }
         }
     }

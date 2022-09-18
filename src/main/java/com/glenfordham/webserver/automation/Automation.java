@@ -1,17 +1,16 @@
 package com.glenfordham.webserver.automation;
 
 import com.glenfordham.webserver.automation.config.AutomationConfig;
-import com.glenfordham.webserver.automation.config.AutomationConfigException;
-import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.handler.broadlink.BroadlinkHandler;
 import com.glenfordham.webserver.automation.handler.carport.CarportHandler;
 import com.glenfordham.webserver.automation.handler.cmdline.CommandLineHandler;
 import com.glenfordham.webserver.automation.handler.email.EmailHandler;
 import com.glenfordham.webserver.automation.handler.gpio.GpioHandler;
 import com.glenfordham.webserver.automation.handler.proxy.ProxyHandler;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import jakarta.servlet.ServletContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.OutputStream;
 
@@ -19,6 +18,8 @@ import java.io.OutputStream;
  * Defines an entry point used to handle a HTTP request to be processed by the Automation Server.
  */
 public class Automation {
+
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Attempts to process HTTP request.
@@ -36,10 +37,10 @@ public class Automation {
 
             // If URL parameters are not valid, ignore the request
             if (!parameterValidator.isParameterMapValid(parameterMap)) {
-                Log.debug("Invalid request");
+                logger.debug("Invalid request");
                 return;
             }
-            Log.debug("Valid request");
+            logger.debug("Valid request");
 
             RequestType requestType = RequestType.get(parameterMap.get(Parameter.REQUEST_TYPE.get()).getFirst());
             if (requestType != null) {
@@ -52,12 +53,12 @@ public class Automation {
                     case PROXY -> new ProxyHandler().start(parameterMap, clientOutput);
                 }
             }
-        } catch (AutomationConfigException acE) {
-            Log.error("Error occurred loading/validating configuration file", acE);
-        } catch (HandlerException hE) {
-            Log.error("Error occurred within Handler", hE);
         } catch (Exception e) {
-            Log.error("Unexpected error occurred", e);
+            if ((boolean) context.getAttribute(AutomationConfig.CONFIG_DEBUG_KEY)) {
+                logger.error(e.getMessage(), e);
+            } else {
+                logger.error(e.getMessage());
+            }
         }
     }
 }

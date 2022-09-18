@@ -11,9 +11,10 @@ import com.glenfordham.webserver.automation.jaxb.BroadlinkDevice;
 import com.glenfordham.webserver.automation.jaxb.BroadlinkRequest;
 import com.glenfordham.webserver.automation.jaxb.BroadlinkSignal;
 import com.glenfordham.webserver.automation.jaxb.Config;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.OutputStream;
 
@@ -23,6 +24,8 @@ import java.io.OutputStream;
  * @see <a href="https://github.com/mjg59/python-broadlink">python-broadlink on GitHub</a>
  */
 public class BroadlinkHandler implements Handler {
+
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Processes a broadlink type request. Matches request against configuration XML and triggers Broadlink action
@@ -41,7 +44,6 @@ public class BroadlinkHandler implements Handler {
 
     /**
      * Attempts to process the broadlink request.
-     *
      * Checks that the request matches a supported request in the configuration file.
      * If it does, then invoke the broadlink action and device associated with that request name.
      *
@@ -64,7 +66,7 @@ public class BroadlinkHandler implements Handler {
                 .orElse(null);
 
         if (request == null) {
-            Log.error("Invalid request name");
+            logger.error("Invalid request name");
             return;
         }
 
@@ -75,7 +77,7 @@ public class BroadlinkHandler implements Handler {
                 .orElse(null);
 
         if (device == null) {
-            Log.error("Device name not configured: " + request.getBroadlinkDeviceName());
+            logger.error("Device name not configured: {}", request.getBroadlinkDeviceName());
             return;
         }
 
@@ -86,7 +88,7 @@ public class BroadlinkHandler implements Handler {
                 .orElse(null);
 
         if (signal == null) {
-            Log.error("Invalid signal name: " + incomingRequestName);
+            logger.error("Invalid signal name: {}", incomingRequestName);
             return;
         }
 
@@ -96,7 +98,7 @@ public class BroadlinkHandler implements Handler {
                     + " --send " + signal.getCode()
                     + " --device \"" + device.getDeviceCode() + " " + device.getIpAddress() + " " + device.getMacAddress() + "\"").exec();
         } catch (CmdLineException e) {
-            throw new HandlerException("Error occurred when executing Broadlink process", e);
+            throw new HandlerException(String.format("Error occurred when executing Broadlink process. %s", e.getMessage()), e);
         }
     }
 }

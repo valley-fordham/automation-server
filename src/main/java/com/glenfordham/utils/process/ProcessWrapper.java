@@ -1,6 +1,5 @@
 package com.glenfordham.utils.process;
 
-import com.glenfordham.webserver.logging.Log;
 
 /**
  * ProcessWrapper wraps a Process class in order to add auto stream closing behaviour.
@@ -34,24 +33,16 @@ public class ProcessWrapper implements AutoCloseable {
     public void close() {
         try {
             process.getErrorStream().close();
-        } catch (Exception e) {
-            Log.error("Unable to close ErrorStream", e);
-        }
+        } catch (Exception ignore) {}
         try {
             process.getOutputStream().close();
-        } catch (Exception e) {
-            Log.error("Unable to close OutputStream", e);
-        }
+        } catch (Exception ignore) {}
         try {
             process.getInputStream().close();
-        } catch (Exception e) {
-            Log.error("Unable to close InputStream", e);
-        }
+        } catch (Exception ignore) {}
         try {
             process.destroy();
-        } catch (Exception e) {
-            Log.error("Unable to destroy process", e);
-        }
+        } catch (Exception ignore) {}
     }
 
     private ProcessWrapper() {
