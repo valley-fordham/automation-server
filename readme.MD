@@ -45,12 +45,9 @@ A highly configurable, Java-based web server to help you automate your home.
 #### Program Arguments
 ```
 -c,--configFile <arg>      the location of the config.xml file
--h,--help                  displays the help text you're seeing now
 -p,--port <arg>            sets the port to listen on  eg. 80
 -r,--reload                if present, config.xml will be loaded on every
                             request
--t,--tempDirPrefix <arg>   sets prefix for Tomcat's temporary directory
-                            name  eg. prefix
 ```
 
 ### Supported Request Types
