@@ -29,7 +29,7 @@ public enum Arguments {
             true,
             "debug",
             false,
-            "if present, config.xml will be loaded on every request",
+            "enable verbose logging for debugging purposes",
             null
     ),
     PORT(

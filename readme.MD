@@ -45,9 +45,10 @@ A highly configurable, Java-based web server to help you automate your home.
 #### Program Arguments
 ```
 -c,--configFile <arg>      the location of the config.xml file
+-d,--debug                 enable verbose logging for debugging purposes
 -p,--port <arg>            sets the port to listen on  eg. 80
 -r,--reload                if present, config.xml will be loaded on every
-                            request
+                           request
 ```
 
 ### Supported Request Types

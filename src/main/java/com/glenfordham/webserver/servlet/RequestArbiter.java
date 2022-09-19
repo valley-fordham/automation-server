@@ -34,14 +34,16 @@ public class RequestArbiter extends HttpServlet {
             }
         } catch (AutomationConfigException e) {
             if (this.getServletContext().getAttribute(AutomationConfig.CONFIG_DEBUG_KEY).equals(true)) {
-                logger.error(String.format("Unable to initialise configuration file at servlet start-up. %s", e.getMessage()), e);
+                logger.error(String.format("Unable to initialise configuration file. %s", e.getMessage()), e);
             } else {
-                logger.error(String.format("Unable to initialise configuration file at servlet start-up. %s", e.getMessage()));
+                logger.error(String.format("Unable to initialise configuration file. %s", e.getMessage()));
             }
 
             // If configuration reload is off, exit the application
             if (this.getServletContext().getAttribute(AutomationConfig.CONFIG_RELOAD_KEY).equals(false)) {
                 System.exit(1);
+            } else {
+                logger.warn("Configuration will be attempted to be reloaded on next request.");
             }
         }
     }
