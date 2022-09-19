@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'com.glenfordham'
-version '22.1.'+gitCommitNumber()
+version '22.2.'+gitCommitNumber()
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
