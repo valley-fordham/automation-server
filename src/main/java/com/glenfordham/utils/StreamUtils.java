@@ -9,7 +9,6 @@ import java.io.*;
  * Contains helper functions relating to Streams.
  */
 public class StreamUtils {
-    // TODO: make into lib
 
     /**
      * Gets a String object from an InputStream and closes the InputStream.

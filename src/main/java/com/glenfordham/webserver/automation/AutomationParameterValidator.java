@@ -1,15 +1,18 @@
 package com.glenfordham.webserver.automation;
 
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterList;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import com.glenfordham.webserver.servlet.parameter.ParameterValidator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 
 public class AutomationParameterValidator implements ParameterValidator {
+
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Validates all passed in parameters based on the Automation package requirements.
@@ -25,7 +28,7 @@ public class AutomationParameterValidator implements ParameterValidator {
                     && isRequestTypeValid(parameterMap.get(Parameter.REQUEST_TYPE.get()))
                     && (parameterMap.containsKey(Parameter.REQUEST_NAME.get()) && !parameterMap.get(Parameter.REQUEST_NAME.get()).isEmpty());
         } catch (AutomationConfigException | ParameterException e) {
-            Log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             return false;
         }
     }
@@ -60,7 +63,7 @@ public class AutomationParameterValidator implements ParameterValidator {
             return false;
         }
         if (urlParams.size() != 1) {
-            Log.error("Only one instance of a parameter key is allowed");
+            logger.error("Only one instance of a parameter key is allowed");
             return false;
         }
         return true;
@@ -78,7 +81,7 @@ public class AutomationParameterValidator implements ParameterValidator {
         if (areUrlParamsValid(authenticationTokens)) {
             return Authenticator.authenticate(authenticationTokens.getFirst());
         } else {
-            Log.error("Invalid authentication token");
+            logger.error("Invalid authentication token");
             return false;
         }
     }
@@ -98,7 +101,7 @@ public class AutomationParameterValidator implements ParameterValidator {
                 }
             }
         }
-        Log.error("Invalid request type");
+        logger.error("Invalid request type");
         return false;
     }
 }

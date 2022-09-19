@@ -4,7 +4,6 @@ import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.Automation;
 import com.glenfordham.webserver.automation.config.AutomationConfig;
 import com.glenfordham.webserver.automation.config.AutomationConfigException;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
@@ -12,6 +11,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @WebServlet(
         name = "RequestArbiter",
@@ -19,6 +20,8 @@ import jakarta.servlet.http.HttpServletResponse;
         loadOnStartup = 1
 )
 public class RequestArbiter extends HttpServlet {
+
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public void init() throws ServletException {
@@ -30,7 +33,12 @@ public class RequestArbiter extends HttpServlet {
                 AutomationConfig.setConfigReload(true);
             }
         } catch (AutomationConfigException e) {
-            Log.error("Unable to initialise configuration file at servlet start-up", e);
+            if (this.getServletContext().getAttribute(AutomationConfig.CONFIG_DEBUG_KEY).equals(true)) {
+                logger.error(String.format("Unable to initialise configuration file at servlet start-up. %s", e.getMessage()), e);
+            } else {
+                logger.error(String.format("Unable to initialise configuration file at servlet start-up. %s", e.getMessage()));
+            }
+
             // If configuration reload is off, exit the application
             if (this.getServletContext().getAttribute(AutomationConfig.CONFIG_RELOAD_KEY).equals(false)) {
                 System.exit(1);
@@ -67,7 +75,11 @@ public class RequestArbiter extends HttpServlet {
                 StreamUtils.writeString(GENERIC_OUTPUT, clientStream);
             }
         } catch (Exception e) {
-            Log.error("Unexpected error occurred in servlet", e);
+            if (this.getServletContext().getAttribute(AutomationConfig.CONFIG_DEBUG_KEY).equals(true)) {
+                logger.error(String.format("Unexpected error occurred in servlet. %s", e.getMessage()), e);
+            } else {
+                logger.error(String.format("Unexpected error occurred in servlet. %s", e.getMessage()));
+            }
         }
     }
 }

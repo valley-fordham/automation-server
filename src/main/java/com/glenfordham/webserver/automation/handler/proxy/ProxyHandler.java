@@ -9,10 +9,11 @@ import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.automation.jaxb.ProxyHost;
 import com.glenfordham.webserver.automation.jaxb.ProxyRequest;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterList;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -26,6 +27,8 @@ import java.util.List;
  * forward other request body elements.
  */
 public class ProxyHandler implements Handler {
+
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Processes a proxy type request. Proxy requests are forwarded on to the configured destination.
@@ -53,7 +56,7 @@ public class ProxyHandler implements Handler {
                 .orElse(null);
 
         if (request == null) {
-            Log.error("Invalid request name");
+            logger.error("Invalid request name");
             return;
         }
 
@@ -64,14 +67,14 @@ public class ProxyHandler implements Handler {
                 .orElse(null);
 
         if (host == null) {
-            Log.error("Host name not configured: " + request.getHost());
+            logger.error("Host name not configured: {}", request.getHost());
             return;
         }
 
         // If proxy request is for another automation server, check that all proxy parameters are present
         if (request.isForAutomationServer()
                 && !Arrays.stream(ProxyParameterMapping.values()).allMatch(e->parameterMap.containsKey(e.getText())) ) {
-            Log.error("Proxy request for another automation server does not contain all required URL parameters");
+            logger.error("Proxy request for another automation server does not contain all required URL parameters");
             return;
         }
 
@@ -104,7 +107,7 @@ public class ProxyHandler implements Handler {
             clientOutput.flush();
             clientOutput.close();
         } catch (Exception e) {
-            throw new HandlerException("Error occurred when making proxy request", e);
+            throw new HandlerException(String.format("Error occurred when making proxy request. %s", e.getMessage()), e);
         }
     }
 

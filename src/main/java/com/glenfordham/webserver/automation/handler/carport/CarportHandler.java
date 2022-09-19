@@ -10,9 +10,10 @@ import com.glenfordham.webserver.automation.jaxb.CarportAction;
 import com.glenfordham.webserver.automation.jaxb.CarportRequest;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.automation.jaxb.GpioRequest;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,6 +24,8 @@ import java.util.List;
  * action, using the 'Carport Only' flag. This handler is compatible with Raspberry Pi's only.
  */
 public class CarportHandler implements Handler {
+
+	private static final Logger logger = LogManager.getLogger();
 
 	static final int TRIGGER = 0;
 	static final int READ = 1;
@@ -57,14 +60,14 @@ public class CarportHandler implements Handler {
 				.orElse(null);
 
 		if (carportRequest == null) {
-			Log.error("Invalid request name");
+			logger.error("Invalid request name");
 			return;
 		}
 
 		// Check if wait time is configured for open/close actions
 		CarportAction action = carportRequest.getAction();
 		if ((action == CarportAction.OPEN || action == CarportAction.CLOSE) && (carportRequest.getWaitTime() == null || carportRequest.getDoorClosedValue() == null)) {
-			Log.error("Wait time required for open/close action");
+			logger.error("Wait time required for open/close action");
 			return;
 		}
 
@@ -75,7 +78,6 @@ public class CarportHandler implements Handler {
 
 	/**
 	 * Attempts to process the carport request.
-	 *
 	 * Retrieves the linked GpioRequest configuration for door trigger and read status, and uses these to perform the
 	 * required Carport Door commands.
 	 *
@@ -87,14 +89,14 @@ public class CarportHandler implements Handler {
 		// Retrieve the Gpio request to use for triggering the door
 		GpioRequest triggerRequest = carportGpioRequests.stream().filter(e->carportRequest.getGpioRequestName().get(TRIGGER).equalsIgnoreCase(e.getName())).findFirst().orElse(null);
 		if (triggerRequest == null) {
-			Log.error("Invalid Trigger Gpio Request: " + carportRequest);
+			logger.error("Invalid Trigger Gpio Request: {}", carportRequest);
 			return;
 		}
 
 		// Retrieve the Gpio request to use for reading the current door status (eg. open/closed)
 		GpioRequest readRequest = carportGpioRequests.stream().filter(e->carportRequest.getGpioRequestName().get(READ).equalsIgnoreCase(e.getName())).findFirst().orElse(null);
 		if (readRequest == null) {
-			Log.error("Invalid Read Gpio Request: " + carportRequest);
+			logger.error("Invalid Read Gpio Request: {}", carportRequest);
 			return;
 		}
 
@@ -126,7 +128,6 @@ public class CarportHandler implements Handler {
 			try {
 				Thread.sleep(waitTime);
 			} catch (InterruptedException e) {
-				Log.error("Interrupted execution of process", e);
 				Thread.currentThread().interrupt();
 				throw new HandlerException(e.getMessage(), e);
 			}
@@ -158,7 +159,7 @@ public class CarportHandler implements Handler {
 		try {
 			clientOutput.write(GpioPinControl.process(readRequest).getBytes());
 		} catch (IOException e) {
-			throw new HandlerException("Error occurred when returning response", e);
+			throw new HandlerException(e.getMessage(), e);
 		}
 	}
 

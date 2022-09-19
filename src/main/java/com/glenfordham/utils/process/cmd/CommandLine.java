@@ -2,8 +2,9 @@ package com.glenfordham.utils.process.cmd;
 
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.utils.process.ProcessWrapper;
-import com.glenfordham.webserver.logging.Log;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -12,6 +13,8 @@ import java.util.Arrays;
  * The CommandLine class represents the hosts' Command Prompt or Terminal.
  */
 public class CommandLine {
+
+    private static final Logger logger = LogManager.getLogger();
 
     private String commandLineToRun;
 
@@ -42,42 +45,23 @@ public class CommandLine {
 
         // Invoke the executable using ProcessWrapper to ensure all streams and the process are closed.
         // Wait for the process to complete and log error if an error code is returned
-        Log.debug("Executing process: " + Arrays.toString(osSafeCmdLine));
+        logger.debug("Executing process: {}", Arrays.toString(osSafeCmdLine));
         try (ProcessWrapper processWrapper = new ProcessWrapper(new ProcessBuilder(osSafeCmdLine).start()))  {
             final int processReturnValue = processWrapper.getProcess().waitFor();
-            Log.debug("Process returned:" + processReturnValue);
+            logger.debug("Process returned: {}", processReturnValue);
             if (processReturnValue != 0) {
-                Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
+                logger.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
             } else {
                 String processOutput = StreamUtils.getString(processWrapper.getProcess().getInputStream());
-                Log.debug("Process stdout:" + processOutput);
+                logger.debug("Process stdout: {}", processOutput);
                 return processOutput;
             }
         } catch (InterruptedException iE) {
-            Log.error("Interrupted execution of process", iE);
             Thread.currentThread().interrupt();
             throw new CmdLineException(iE.getMessage(), iE);
         } catch (IOException e) {
             throw new CmdLineException(e.getMessage(), e);
         }
         return null;
-    }
-
-    /**
-     * Gets the current command line value.
-     *
-     * @return A String containing the command line set against the CmdLine object.
-     */
-    public String getCommandLineToRun() {
-        return commandLineToRun;
-    }
-
-    /**
-     * Sets the command line to the provided String.
-     *
-     * @param commandLineToRun String containing the command line to run.
-     */
-    public void setCommandLineToRun(String commandLineToRun) {
-        this.commandLineToRun = commandLineToRun;
     }
 }

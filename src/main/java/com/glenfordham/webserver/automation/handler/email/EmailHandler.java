@@ -9,8 +9,6 @@ import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.automation.jaxb.EmailHeader;
 import com.glenfordham.webserver.automation.jaxb.EmailRequest;
 import com.glenfordham.webserver.automation.jaxb.Mailbox;
-import com.glenfordham.webserver.logging.Log;
-import com.glenfordham.webserver.logging.LogLevel;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import jakarta.mail.Message;
@@ -19,6 +17,8 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.OutputStream;
 import java.util.Properties;
@@ -27,6 +27,9 @@ import java.util.Properties;
  * Email handler is used for processing requests of the email request type.
  */
 public class EmailHandler implements Handler {
+
+    private static final Logger logger = LogManager.getLogger();
+
     /**
      * Processes an Email type request. Matches request against configuration XML and triggers email action
      * on the mailbox configured against the request.
@@ -54,7 +57,7 @@ public class EmailHandler implements Handler {
                 .orElse(null);
 
         if (request == null) {
-            Log.error("Invalid request name");
+            logger.error("Invalid request name");
             return;
         }
 
@@ -65,7 +68,7 @@ public class EmailHandler implements Handler {
                 .orElse(null);
 
         if (mailbox == null) {
-            Log.error("Mailbox name not configured: " + request.getMailboxName());
+            logger.error("Mailbox name not configured: {}", request.getMailboxName());
             return;
         }
         sendEmail(mailbox, request);
@@ -79,7 +82,6 @@ public class EmailHandler implements Handler {
      * @throws HandlerException If an unexpected error occurs when handling the request.
      */
     private synchronized void sendEmail(Mailbox mailbox, EmailRequest request) throws HandlerException {
-        // TODO: make thread-safe with something _better than_ synchronized
         // Get system properties
         Properties properties = System.getProperties();
 
@@ -99,9 +101,8 @@ public class EmailHandler implements Handler {
         });
 
         // If log level is debug then also print email debug lines
-        if (Log.getLogLevel().equalsIgnoreCase(LogLevel.DEBUG.get())) {
-            session.setDebug(true);
-        }
+        session.setDebug(logger.isDebugEnabled());
+
         try {
             MimeMessage message = new MimeMessage(session);
 
@@ -123,9 +124,9 @@ public class EmailHandler implements Handler {
                 message.setHeader(header.getName(), header.getText());
             }
 
-            Log.debug("Attempting to send message...");
+            logger.debug("Attempting to send message...");
             Transport.send(message);
-            Log.info("Email sent");
+            logger.info("Email sent");
         } catch (Exception mE) {
             throw new HandlerException(mE.getMessage(), mE);
         }

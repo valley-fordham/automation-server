@@ -1,7 +1,8 @@
 package com.glenfordham.webserver.config;
 
-import com.glenfordham.webserver.logging.Log;
 import org.apache.commons.cli.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 
@@ -11,7 +12,8 @@ import java.util.Arrays;
  */
 public class CliParser {
 
-    private final String exeName = (getClass().getPackage().getImplementationTitle() != null ? getClass().getPackage().getImplementationTitle() : "Web Server");
+    private static final Logger logger = LogManager.getLogger();
+
 
     /**
      * Parses CLI arguments and loads into the static ConfigProperties instance.
@@ -20,7 +22,7 @@ public class CliParser {
      * @return True if all required config has been loaded.
      */
     public ConfigProperties loadConfig(String[] args) {
-        // Add all arguments without setting the 'required' flag yet, so that the --help argument works
+        // Add all arguments without setting the 'required' flag yet
         Options options = new Options();
 
         // Add all available arguments to Options list and then set options as 'required' where needed
@@ -31,8 +33,8 @@ public class CliParser {
         CommandLine cmd = parseArguments(options, args);
 
         // Check if the help argument has been provided or if a required argument is not provided - if so, display help and exit
-        if (cmd == null || (cmd.hasOption(Arguments.HELP.getName()) || cmd.hasOption(Arguments.HELP.getLongName()))) {
-            new HelpFormatter().printHelp(exeName, options);
+        if (cmd == null) {
+            new HelpFormatter().printHelp((getClass().getPackage().getImplementationTitle() != null ? getClass().getPackage().getImplementationTitle() : "Automation Server"), options);
         }
 
         // Load command line arguments into ConfigProperties, set values where provided
@@ -62,10 +64,8 @@ public class CliParser {
         CommandLine cmd = null;
         try {
             cmd = new DefaultParser().parse(options, args, false);
-        } catch (MissingOptionException | UnrecognizedOptionException parseException) {
-            Log.info(parseException.getMessage());
-        } catch (Exception e) {
-            Log.error("Unable to parse arguments", e);
+        } catch (ParseException e) {
+            logger.info(e.getMessage());
         }
         return cmd;
     }

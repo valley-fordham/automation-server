@@ -2,9 +2,11 @@ package com.glenfordham.webserver.automation.config;
 
 import com.glenfordham.utils.StreamUtils;
 import com.glenfordham.webserver.automation.jaxb.Config;
-import com.glenfordham.webserver.logging.Log;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -13,15 +15,19 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Represents configuration XML that complies to the Automation Server XML schema.
  */
 public class AutomationConfig {
 
-    // String constant used to save and retrieve Servlet configuration provided from command line
+    private static final Logger logger = LogManager.getLogger();
+
+    // Used to save and retrieve Servlet configuration provided from command line
     public static final String CONFIG_LOCATION_KEY = "configLocation";
     public static final String CONFIG_RELOAD_KEY = "configReload";
+    public static final String CONFIG_DEBUG_KEY = "configDebug";
 
     private static Config config = null;
     private static boolean loaded = false;
@@ -35,23 +41,14 @@ public class AutomationConfig {
      */
     public static void load(String configFileLocation) throws AutomationConfigException {
         if (!loaded || configReload) {
-            Log.info("Loading configuration XML");
-            // Ensure that external files cannot be loaded
-            SchemaFactory schemaFactory;
+            logger.info("Loading configuration XML");
             try {
-                schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-                schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-
                 // Load configuration file
                 File configFile = new File(configFileLocation);
-
-                // Load and validate config XML file against schema - use getResourceAsStream() so this code works when jar'd
-                Schema schema = schemaFactory.newSchema(StreamUtils.getFile(AutomationConfig.class.getResourceAsStream(Constant.CONFIG_XSD.getText())));
-                Validator validator = schema.newValidator();
-
-                Source configFileAsXml = new StreamSource(configFile);
-                validator.validate(configFileAsXml);
+                if (!configFile.exists()) {
+                    throw new AutomationConfigException("Configuration XML file does not exist.");
+                }
+                validateConfig(configFile);
 
                 // Convert config XML into Java object representation
                 JAXBContext jaxbContext = JAXBContext.newInstance(Config.class);
@@ -85,7 +82,25 @@ public class AutomationConfig {
      */
     public static void setConfigReload(boolean value) {
         configReload = value;
-        Log.info("Configuration XML will reload on every request.");
+        logger.info("Configuration XML will reload on every request.");
+    }
+
+    private static void validateConfig(final File configFile) throws AutomationConfigException {
+        SchemaFactory schemaFactory;
+        schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+
+            // Load and validate config XML file against schema - use getResourceAsStream() so this code works when jar'd
+            Schema schema = schemaFactory.newSchema(StreamUtils.getFile(AutomationConfig.class.getResourceAsStream(Constant.CONFIG_XSD.getText())));
+            Validator validator = schema.newValidator();
+            Source configFileAsXml = new StreamSource(configFile);
+
+            validator.validate(configFileAsXml);
+        } catch (IOException | SAXException e) {
+            throw new AutomationConfigException(e.getMessage(), e);
+        }
     }
 
     // use static methods

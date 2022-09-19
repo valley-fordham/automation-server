@@ -9,10 +9,11 @@ import com.glenfordham.webserver.automation.handler.Handler;
 import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.jaxb.CommandLineRequest;
 import com.glenfordham.webserver.automation.jaxb.Config;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,6 +25,9 @@ import java.util.concurrent.TimeUnit;
  * process when executed against the operating system.
  */
 public class CommandLineHandler implements Handler {
+
+    private static final Logger logger = LogManager.getLogger();
+
     /**
      * Processes a Command Line type request. Matches request against configuration XML and triggers command defined
      * against the request name.
@@ -51,27 +55,26 @@ public class CommandLineHandler implements Handler {
                 .orElse(null);
 
         if (request == null) {
-            Log.error("Invalid request name");
+            logger.error("Invalid request name");
             return;
         }
 
         // Invoke the executable using ProcessWrapper to ensure all streams and the process are closed.
         // Wait for the process to complete and log error if an error code is returned
         String executePath = request.getCommandLine();
-        Log.debug("Executing process: " + executePath);
+        logger.debug("Executing process: {}", executePath);
         try {
             try (ProcessWrapper processWrapper = new ProcessWrapper(
                     Runtime.getRuntime().exec(executePath))) {
                 // This waitFor implementation continues to wait if nothing is written to STDOUT, so we use a 30-second timeout
                 if (!processWrapper.getProcess().waitFor(30, TimeUnit.SECONDS)) {
                     // Write the error to the logs, but not to the client as they don't need to know the details
-                    Log.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
+                    logger.error(StreamUtils.getString(processWrapper.getProcess().getErrorStream()));
                 } else if (BooleanUtils.isTrue(request.isOutputReturned())) {
                     clientOutput.write(StreamUtils.getString(processWrapper.getProcess().getInputStream()).getBytes(StandardCharsets.UTF_8));
                 }
             }
         } catch (InterruptedException iE) {
-            Log.error("Interrupted execution of process", iE);
             Thread.currentThread().interrupt();
             throw new HandlerException(iE.getMessage(), iE);
         } catch (IOException e) {

@@ -23,13 +23,13 @@ public enum Arguments {
             "if present, config.xml will be loaded on every request",
             null
     ),
-    HELP(
-            "h",
+    DEBUG(
+            "d",
             false,
+            true,
+            "debug",
             false,
-            "help",
-            false,
-            "displays the help text you're seeing now",
+            "if present, config.xml will be loaded on every request",
             null
     ),
     PORT(
@@ -39,15 +39,7 @@ public enum Arguments {
             "port",
             true,
             "sets the port to listen on  eg. 80",
-            "80"),
-    TEMP_DIR_PREFIX(
-            "t",
-            false,
-            true,
-            "tempDirPrefix",
-            true,
-            "sets prefix for Tomcat's temporary directory name  eg. prefix",
-            "tomcat-base-dir");
+            "80");
 
     private final String name;
     private final boolean isRequired;

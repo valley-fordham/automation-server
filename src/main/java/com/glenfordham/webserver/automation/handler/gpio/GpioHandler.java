@@ -7,9 +7,10 @@ import com.glenfordham.webserver.automation.handler.Handler;
 import com.glenfordham.webserver.automation.handler.HandlerException;
 import com.glenfordham.webserver.automation.jaxb.Config;
 import com.glenfordham.webserver.automation.jaxb.GpioRequest;
-import com.glenfordham.webserver.logging.Log;
 import com.glenfordham.webserver.servlet.parameter.ParameterException;
 import com.glenfordham.webserver.servlet.parameter.ParameterMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,6 +19,8 @@ import java.io.OutputStream;
  * This handler interfaces with the GPIO process that sits on the PATH environment variable. For Raspberry Pi's only.
  */
 public class GpioHandler implements Handler {
+
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Processes a GPIO type request. Matches request against configuration XML and triggers configured GPIO action.
@@ -45,7 +48,7 @@ public class GpioHandler implements Handler {
                 .orElse(null);
 
         if (request == null || request.isCarportOnly()) {
-            Log.error("Invalid request name");
+            logger.error("Invalid request name");
             return;
         }
 
@@ -56,7 +59,7 @@ public class GpioHandler implements Handler {
             try {
                 clientOutput.write(gpioResponse.getBytes());
             } catch (IOException e) {
-                throw new HandlerException("Unable to write response", e);
+                throw new HandlerException(String.format("Unable to write response. %s", e.getMessage()), e);
             }
         }
     }
