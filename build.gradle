@@ -35,6 +35,7 @@ jar {
                 'Implementation-Title': project.name,
                 // Use 'version' so Shadow Jar gets version properly
                 'Implementation-Version': version,
+                'Multi-Release': 'true',
         )
     }
 }

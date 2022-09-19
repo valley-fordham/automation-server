@@ -1,16 +1,11 @@
 package com.glenfordham.webserver.config;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.EnumMap;
 
 /**
  * Static class used for retrieving configuration properties across the application.
  */
 public class ConfigProperties {
-
-    private static final Logger logger = LogManager.getLogger();
 
     private final EnumMap<Arguments, Object> configMap = new EnumMap<>(Arguments.class);
 
@@ -52,12 +47,7 @@ public class ConfigProperties {
      * @return The property's value as an Integer.
      */
     public Integer getPropertyValueAsInt(Arguments key) {
-        try {
-            return Integer.parseInt((String)configMap.get(key));
-        } catch (Exception e) {
-            logger.error("Unable to get property as Integer", e);
-            return null;
-        }
+        return Integer.parseInt((String)configMap.get(key));
     }
 
     /**
